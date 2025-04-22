@@ -1,4 +1,7 @@
 name: CyberEnte
 version: '1.0-SNAPSHOT'
+
 main: de.datenente.cyberente.CyberEnte
 api-version: '1.21'
+
+author: CyberEnte

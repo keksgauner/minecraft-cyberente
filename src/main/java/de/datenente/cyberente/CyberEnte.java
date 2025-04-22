@@ -1,6 +1,5 @@
 package de.datenente.cyberente;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CyberEnte extends JavaPlugin {
@@ -14,9 +13,9 @@ public final class CyberEnte extends JavaPlugin {
 
         instance = this;
 
-        Bukkit.getPluginManager().registerEvents(new ChatEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new JoinLeaveEvent(), this);
-
+        // Register Listeners
+        getServer().getPluginManager().registerEvents(new ChatEvent(), this);
+        getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
     }
 
     @Override

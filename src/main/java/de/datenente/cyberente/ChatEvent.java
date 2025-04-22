@@ -9,21 +9,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-
 public class ChatEvent implements Listener {
+
     @EventHandler
-    public void handleChatEvent(AsyncChatEvent chatEvent)
-    {
+    public void handleChatEvent(AsyncChatEvent chatEvent) {
         Player player = chatEvent.getPlayer();
         Component message = chatEvent.message();
 
         chatEvent.setCancelled(true);
 
-        String plainMessage = "<" + player.getName() + "> " + PlainTextComponentSerializer.plainText().serialize(message);
+        String plainMessage = "<" + player.getName() + "> "
+                + PlainTextComponentSerializer.plainText().serialize(message);
         var finalMessage = MiniMessage.miniMessage().deserialize(plainMessage);
 
         Bukkit.broadcast(finalMessage);
-
-
     }
 }
