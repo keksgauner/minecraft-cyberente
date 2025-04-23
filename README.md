@@ -1,8 +1,7 @@
 
 # CyberEnte
 
-Ein **Minecraft Paper Plugin** für den Privaten CyberEnte Server
-
+Ein spezielles **Minecraft Paper-Plugin** für den privaten CyberEnte-Server.
 
 ## Autoren
 
