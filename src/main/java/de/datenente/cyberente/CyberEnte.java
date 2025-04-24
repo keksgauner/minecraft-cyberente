@@ -16,6 +16,9 @@ public final class CyberEnte extends JavaPlugin {
         // Register Listeners
         getServer().getPluginManager().registerEvents(new ChatEvent(), this);
         getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
+        getServer().getCommandMap().register("Ping", new PingCommand());
+        getServer().getPluginManager().registerEvents(new DropChest(), this);
+        getServer().getCommandMap().register("ClearChat", new ClearChatCommand());
     }
 
     @Override
