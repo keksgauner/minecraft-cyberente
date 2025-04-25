@@ -1,4 +1,4 @@
-package de.datenente.cyberente;
+package de.datenente.cyberente.listeners;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -9,10 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class ChatEvent implements Listener {
+public class ChatListener implements Listener {
 
     @EventHandler
-    public void handleChatEvent(AsyncChatEvent chatEvent) {
+    public void handleChat(AsyncChatEvent chatEvent) {
         Player player = chatEvent.getPlayer();
         Component message = chatEvent.message();
 
@@ -20,7 +20,7 @@ public class ChatEvent implements Listener {
 
         String plainMessage = "<" + player.getName() + "> "
                 + PlainTextComponentSerializer.plainText().serialize(message);
-        var finalMessage = MiniMessage.miniMessage().deserialize(plainMessage);
+        Component finalMessage = MiniMessage.miniMessage().deserialize(plainMessage);
 
         Bukkit.broadcast(finalMessage);
     }
