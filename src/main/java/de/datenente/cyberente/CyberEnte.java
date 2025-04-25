@@ -1,10 +1,7 @@
 package de.datenente.cyberente;
 
-import de.datenente.cyberente.commands.ClearChatCommand;
-import de.datenente.cyberente.commands.PingCommand;
-import de.datenente.cyberente.listeners.ChatListener;
-import de.datenente.cyberente.listeners.DropChestListener;
-import de.datenente.cyberente.listeners.JoinLeaveListener;
+import de.datenente.cyberente.commands.*;
+import de.datenente.cyberente.listeners.*;
 import lombok.Getter;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.PluginManager;
@@ -25,16 +22,18 @@ public final class CyberEnte extends JavaPlugin {
         }
 
         // Register Listeners
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new ChatListener(), this);
-        pm.registerEvents(new DropChestListener(), this);
-        pm.registerEvents(new JoinLeaveListener(), this);
-        // pm.registerEvents(new StairSittingListener(), this);
+        PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new ChatListener(), this);
+        pluginManager.registerEvents(new DeathListener(), this);
+        pluginManager.registerEvents(new DropChestListener(), this);
+        pluginManager.registerEvents(new CheatBlockListener(), this);
+        pluginManager.registerEvents(new JoinLeaveListener(), this);
+        pluginManager.registerEvents(new StairSittingListener(), this);
 
         // Register Commands
-        CommandMap cm = getServer().getCommandMap();
-        cm.register("cyberente", new PingCommand());
-        cm.register("cyberente", new ClearChatCommand());
+        CommandMap commandMap = getServer().getCommandMap();
+        commandMap.register("cyberente", new PingCommand());
+        commandMap.register("cyberente", new ClearChatCommand());
     }
 
     @Override

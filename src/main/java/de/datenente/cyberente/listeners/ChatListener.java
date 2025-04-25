@@ -1,8 +1,8 @@
 package de.datenente.cyberente.listeners;
 
+import de.datenente.cyberente.utils.Message;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,9 +18,9 @@ public class ChatListener implements Listener {
 
         chatEvent.setCancelled(true);
 
-        String plainMessage = "<" + player.getName() + "> "
-                + PlainTextComponentSerializer.plainText().serialize(message);
-        Component finalMessage = MiniMessage.miniMessage().deserialize(plainMessage);
+        String plainMessage = PlainTextComponentSerializer.plainText().serialize(message);
+        Component finalMessage =
+                Message.get(player, "<dark_green>%player%</dark_green> <gray>></gray> " + plainMessage);
 
         Bukkit.broadcast(finalMessage);
     }

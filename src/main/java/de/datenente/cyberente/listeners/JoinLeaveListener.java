@@ -1,7 +1,7 @@
 package de.datenente.cyberente.listeners;
 
+import de.datenente.cyberente.utils.Message;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,8 +13,9 @@ public class JoinLeaveListener implements Listener {
     @EventHandler
     public void handleJoin(PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
-        Component finalMessage = MiniMessage.miniMessage()
-                .deserialize("<gradient:#ADF3FD:#ADF3FD>" + player.getName() + " hat das Spiel betreten </gradient>");
+        Component finalMessage = Message.get(
+                player,
+                "<dark_gray>[</dark_gray><green>+</green><dark_gray>]</dark_gray> <gradient:#ADF3FD:#ADF3FD>%player%</gradient>");
 
         joinEvent.joinMessage(finalMessage);
     }
@@ -22,8 +23,9 @@ public class JoinLeaveListener implements Listener {
     @EventHandler
     public void handleLeave(PlayerQuitEvent quitEvent) {
         Player player = quitEvent.getPlayer();
-        Component finalMessage = MiniMessage.miniMessage()
-                .deserialize("<gradient:#ADF3FD:#ADF3FD>" + player.getName() + " hat das Spiel verlassen </gradient>");
+        Component finalMessage = Message.get(
+                player,
+                "<dark_gray>[</dark_gray><dark_red>-</dark_red><dark_gray>]</dark_gray> <gradient:#ADF3FD:#ADF3FD>%player%</gradient>");
 
         quitEvent.quitMessage(finalMessage);
     }

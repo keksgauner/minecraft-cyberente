@@ -1,5 +1,6 @@
 package de.datenente.cyberente.listeners;
 
+import java.util.HashMap;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -8,26 +9,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class DropChestListener implements Listener {
 
     @EventHandler
-    public void handleDropChest(PlayerDropItemEvent playerDropItem) {
-        Item item = playerDropItem.getItemDrop();
-        Player player = playerDropItem.getPlayer();
+    public void handleDropChest(PlayerDropItemEvent playerDropItemEvent) {
+        Item item = playerDropItemEvent.getItemDrop();
+        Player player = playerDropItemEvent.getPlayer();
 
-        Block block = player.getTargetBlockExact(5);
-        if (block == null) {
-            return;
-        }
-
-        if (block.getType() != Material.CHEST) {
-            return;
-        }
+        Block block = player.getTargetBlockExact(10);
+        if (block == null || block.getType() != Material.CHEST) return;
 
         Chest chest = (Chest) block.getState();
-        if (chest.getBlockInventory().firstEmpty() != -1) {
-            chest.getBlockInventory().addItem(item.getItemStack());
+        Inventory inventory = chest.getBlockInventory();
+
+        HashMap<Integer, ItemStack> addedItem = inventory.addItem(item.getItemStack());
+        if (addedItem.isEmpty()) {
             item.remove();
         }
     }
