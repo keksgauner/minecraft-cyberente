@@ -12,8 +12,7 @@ public class DeathListener implements Listener {
     @EventHandler
     public void handleDeath(PlayerDeathEvent deathEvent) {
         Player player = deathEvent.getPlayer();
-        Location deathLocation = deathEvent.getPlayer().getLastDeathLocation();
-        if (deathLocation == null) return;
+        Location deathLocation = deathEvent.getPlayer().getLocation();
 
         player.sendMessage(Message.get("<gray>Du bist bei <white>X: " + deathLocation.getX() + " Y: "
                 + deathLocation.getY() + " Z: "

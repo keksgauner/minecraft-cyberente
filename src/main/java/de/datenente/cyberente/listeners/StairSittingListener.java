@@ -36,13 +36,13 @@ public class StairSittingListener implements Listener {
                 clickedBlock.getLocation().add(0, 0, 1).getBlock(),
                 clickedBlock.getLocation().add(0, 0, -1).getBlock());
 
-        boolean isSing = false;
+        boolean isSign = false;
         for (Block block : potentialSigns) {
             if (block.getType().name().endsWith("SIGN")) {
-                isSing = true;
+                isSign = true;
             }
         }
-        if (!isSing) return;
+        if (!isSign) return;
 
         Player player = playerInteractEvent.getPlayer();
         Location sitLocation = clickedBlock.getLocation().add(0.5D, -0.4D, 0.5D);
