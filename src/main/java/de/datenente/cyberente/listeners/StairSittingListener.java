@@ -20,9 +20,7 @@ public class StairSittingListener implements Listener {
 
     @EventHandler
     public void handleClickStair(PlayerInteractEvent playerInteractEvent) {
-        if (playerInteractEvent.getAction() != Action.RIGHT_CLICK_BLOCK) {
-            return;
-        }
+        if (playerInteractEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         Block clickedBlock = playerInteractEvent.getClickedBlock();
         if (clickedBlock == null || !clickedBlock.getType().name().endsWith("STAIRS")) return;

@@ -47,20 +47,22 @@ public class DeathListener implements Listener {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
 
-        Block block = deathLocation.getBlock();
-        block.setType(Material.PLAYER_HEAD);
-
         Bukkit.getScheduler()
                 .runTaskLater(
                         CyberEnte.getInstance(),
                         () -> {
+                            Block block = deathLocation.getBlock();
+                            block.setType(Material.PLAYER_HEAD);
+
                             BlockState state = block.getState();
                             if (!(state instanceof Skull skull)) return;
+                            skull.setOwningPlayer(player);
 
                             ItemStack[] contents = player.getInventory().getContents();
                             int droppedExp = deathEvent.getDroppedExp();
 
                             PersistentDataContainer container = skull.getPersistentDataContainer();
+
                             container.set(
                                     ITEMS_KEY, PersistentDataType.STRING, Base64.itemStackArrayToBase64(contents));
                             container.set(XP_KEY, PersistentDataType.INTEGER, droppedExp);
