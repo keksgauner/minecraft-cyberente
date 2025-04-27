@@ -34,12 +34,18 @@ public class DeathListener implements Listener {
     private final HashMap<UUID, Block> openedDeathInventories = new HashMap<>();
 
     @EventHandler
-    public void handleDeath(PlayerDeathEvent deathEvent) {
+    public void handleDeathLocation(PlayerDeathEvent deathEvent) {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
 
         player.sendMessage(Message.get("<gray>Du bist bei <white>X: " + deathLocation.getBlockX() + " Y: "
                 + deathLocation.getBlockY() + " Z: " + deathLocation.getBlockZ() + " <gray>gestorben."));
+    }
+
+    @EventHandler
+    public void handleDeath(PlayerDeathEvent deathEvent) {
+        Player player = deathEvent.getEntity();
+        Location deathLocation = player.getLocation();
 
         Block block = deathLocation.getBlock();
         block.setType(Material.PLAYER_HEAD);

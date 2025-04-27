@@ -1,6 +1,7 @@
 package de.datenente.cyberente;
 
 import de.datenente.cyberente.commands.*;
+import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.listeners.*;
 import lombok.Getter;
 import org.bukkit.command.CommandMap;
@@ -34,6 +35,9 @@ public final class CyberEnte extends JavaPlugin {
         CommandMap commandMap = getServer().getCommandMap();
         commandMap.register("cyberente", new PingCommand());
         commandMap.register("cyberente", new ClearChatCommand());
+
+        // Load Config
+        new StorageConfig(getLogger(), getDataFolder());
     }
 
     @Override
