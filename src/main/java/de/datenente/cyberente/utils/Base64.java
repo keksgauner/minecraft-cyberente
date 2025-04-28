@@ -1,7 +1,9 @@
 package de.datenente.cyberente.utils;
 
+import de.datenente.cyberente.CyberEnte;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -22,13 +24,13 @@ public class Base64 {
             }
             dataInput.close();
             return items;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | ClassNotFoundException ex) {
+            CyberEnte.getInstance().getLogger().severe(ex.getMessage());
         }
         return null;
     }
 
-    public static String itemStackArrayToBase64(ItemStack[] items) throws IllegalStateException {
+    public static String itemStackArrayToBase64(ItemStack[] items) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
@@ -38,8 +40,8 @@ public class Base64 {
             }
             dataOutput.close();
             return Base64Coder.encodeLines(outputStream.toByteArray());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            CyberEnte.getInstance().getLogger().severe(ex.getMessage());
         }
         return null;
     }

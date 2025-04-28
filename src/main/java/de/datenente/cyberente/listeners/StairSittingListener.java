@@ -18,6 +18,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class StairSittingListener implements Listener {
 
+    static final FixedMetadataValue STAIRS_KEY = new FixedMetadataValue(CyberEnte.getInstance(), Boolean.TRUE);
+
     @EventHandler
     public void handleClickStair(PlayerInteractEvent playerInteractEvent) {
         if (playerInteractEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
@@ -66,12 +68,12 @@ public class StairSittingListener implements Listener {
 
     @EventHandler
     public void onDismount(EntityDismountEvent entityDismountEvent) {
-        if (entityDismountEvent.getDismounted().hasMetadata("stair"))
-            Bukkit.getScheduler()
-                    .runTaskLater(
-                            CyberEnte.getInstance(),
-                            () -> entityDismountEvent.getDismounted().remove(),
-                            1L);
+        if (!entityDismountEvent.getDismounted().hasMetadata("stair")) return;
+        Bukkit.getScheduler()
+                .runTaskLater(
+                        CyberEnte.getInstance(),
+                        () -> entityDismountEvent.getDismounted().remove(),
+                        1L);
     }
 
     public void setPlayerSitting(Player player, Location location) {
@@ -80,7 +82,7 @@ public class StairSittingListener implements Listener {
         seat.setGravity(false);
         seat.setInvulnerable(true);
         seat.setAI(false);
-        seat.setMetadata("stair", new FixedMetadataValue(CyberEnte.getInstance(), Boolean.TRUE));
+        seat.setMetadata("stair", STAIRS_KEY);
         seat.addPassenger(player);
     }
 }
