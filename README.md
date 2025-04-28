@@ -3,9 +3,13 @@
 
 Ein spezielles **Minecraft Paper-Plugin** für den privaten CyberEnte-Server.
 
+## Funktionen dieses Plugins
+siehe [Funkionen](TODO.md)
+
 ## Autoren
 
 - [@CyberEnte](https://www.github.com/cyberente)
+- [@KeksGauner](https://www.github.com/keksgauner)
 
 ## Kompilieren aus dem Quellcode
 
