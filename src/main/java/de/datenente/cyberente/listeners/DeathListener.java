@@ -47,6 +47,10 @@ public class DeathListener implements Listener {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
 
+        // Items merken und dann sofort aus dem Drop entfernen!
+        ItemStack[] contents = deathEvent.getDrops().toArray(new ItemStack[0]);
+        deathEvent.getDrops().clear(); // <-- Items werden NICHT mehr gedroppt
+
         Bukkit.getScheduler()
                 .runTaskLater(
                         CyberEnte.getInstance(),
@@ -58,9 +62,7 @@ public class DeathListener implements Listener {
                             if (!(state instanceof Skull skull)) return;
                             skull.setOwningPlayer(player);
 
-                            ItemStack[] contents = player.getInventory().getContents();
                             int droppedExp = deathEvent.getDroppedExp();
-
                             PersistentDataContainer container = skull.getPersistentDataContainer();
 
                             container.set(
@@ -94,6 +96,7 @@ public class DeathListener implements Listener {
 
             for (ItemStack item : contents) {
                 if (item != null) {
+                    player.sendMessage(Message.get(item.getType().name()));
                     deathInventory.addItem(item);
                 }
             }

@@ -20,12 +20,11 @@ package de.datenente.cyberente.utils.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.Getter;
-
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
+import lombok.Getter;
 
 /**
  * Abstract class representing a JSON document configuration.
