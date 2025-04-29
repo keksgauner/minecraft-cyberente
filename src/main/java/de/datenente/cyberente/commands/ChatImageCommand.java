@@ -23,75 +23,97 @@
  */
 package de.datenente.cyberente.commands;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
+import de.datenente.cyberente.CyberEnte;
+import de.datenente.cyberente.utils.Image2Chat;
+import de.datenente.cyberente.utils.Message;
+import java.awt.*;
+import java.io.IOException;
 import java.util.List;
-import javax.imageio.ImageIO;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ChatImageCommand extends Command {
+
     public ChatImageCommand() {
-        super("chatimage", "Füge dem Chat ein Bild hinzu", "/", List.of("ci"));
+        super("chatimage", "Sende im Chat ein Bild", "/", List.of("ci"));
     }
 
     public boolean execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (!(sender instanceof Player player)) return true;
+
+        if (args.length == 1) {
+            // InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images/cyberente.png");
+            // BufferedImage image = ImageIO.read(stream);
 
             try {
-                InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images/cyberente.png");
-                player.sendMessage("Hi, der Stream ist " + stream.toString());
-                if (stream == null) {
-                    player.sendMessage("§cBild nicht gefunden! Lege es in src/main/resources/images/cyberente.png.");
-                    return true;
-                }
-
-                BufferedImage image = ImageIO.read(stream);
+                Image image = Image2Chat.getImageFromURL(args[0]);
                 if (image == null) {
-                    player.sendMessage("§cBild konnte nicht geladen werden!");
+                    player.sendMessage(Message.text("<red>Das Bild konnte nicht geladen werden!"));
                     return true;
                 }
 
-                int width = image.getWidth();
-                int height = image.getHeight();
-                MiniMessage mm = MiniMessage.miniMessage();
-                player.sendMessage(Component.text("Hier ist die CyberEnte:"));
-
-                for (int y = 0; y < height; ++y) {
-                    StringBuilder line = new StringBuilder();
-
-                    for (int x = 0; x < width; ++x) {
-                        int pixel = image.getRGB(x, y);
-                        Color color = new Color(pixel, true);
-                        if (color.getAlpha() < 128) {
-                            line.append("  ");
-                        } else {
-                            String hex =
-                                    String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-                            line.append("<color:").append(hex).append(">█</color>");
-                        }
-                    }
-
-                    Component coloredLine = mm.deserialize(line.toString());
-                    player.sendMessage(coloredLine);
+                for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
+                    Image2Chat.sendResizedImage(onlinePlayer, image, 30, 20);
                 }
-            } catch (Exception var16) {
-                var16.printStackTrace();
-                player.sendMessage(Component.text("§cFehler beim Senden des Bildes!"));
-                String error = var16.getMessage() != null ? var16.getMessage() : var16.toString();
-                player.sendMessage(Component.text("§7" + error));
+            } catch (IOException ex) {
+                player.sendMessage(Message.text("<red>Das Bild konnte nicht geladen werden!"));
+                CyberEnte.getInstance().getLogger().severe(ex.getMessage());
             }
 
             return true;
-        } else {
-            sender.sendMessage("Nur Spieler können das verwenden!");
+        }
+
+        if (args.length == 3) {
+            try {
+                int width = Integer.parseInt(args[1]);
+                int height = Integer.parseInt(args[2]);
+
+                Image image = Image2Chat.getImageFromURL(args[0]);
+                if (image == null) {
+                    player.sendMessage(Message.text("<red>Das Bild konnte nicht geladen werden!"));
+                    return true;
+                }
+
+                for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
+                    Image2Chat.sendResizedImage(onlinePlayer, image, width, height);
+                }
+            } catch (NumberFormatException ex) {
+                player.sendMessage(Message.text("<red>Die Breite und Höhe müssen Zahlen sein!"));
+            } catch (IOException ex) {
+                player.sendMessage(Message.text("<red>Das Bild konnte nicht geladen werden!"));
+                CyberEnte.getInstance().getLogger().severe(ex.getMessage());
+            }
+
             return true;
         }
+
+        player.sendMessage(
+                Message.text("<red>Bitte gib eine URL an! <green>Beispiel: /ci https://example.com/image.png 30 20"));
+
+        return true;
+    }
+
+    @Override
+    public @NotNull List<String> tabComplete(
+            @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
+            throws IllegalArgumentException {
+
+        if (args.length == 0) {
+            return List.of("https://example.com/image.png");
+        }
+
+        if (args.length == 1) {
+            return List.of("8", "10", "30");
+        }
+
+        if (args.length == 2) {
+            return List.of("8", "10", "20");
+        }
+
+        return List.of();
     }
 }

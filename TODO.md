@@ -11,7 +11,7 @@
 
 - [x] **/clearchat** – Löscht den Chat für alle Spieler
 - [x] **/ping** – Zeigt den Ping eines Spielers (nur Java-Spieler)
-- [ ] **/imagechat** – Bilder im Chat senden können
+- [X] **/imagechat** – Bilder im Chat senden können
 
 ---
 

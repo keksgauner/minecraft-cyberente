@@ -50,7 +50,7 @@ public class ChatListener implements Listener {
 
         String plainMessage = PlainTextComponentSerializer.plainText().serialize(message);
 
-        Component finalMessage = Message.get(
+        Component finalMessage = Message.text(
                 "<hover:show_text:'<gold>{0}</gold>'><dark_green>{1}</dark_green></hover> <gray>></gray> {2}",
                 currentTime, player.getName(), plainMessage);
 
@@ -71,7 +71,7 @@ public class ChatListener implements Listener {
             // Highlight the mentioned player name
             message = message.replaceText(TextReplacementConfig.builder()
                     .match(matcher.group())
-                    .replacement(Message.get("<i><color:#FB4EE9>{0}</color></i>", matcher.group()))
+                    .replacement(Message.text("<i><color:#FB4EE9>{0}</color></i>", matcher.group()))
                     .build());
 
             // Notify the mentioned player with a sound
@@ -98,7 +98,7 @@ public class ChatListener implements Listener {
             // Highlight the link
             message = message.replaceText(TextReplacementConfig.builder()
                     .match(matcher.group())
-                    .replacement(Message.get(
+                    .replacement(Message.text(
                             "<hover:show_text:'<gold>{0}</gold>'><click:open_url:'{0}'><green>[LINK]</green></click></hover>",
                             matcher.group()))
                     .build());

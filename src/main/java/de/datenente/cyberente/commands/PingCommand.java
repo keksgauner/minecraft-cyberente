@@ -40,7 +40,7 @@ public class PingCommand extends Command {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
         if (sender instanceof Player player && args.length == 0) {
-            player.sendMessage(Message.get("Dein Ping ist: <green>{0}", String.valueOf(player.getPing())));
+            player.sendMessage(Message.text("Dein Ping ist: <green>{0}", String.valueOf(player.getPing())));
             return true;
         }
 
@@ -49,16 +49,16 @@ public class PingCommand extends Command {
             Player target = Bukkit.getPlayer(targetName);
 
             if (target == null) {
-                sender.sendMessage(Message.get("<red>Der Spieler {0} ist nicht Online!", targetName));
+                sender.sendMessage(Message.text("<red>Der Spieler {0} ist nicht Online!", targetName));
                 return true;
             }
 
-            sender.sendMessage(Message.get(
+            sender.sendMessage(Message.text(
                     "Der Ping vom Spieler {0} ist <green>{1}", target.getName(), String.valueOf(target.getPing())));
             return true;
         }
 
-        sender.sendMessage(Message.get("<red>Befehl wurde falsch eingegeben! /ping [player]"));
+        sender.sendMessage(Message.text("<red>Befehl wurde falsch eingegeben! /ping [player]"));
 
         return true;
     }

@@ -40,7 +40,7 @@ public class JoinLeaveListener implements Listener {
         Player player = joinEvent.getPlayer();
         String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-        Component finalMessage = Message.get(
+        Component finalMessage = Message.text(
                 "<dark_gray>[</dark_gray><green>+</green><dark_gray>]</dark_gray> <hover:show_text:'<gold>{0}</gold>'><gradient:#ADF3FD:#ADF3FD>{1}</gradient></hover>",
                 currentTime, player.getName());
 
@@ -52,7 +52,7 @@ public class JoinLeaveListener implements Listener {
         Player player = quitEvent.getPlayer();
         String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-        Component finalMessage = Message.get(
+        Component finalMessage = Message.text(
                 "<dark_gray>[</dark_gray><dark_red>-</dark_red><dark_gray>]</dark_gray> <hover:show_text:'<gold>{0}</gold>'><gradient:#ADF3FD:#ADF3FD>{1}</gradient></hover>",
                 currentTime, player.getName());
 

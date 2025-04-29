@@ -63,7 +63,7 @@ public class DeathListener implements Listener {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
 
-        player.sendMessage(Message.get("<gray>Du bist bei <white>X: " + deathLocation.getBlockX() + " Y: "
+        player.sendMessage(Message.text("<gray>Du bist bei <white>X: " + deathLocation.getBlockX() + " Y: "
                 + deathLocation.getBlockY() + " Z: " + deathLocation.getBlockZ() + " <gray>gestorben."));
     }
 
@@ -123,7 +123,7 @@ public class DeathListener implements Listener {
         if (!skull.hasMetadata("death")) return;
 
         if (openedDeathInventories.containsValue(clickedBlock)) {
-            interactEvent.getPlayer().sendMessage(Message.get("<red>Es ist bereits dieses Inventar geöffnet!"));
+            interactEvent.getPlayer().sendMessage(Message.text("<red>Es ist bereits dieses Inventar geöffnet!"));
             return;
         }
 

@@ -28,6 +28,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class Image2Chat {
      * Send the head image to the player
      * @param player the player
      */
-    public static void sendHeadImage(Player player) {
+    public static void sendHeadImage(Player player) throws IOException {
         final String pageURL = "https://minotar.net/avatar/";
         // 'https://minotar.net/helm/{Player}/8.png'
         // 'https://cravatar.eu/helmavatar/{Player}/8.png'
@@ -58,10 +59,10 @@ public class Image2Chat {
      * @param width the width
      * @param height the height
      */
-    public static void sendImageURL(Player player, String url, int width, int height) {
+    public static void sendImageURL(Player player, String url, int width, int height) throws IOException {
         Image image = getImageFromURL(url);
         if (image == null) {
-            player.sendMessage(Message.get("<red>Could not load image!"));
+            player.sendMessage(Message.text("<red>Could not load image!"));
             return;
         }
         sendResizedImage(player, image, width, height);
@@ -112,14 +113,20 @@ public class Image2Chat {
      * @param imageUrl the image URL
      * @return the image
      */
-    public static Image getImageFromURL(String imageUrl) {
-        try {
-            URL url = URI.create(imageUrl).toURL();
-            return ImageIO.read(url);
-        } catch (IOException ex) {
-            CyberEnte.getInstance().getLogger().severe(ex.toString());
+    public static Image getImageFromURL(String imageUrl) throws IOException {
+        URI uri = URI.create(imageUrl);
+        if (uri.getScheme() == null) {
+            return null;
         }
-        return null;
+        URL url = uri.toURL();
+        return ImageIO.read(url);
+    }
+
+    public static Image getImageFromStream(InputStream inputStream) throws IOException {
+        if (inputStream == null) {
+            return null;
+        }
+        return ImageIO.read(inputStream);
     }
 
     /**
@@ -141,7 +148,7 @@ public class Image2Chat {
             if (x == width) {
                 y++;
                 x = 0;
-                colorMap.add(Message.get(line.toString()));
+                colorMap.add(Message.text(line.toString()));
                 line = new StringBuilder();
             } else {
                 Color color = getSpecificColor(image, x, y);

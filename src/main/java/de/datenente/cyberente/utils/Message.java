@@ -32,7 +32,7 @@ public class Message {
      * @param message the message
      * @return the message
      */
-    public static Component get(String message) {
+    public static Component text(String message) {
         return MiniMessage.miniMessage().deserialize(message);
     }
 
@@ -43,10 +43,10 @@ public class Message {
      * @param replacements the replacements
      * @return the message
      */
-    public static Component get(String message, String... replacements) {
+    public static Component text(String message, String... replacements) {
         for (int i = 0; i < replacements.length; i++) {
             message = message.replace("{" + i + "}", replacements[i]);
         }
-        return get(message);
+        return text(message);
     }
 }
