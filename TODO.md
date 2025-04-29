@@ -1,19 +1,32 @@
-# TODO - CyberEnte Plugin
-- [ ] ChickenGrow - Ermöglicht das Anpfanzen von Hühnern auf Feldern
-- [ ] ChatBilder - Ermöglicht das Senden von Bildern im Chat
-- [ ] InfoWorld - Ist eine eigene Welt, die als Hub dient und Informationen wie Koordinaten usw anzeigt (Eventuell später entwickeln)
+# ✅ TODO – CyberEnte Plugin
 
-## Commands:
-- [x] ClearChat - löscht den Chat
-- [x] Ping - gibt den Ping eines Spielers zurück (nur Java-Spieler)
+## 🐣 Features in Entwicklung
 
-## Listeners (Spielabläufe)
-- [x] Chat farbig schreiben - MiniMessage
-- [x] CheatBlock - teleportieren + GameMode-Wechsel für alle inaktiv
-- [x] JoinLeave - Custom Join und Leave Message
-- [x] DropChest - Ermöglicht das Werfen von Items in Kisten
-- [x] DeathListener - Platziert beim Tod den Spielerkopf mit seinen Items
-- [x] StairSitting - Ermöglicht beim Platzieren eines Schilds auf eine Treppe das Sitzen
+- [ ] **🐔 ChickenGrow** – Hühner auf Feldern anpflanzen und wachsen lassen  
+- [ ] **🖼️ ChatBilder** – Bilder im Chat senden können  
+- [ ] **🌐 InfoWorld** – Eigene Hub-Welt mit Infos (z. B. Koordinaten)  
+  > *Hinweis: Entwicklung ggf. später geplant*
 
-## Utils
-- [x] Config - Auf JSON-Basis mit GSON
+---
+
+## 💬 Commands
+
+- [x] **🧹 /clearchat** – Löscht den Chat für alle Spieler  
+- [x] **📶 /ping** – Zeigt den Ping eines Spielers (nur Java-Spieler)
+
+---
+
+## 🎧 Event Listener (Spielverhalten)
+
+- [x] **🎨 Farbiger Chat** – Unterstützung für Farben & MiniMessage  
+- [x] **🚫 CheatBlock** – Blockiert Teleports & GameMode-Wechsel für alle  
+- [x] **🚪 JoinLeave** – Eigene Join-/Leave-Messages  
+- [x] **📦 DropChest** – Items in Kisten werfen  
+- [x] **💀 DeathListener** – Spieler stirbt → Kopf + Items an Ort  
+- [x] **🪑 StairSitting** – Schild auf Treppe = Spieler kann sitzen
+
+---
+
+## 🔧 Utils
+
+- [x] **🛠️ Konfiguration** – JSON-basiert, umgesetzt mit GSON
