@@ -4,7 +4,7 @@
 
 - [ ] **ChickenGrow** – Hühner auf Feldern anpflanzen und wachsen lassen
 - [ ] **ChatBilder** – Bilder im Chat senden können
-- [ ] **InfoWorld** – Eigene Hub-Welt mit Infos (z. B. Koordinaten)
+- [ ] **InfoWorld** – Eigene Hub-Welt mit Infos (z.B. Koordinaten)
   > *Hinweis: Entwicklung ggf. später geplant*
 
 ---

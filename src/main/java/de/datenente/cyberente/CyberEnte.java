@@ -64,6 +64,7 @@ public final class CyberEnte extends JavaPlugin {
         CommandMap commandMap = getServer().getCommandMap();
         commandMap.register("cyberente", new PingCommand());
         commandMap.register("cyberente", new ClearChatCommand());
+        commandMap.register("cyberente", new ChatImageCommand());
 
         // Load Config
         new StorageConfig(getLogger(), getDataFolder());

@@ -120,20 +120,3 @@ spotless {
         licenseHeaderFile(rootProject.file("LICENSE_HEADER"))
     }
 }
-sourceSets {
-    main {
-        resources {
-            srcDir 'src/main/resources'
-        }
-    }
-}
-
-processResources {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
-}
