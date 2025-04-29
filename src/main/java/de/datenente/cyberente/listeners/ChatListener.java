@@ -98,7 +98,9 @@ public class ChatListener implements Listener {
             // Highlight the link
             message = message.replaceText(TextReplacementConfig.builder()
                     .match(matcher.group())
-                    .replacement(Message.get("<hover:show_text:'<gold>{0}</gold>'><click:open_url:'{0}'><green>[LINK]</green></click></hover>", matcher.group()))
+                    .replacement(Message.get(
+                            "<hover:show_text:'<gold>{0}</gold>'><click:open_url:'{0}'><green>[LINK]</green></click></hover>",
+                            matcher.group()))
                     .build());
         }
 

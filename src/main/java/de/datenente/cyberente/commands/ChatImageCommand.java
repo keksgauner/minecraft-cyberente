@@ -1,3 +1,26 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 KeksGauner, CyberEnte
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package de.datenente.cyberente.commands;
 
 import java.awt.Color;
@@ -19,7 +42,7 @@ public class ChatImageCommand extends Command {
 
     public boolean execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
         if (sender instanceof Player) {
-            Player player = (Player)sender;
+            Player player = (Player) sender;
 
             try {
                 InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images/cyberente.png");
@@ -40,16 +63,17 @@ public class ChatImageCommand extends Command {
                 MiniMessage mm = MiniMessage.miniMessage();
                 player.sendMessage(Component.text("Hier ist die CyberEnte:"));
 
-                for(int y = 0; y < height; ++y) {
+                for (int y = 0; y < height; ++y) {
                     StringBuilder line = new StringBuilder();
 
-                    for(int x = 0; x < width; ++x) {
+                    for (int x = 0; x < width; ++x) {
                         int pixel = image.getRGB(x, y);
                         Color color = new Color(pixel, true);
                         if (color.getAlpha() < 128) {
                             line.append("  ");
                         } else {
-                            String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+                            String hex =
+                                    String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
                             line.append("<color:").append(hex).append(">█</color>");
                         }
                     }
