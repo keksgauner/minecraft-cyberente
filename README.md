@@ -1,25 +1,52 @@
+# 🦆 CyberEnte
 
-# CyberEnte
+[![Build](https://img.shields.io/github/actions/workflow/status/keksgauner/minecraft-cyberente/build.yml?branch=main&label=Build&style=for-the-badge)](https://github.com/keksgauner/minecraft-cyberente/actions)
+[![Java](https://img.shields.io/badge/Java-21+-orange?style=for-the-badge&logo=openjdk)](https://jdk.java.net/21/)
+[![License](https://img.shields.io/github/license/keksgauner/minecraft-cyberente?style=for-the-badge)](https://github.com/keksgauner/minecraft-cyberente/blob/main/LICENSE)
 
-## Information
+> 🛠️ Ein maßgeschneidertes **Minecraft Paper-Plugin** für den privaten CyberEnte-Server.
 
-Ein spezielles **Minecraft Paper-Plugin** für den privaten CyberEnte-Server.
+---
 
-## Funktionen dieses Plugins
-Eine Übersicht findest du unter [Funkionen](TODO.md).
+## 📦 Funktionen
 
-## Autoren
+Eine vollständige Übersicht findest du in der Datei: [📄 Funktionen](TODO.md)
 
-- [@CyberEnte](https://www.github.com/cyberente)
-- [@KeksGauner](https://www.github.com/keksgauner)
+---
 
-## Kompilieren aus dem Quellcode
+## 👥 Autoren
 
-Um den CyberEnte Plugin zu kompilieren, benötigen Sie mindestans JDK 21 und eine Internetverbindung. \
-Dann klonen Sie dieses Repository und führen `./gradlew build` innerhalb des geklonten Projekts aus. \
-Standardmäßig befinden sich die kompilierten Jars in `build/libs` und heißt `<pluginname>-<version>.jar`.
+- 🐤 [@CyberEnte](https://www.github.com/cyberente)  
+- 🍪 [@KeksGauner](https://www.github.com/keksgauner)
 
-## Überprüfen und Formatieren des Codes
+---
 
-Um zu überprüfen, dass Ihr Code fehlerfrei ist, führen Sie `./gradlew spotlessCheck` aus.\
-Um Ihren Code zu formatieren, führen Sie `./gradlew spotlessApply` aus.
+## 🧪 Kompilieren aus dem Quellcode
+
+**Voraussetzungen:**
+
+- ✅ JDK 21 oder höher  
+- 🌐 Internetverbindung
+
+**Schritte:**
+
+```bash
+git clone https://github.com/keksgauner/minecraft-cyberente.git
+cd minecraft-cyberente
+./gradlew build
+```
+
+🗃️ Das fertige Plugin befindet sich anschließend in `build/libs` und trägt den Namen:  
+`<pluginname>-<version>.jar`
+
+---
+
+## 🧹 Code-Check & Formatierung
+
+- 🔍 Code prüfen:  
+  `./gradlew spotlessCheck`
+
+- 🎨 Code formatieren:  
+  `./gradlew spotlessApply`
+
+---
