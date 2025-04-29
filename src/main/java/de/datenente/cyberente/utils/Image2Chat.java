@@ -37,42 +37,99 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 public class Image2Chat {
-    static final String pageURL = "https://minotar.net/avatar/";
-    // 'https://minotar.net/helm/{Player}/8.png'
-    // 'https://cravatar.eu/helmavatar/{Player}/8.png'
-    // 'https://mc-heads.net/avatar/{Player}/8'
 
     /**
      * Send the head image to the player
      * @param player the player
      */
     public static void sendHeadImage(Player player) {
-        sendURL(player, pageURL + player.getName() + "/8", 8, 7);
+        final String pageURL = "https://minotar.net/avatar/";
+        // 'https://minotar.net/helm/{Player}/8.png'
+        // 'https://cravatar.eu/helmavatar/{Player}/8.png'
+        // 'https://mc-heads.net/avatar/{Player}/8'
+
+        sendImageURL(player, pageURL + player.getName() + "/8", 8, 8);
     }
 
-    public static void sendDuck(Player player) {
-        sendURL(player, pageURL + player.getName() + "/8", 8, 7);
+    /**
+     * Send the image to the player
+     * @param player the player
+     * @param url the image URL
+     * @param width the width
+     * @param height the height
+     */
+    public static void sendImageURL(Player player, String url, int width, int height) {
+        Image image = getImageFromURL(url);
+        if (image == null) {
+            player.sendMessage(Message.get("<red>Could not load image!"));
+            return;
+        }
+        sendResizedImage(player, image, width, height);
+    }
+    /**
+     * Send the image to the player
+     * @param player the player
+     * @param image the image
+     * @param width the width
+     * @param height the height
+     */
+    public static void sendResizedImage(Player player, Image image, int width, int height) {
+        Image resizedImage = resizeImage(image, width, height);
+        sendImage(player, resizedImage, width, height);
     }
 
-    public static void sendURL(Player player, String imageUrl, int width, int height) {
-        try {
-            URL url = URI.create(imageUrl).toURL();
-            Image image = ImageIO.read(url);
-
-            List<Component> colorMap = getImageAsComponentList(image, width);
-            for (int i = 0; i < height; i++) {
-                if (i >= colorMap.size()) break;
-                Component component = colorMap.get(i);
-                if (component == null) continue;
-                player.sendMessage(component);
-            }
-
-        } catch (IOException ex) {
-            CyberEnte.getInstance().getLogger().severe(ex.getMessage());
+    /**
+     * Send the image to the player
+     * @param player the player
+     * @param image the image
+     * @param width the width
+     * @param height the height
+     */
+    public static void sendImage(Player player, Image image, int width, int height) {
+        List<Component> colorMap = getImageAsComponentList(resizeImage(image, width, height), '\u2588', width);
+        for (Component component : colorMap) {
+            player.sendMessage(component);
         }
     }
 
-    public static List<Component> getImageAsComponentList(Image image, int width) {
+    /**
+     * Resize the image
+     * @param image the image
+     * @param width the width
+     * @param height the height
+     * @return the resized image
+     */
+    public static Image resizeImage(Image image, int width, int height) {
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics2D = resizedImage.createGraphics();
+        graphics2D.drawImage(image, 0, 0, width, height, null);
+        graphics2D.dispose();
+        return resizedImage;
+    }
+
+    /**
+     * Get the image from the URL
+     * @param imageUrl the image URL
+     * @return the image
+     */
+    public static Image getImageFromURL(String imageUrl) {
+        try {
+            URL url = URI.create(imageUrl).toURL();
+            return ImageIO.read(url);
+        } catch (IOException ex) {
+            CyberEnte.getInstance().getLogger().severe(ex.toString());
+        }
+        return null;
+    }
+
+    /**
+     * Get the image as a list of components
+     * @param image the image
+     * @param filler the filler character
+     * @param width the width per line
+     * @return the list of components
+     */
+    public static List<Component> getImageAsComponentList(Image image, char filler, int width) {
         int height = image.getHeight(null);
 
         List<Component> colorMap = new ArrayList<>();
@@ -88,13 +145,22 @@ public class Image2Chat {
                 line = new StringBuilder();
             } else {
                 Color color = getSpecificColor(image, x, y);
-                line.append("<color:").append(getHexColor(color)).append(">\u2588</color>");
+                line.append("<color:")
+                        .append(getHexColor(color))
+                        .append(">")
+                        .append(filler)
+                        .append("</color>");
                 x++;
             }
         }
         return colorMap;
     }
 
+    /**
+     * Get the hex color of the image
+     * @param color the color
+     * @return the hex color format #RRGGBB
+     */
     public static String getHexColor(Color color) {
         return "#" + Integer.toHexString(color.getRGB()).substring(2);
     }

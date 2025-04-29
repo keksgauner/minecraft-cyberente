@@ -44,7 +44,7 @@ public class JoinLeaveListener implements Listener {
         joinEvent.joinMessage(finalMessage);
 
         // Delete by production
-        Image2Chat.sendHeadImage(player);
+        Image2Chat.sendImageURL(player, "https://www.tollerserver.de/1.png", 30, 20);
     }
 
     @EventHandler
