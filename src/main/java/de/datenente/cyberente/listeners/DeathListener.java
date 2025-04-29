@@ -62,9 +62,18 @@ public class DeathListener implements Listener {
                 .runTaskLater(
                         CyberEnte.getInstance(),
                         () -> {
-                            clickedBlock.setType(Material.PLAYER_HEAD);
+                            Location safeLocation = clickedBlock.getLocation();
+                            Block saveBlock = safeLocation.getBlock();
 
-                            BlockState state = clickedBlock.getState();
+                            while (saveBlock.getType() != Material.AIR) {
+                                safeLocation = safeLocation.add(0, 1, 0);
+                                saveBlock = safeLocation.getBlock();
+                            }
+                            ;
+
+                            saveBlock.setType(Material.PLAYER_HEAD);
+
+                            BlockState state = saveBlock.getState();
                             if (!(state instanceof Skull skull)) return;
                             skull.setOwningPlayer(player);
                             skull.setMetadata("death", DEATH_KEY);
@@ -105,7 +114,7 @@ public class DeathListener implements Listener {
         if (contents == null) return;
         int xp = container.get(XP_KEY, PersistentDataType.INTEGER);
 
-        Inventory deathInventory = Bukkit.createInventory(null, 9 * 4, Component.text("Letzte Items"));
+        Inventory deathInventory = Bukkit.createInventory(null, 9 * 6, Component.text("Letzte Items"));
         for (ItemStack item : contents) {
             if (item == null) continue;
             deathInventory.addItem(item);
