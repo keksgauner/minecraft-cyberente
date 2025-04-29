@@ -40,10 +40,8 @@ public class CheatBlockListener implements Listener {
         gameModeChangeEvent.setCancelled(true);
         Player player = gameModeChangeEvent.getPlayer();
         Bukkit.broadcast(Message.get(
-                player,
-                "<red>%player% wollte in den "
-                        + gameModeChangeEvent.getNewGameMode().name()
-                        + "-Modus wechseln – wurde erfolgreich blockiert.</red>"));
+                "<red>{0} wollte in den {1}-Modus wechseln – wurde erfolgreich blockiert.</red>",
+                player.getName(), gameModeChangeEvent.getNewGameMode().name()));
         player.setGameMode(GameMode.SURVIVAL);
     }
 
@@ -58,7 +56,8 @@ public class CheatBlockListener implements Listener {
         if (teleportEvent.getCause() == PlayerTeleportEvent.TeleportCause.COMMAND) {
             teleportEvent.setCancelled(true);
             Bukkit.broadcast(Message.get(
-                    "<red>" + teleportEvent.getPlayer().getName() + " Es darf sich nicht Teleportiert werden!</red>"));
+                    "<red>{0} - Es darf sich nicht Teleportiert werden!</red>",
+                    teleportEvent.getPlayer().getName()));
         }
     }
 }

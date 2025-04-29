@@ -123,7 +123,7 @@ public class DeathListener implements Listener {
         if (!skull.hasMetadata("death")) return;
 
         if (openedDeathInventories.containsValue(clickedBlock)) {
-            interactEvent.getPlayer().sendMessage(Message.get("<red>Es ist bereits ein Inventar geöffnet!"));
+            interactEvent.getPlayer().sendMessage(Message.get("<red>Es ist bereits dieses Inventar geöffnet!"));
             return;
         }
 

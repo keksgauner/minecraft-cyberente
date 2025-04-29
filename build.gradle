@@ -1,8 +1,11 @@
 plugins {
     id 'java'
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id "xyz.jpenilla.run-paper" version "2.3.1"
     id "com.diffplug.spotless" version "6.25.0"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
+
+defaultTasks("shadowJar")
 
 group = 'de.datenente'
 version = '1.0-SNAPSHOT'
@@ -29,6 +32,15 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 }
 
+shadowJar {
+    archiveFileName.set("${project.name}-${version}-shadow.jar")
+    // archiveFileName.set("${project.name}-latest.jar")
+    configurations = [
+        project.configurations.runtimeClasspath,
+        project.configurations.shadow
+    ]
+}
+
 tasks {
     runServer {
         // Configure the Minecraft version for our task.
@@ -38,6 +50,7 @@ tasks {
     }
     build {
         dependsOn(spotlessApply)
+        dependsOn(shadowJar)
     }
     jar {
         dependsOn(spotlessApply)

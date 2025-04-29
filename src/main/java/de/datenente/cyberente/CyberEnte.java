@@ -26,15 +26,20 @@ package de.datenente.cyberente;
 import de.datenente.cyberente.commands.*;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.listeners.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Getter
 public final class CyberEnte extends JavaPlugin {
 
     @Getter
     static CyberEnte instance;
+
+    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(250);
 
     @Override
     public void onEnable() {

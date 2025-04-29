@@ -23,8 +23,9 @@
  */
 package de.datenente.cyberente.listeners;
 
-import de.datenente.cyberente.utils.Image2Chat;
 import de.datenente.cyberente.utils.Message;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,22 +38,23 @@ public class JoinLeaveListener implements Listener {
     @EventHandler
     public void handleJoin(PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
+        String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         Component finalMessage = Message.get(
-                player,
-                "<dark_gray>[</dark_gray><green>+</green><dark_gray>]</dark_gray> <gradient:#ADF3FD:#ADF3FD>%player%</gradient>");
+                "<dark_gray>[</dark_gray><green>+</green><dark_gray>]</dark_gray> <hover:show_text:'<gold>{0}</gold>'><gradient:#ADF3FD:#ADF3FD>{1}</gradient></hover>",
+                currentTime, player.getName());
 
         joinEvent.joinMessage(finalMessage);
-
-        // Delete by production
-        Image2Chat.sendImageURL(player, "https://www.tollerserver.de/1.png", 30, 20);
     }
 
     @EventHandler
     public void handleLeave(PlayerQuitEvent quitEvent) {
         Player player = quitEvent.getPlayer();
+        String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         Component finalMessage = Message.get(
-                player,
-                "<dark_gray>[</dark_gray><dark_red>-</dark_red><dark_gray>]</dark_gray> <gradient:#ADF3FD:#ADF3FD>%player%</gradient>");
+                "<dark_gray>[</dark_gray><dark_red>-</dark_red><dark_gray>]</dark_gray> <hover:show_text:'<gold>{0}</gold>'><gradient:#ADF3FD:#ADF3FD>{1}</gradient></hover>",
+                currentTime, player.getName());
 
         quitEvent.quitMessage(finalMessage);
     }

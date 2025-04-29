@@ -25,14 +25,28 @@ package de.datenente.cyberente.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.entity.Player;
 
 public class Message {
-    public static Component get(Player player, String message) {
-        return MiniMessage.miniMessage().deserialize(message.replace("%player%", player.getName()));
-    }
-
+    /**
+     * Get a message from the MiniMessage
+     * @param message the message
+     * @return the message
+     */
     public static Component get(String message) {
         return MiniMessage.miniMessage().deserialize(message);
+    }
+
+    /**
+     * Get a message from the MiniMessage with replacements
+     * {0} = {0}, {1} = {1}, ...
+     * @param message the message
+     * @param replacements the replacements
+     * @return the message
+     */
+    public static Component get(String message, String... replacements) {
+        for (int i = 0; i < replacements.length; i++) {
+            message = message.replace("{" + i + "}", replacements[i]);
+        }
+        return get(message);
     }
 }
