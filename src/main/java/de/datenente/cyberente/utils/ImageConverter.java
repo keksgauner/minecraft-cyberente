@@ -17,22 +17,23 @@ import org.bukkit.entity.Player;
  * Jul 22, 2022
  */
 @Deprecated
-public class HeadImage {
+public class ImageConverter {
     static final String pageURL = "https://minotar.net/avatar/";
     // 'https://minotar.net/helm/{Player}/8.png'
     // 'https://cravatar.eu/helmavatar/{Player}/8.png'
     // 'https://mc-heads.net/avatar/{Player}/8'
 
     /**
-     * Send the player the head of the skin
+     * Send the head image to the player
      * @param player the player
      */
     public static void sendHeadImage(Player player) {
         try {
             URL playerURL = new URL(pageURL + player.getName() + "/8");
-            Image image = ImageIO.read(playerURL);
+            java.awt.Image image = ImageIO.read(playerURL);
             int y = 0;
             int x = 0;
+
             StringBuilder line = new StringBuilder();
             for (int pixel = 0; pixel < 72; pixel++) {
                 if (x == 8) {
@@ -42,22 +43,25 @@ public class HeadImage {
                     line = new StringBuilder();
                 } else {
                     Color color = getSpecificColor(image, x, y);
-                    String hex =
-                            "<color:#" + Integer.toHexString(color.getRGB()).substring(2) + ">";
+                    String hex = "<color:" + getHexColor(color) + ">";
                     line.append(hex + "\u2588");
                     x++;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            CyberEnte.getInstance().getLogger().severe(ex.getMessage());
         }
     }
 
+    public static String getHexColor(Color color) {
+        return "#" + Integer.toHexString(color.getRGB()).substring(2);
+    }
+
     /**
-     * get of a image a color
+     * Get the specific color of the image
      * @return Color
      */
-    private static Color getSpecificColor(Image image, int x, int y) {
+    public static Color getSpecificColor(java.awt.Image image, int x, int y) {
         if (image instanceof BufferedImage) return new Color(((BufferedImage) image).getRGB(x, y));
         int width = image.getWidth(null);
         int height = image.getHeight(null);

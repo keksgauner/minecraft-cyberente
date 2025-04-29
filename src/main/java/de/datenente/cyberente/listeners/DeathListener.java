@@ -62,17 +62,6 @@ public class DeathListener implements Listener {
                 .runTaskLater(
                         CyberEnte.getInstance(),
                         () -> {
-                            if (clickedBlock.getType() != Material.AIR) {
-                                for (ItemStack item : contents) {
-                                    if (item == null) continue;
-                                    clickedBlock.getWorld().dropItemNaturally(clickedBlock.getLocation(), item);
-                                }
-                                clickedBlock
-                                        .getWorld()
-                                        .dropItemNaturally(
-                                                clickedBlock.getLocation(), new ItemStack(clickedBlock.getType()));
-                                clickedBlock.setType(Material.AIR);
-                            }
                             clickedBlock.setType(Material.PLAYER_HEAD);
 
                             BlockState state = clickedBlock.getState();
@@ -145,6 +134,7 @@ public class DeathListener implements Listener {
 
         Inventory inventory = closeEvent.getInventory();
         for (ItemStack item : inventory.getContents()) {
+            if (item == null) continue;
             clickedBlock.getWorld().dropItemNaturally(clickedBlock.getLocation(), item);
         }
 
