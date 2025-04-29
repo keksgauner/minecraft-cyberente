@@ -29,7 +29,12 @@ import de.datenente.cyberente.listeners.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandMap;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,7 +55,15 @@ public final class CyberEnte extends JavaPlugin {
             instance = this;
         }
 
-        // Register Listeners
+        // Load Config
+        new StorageConfig(getLogger(), getDataFolder());
+
+        // Register Commands & Listeners
+        registerListener();
+        registerCommand();
+    }
+
+    void registerListener() {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new ChatListener(), this);
         pluginManager.registerEvents(new DeathListener(), this);
@@ -59,19 +72,27 @@ public final class CyberEnte extends JavaPlugin {
         pluginManager.registerEvents(new JoinLeaveListener(), this);
         pluginManager.registerEvents(new StairSittingListener(), this);
         pluginManager.registerEvents(new ChickenPlantListener(), this);
+    }
 
-        // Register Commands
+    void registerCommand() {
         CommandMap commandMap = getServer().getCommandMap();
         commandMap.register("cyberente", new PingCommand());
         commandMap.register("cyberente", new ClearChatCommand());
         commandMap.register("cyberente", new ChatImageCommand());
-
-        // Load Config
-        new StorageConfig(getLogger(), getDataFolder());
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+    void createCustomRecipe() {
+        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
+
+        NamespacedKey key = new NamespacedKey(this, "emerald_sword");
+
+        ShapedRecipe recipe = new ShapedRecipe(key, item);
+
+        recipe.shape(" E ", " E ", " S ");
+
+        recipe.setIngredient('C', Material.COBBLESTONE);
+        recipe.setIngredient('D', Material.COBBLED_DEEPSLATE);
+
+        Bukkit.addRecipe(recipe);
     }
 }
