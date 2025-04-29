@@ -1,10 +1,12 @@
 
 # CyberEnte
 
+## Information
+
 Ein spezielles **Minecraft Paper-Plugin** für den privaten CyberEnte-Server.
 
 ## Funktionen dieses Plugins
-siehe [Funkionen](TODO.md)
+Eine Übersicht findest du unter [Funkionen](TODO.md).
 
 ## Autoren
 
@@ -15,8 +17,7 @@ siehe [Funkionen](TODO.md)
 
 Um den CyberEnte Plugin zu kompilieren, benötigen Sie mindestans JDK 21 und eine Internetverbindung. \
 Dann klonen Sie dieses Repository und führen `./gradlew build` innerhalb des geklonten Projekts aus. \
-Standardmäßig befinden sich die kompilierten Jars in `build/libs` und heißen `<pluginname>-<version>.jar`. \
-Wenn es Abhängigkeiten hat dann heißt es `<pluginname>-<version>-shadow.jar`.
+Standardmäßig befinden sich die kompilierten Jars in `build/libs` und heißt `<pluginname>-<version>.jar`.
 
 ## Überprüfen und Formatieren des Codes
 
