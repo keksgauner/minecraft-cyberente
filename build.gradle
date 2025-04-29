@@ -103,5 +103,7 @@ spotless {
         endWithNewline()
         importOrder()
         formatAnnotations()
+        
+        licenseHeaderFile(rootProject.file("LICENSE_HEADER"))
     }
 }
