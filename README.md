@@ -16,7 +16,7 @@ Eine vollständige Übersicht findest du in der Datei: [📄 Funktionen](TODO.md
 
 ## 👥 Autoren
 
-- 🐤 [@CyberEnte](https://www.github.com/cyberente)  
+- 🐤 [@CyberEnte](https://www.github.com/cyberente)
 - 🍪 [@KeksGauner](https://www.github.com/keksgauner)
 
 ---
@@ -25,7 +25,7 @@ Eine vollständige Übersicht findest du in der Datei: [📄 Funktionen](TODO.md
 
 **Voraussetzungen:**
 
-- ✅ JDK 21 oder höher  
+- ✅ JDK 21 oder höher
 - 🌐 Internetverbindung
 
 **Schritte:**
@@ -36,17 +36,17 @@ cd minecraft-cyberente
 ./gradlew build
 ```
 
-🗃️ Das fertige Plugin befindet sich anschließend in `build/libs` und trägt den Namen:  
+🗃️ Das fertige Plugin befindet sich anschließend in `build/libs` und trägt den Namen:
 `<pluginname>-<version>.jar`
 
 ---
 
 ## 🧹 Code-Check & Formatierung
 
-- 🔍 Code prüfen:  
+- 🔍 Code prüfen:
   `./gradlew spotlessCheck`
 
-- 🎨 Code formatieren:  
+- 🎨 Code formatieren:
   `./gradlew spotlessApply`
 
 ---
