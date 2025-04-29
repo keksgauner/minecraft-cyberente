@@ -1,5 +1,6 @@
 package de.datenente.cyberente.listeners;
 
+import de.datenente.cyberente.utils.HeadImage;
 import de.datenente.cyberente.utils.Message;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -18,6 +19,9 @@ public class JoinLeaveListener implements Listener {
                 "<dark_gray>[</dark_gray><green>+</green><dark_gray>]</dark_gray> <gradient:#ADF3FD:#ADF3FD>%player%</gradient>");
 
         joinEvent.joinMessage(finalMessage);
+
+        // Delete by production
+        HeadImage.sendHeadImage(player);
     }
 
     @EventHandler
