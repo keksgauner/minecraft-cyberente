@@ -58,6 +58,7 @@ public final class CyberEnte extends JavaPlugin {
         pluginManager.registerEvents(new CheatBlockListener(), this);
         pluginManager.registerEvents(new JoinLeaveListener(), this);
         pluginManager.registerEvents(new StairSittingListener(), this);
+        pluginManager.registerEvents(new ChickenPlantListener(), this);
 
         // Register Commands
         CommandMap commandMap = getServer().getCommandMap();
