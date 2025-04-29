@@ -48,9 +48,9 @@ public class DeathListener implements Listener {
     public void handleDeathSkull(PlayerDeathEvent deathEvent) {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
-        Block block = deathLocation.getBlock();
-        List<ItemStack> drops = deathEvent.getDrops();
+        Block clickedBlock = deathLocation.getBlock();
 
+        List<ItemStack> drops = deathEvent.getDrops();
         ItemStack[] contents = drops.toArray(new ItemStack[0]);
         String base64 = Base64.itemStackArrayToBase64(contents);
         int droppedExp = deathEvent.getDroppedExp();
@@ -62,9 +62,20 @@ public class DeathListener implements Listener {
                 .runTaskLater(
                         CyberEnte.getInstance(),
                         () -> {
-                            block.setType(Material.PLAYER_HEAD);
+                            if (clickedBlock.getType() != Material.AIR) {
+                                for (ItemStack item : contents) {
+                                    if (item == null) continue;
+                                    clickedBlock.getWorld().dropItemNaturally(clickedBlock.getLocation(), item);
+                                }
+                                clickedBlock
+                                        .getWorld()
+                                        .dropItemNaturally(
+                                                clickedBlock.getLocation(), new ItemStack(clickedBlock.getType()));
+                                clickedBlock.setType(Material.AIR);
+                            }
+                            clickedBlock.setType(Material.PLAYER_HEAD);
 
-                            BlockState state = block.getState();
+                            BlockState state = clickedBlock.getState();
                             if (!(state instanceof Skull skull)) return;
                             skull.setOwningPlayer(player);
                             skull.setMetadata("death", DEATH_KEY);
@@ -90,14 +101,20 @@ public class DeathListener implements Listener {
         if (!(state instanceof Skull skull)) return;
         if (!skull.hasMetadata("death")) return;
 
+        if (openedDeathInventories.containsValue(clickedBlock)) {
+            interactEvent.getPlayer().sendMessage(Message.get("<red>Es ist bereits ein Inventar geöffnet!"));
+            return;
+        }
+
         interactEvent.setCancelled(true);
 
         PersistentDataContainer container = skull.getPersistentDataContainer();
-        if (!container.has(ITEMS_KEY, PersistentDataType.STRING) && !container.has(XP_KEY, PersistentDataType.INTEGER))
+        if (!container.has(ITEMS_KEY, PersistentDataType.STRING) || !container.has(XP_KEY, PersistentDataType.INTEGER))
             return;
         String base64 = container.get(ITEMS_KEY, PersistentDataType.STRING);
         ItemStack[] contents = Base64.itemStackArrayFromBase64(base64);
         if (contents == null) return;
+        int xp = container.get(XP_KEY, PersistentDataType.INTEGER);
 
         Inventory deathInventory = Bukkit.createInventory(null, 9 * 4, Component.text("Letzte Items"));
         for (ItemStack item : contents) {
@@ -106,9 +123,12 @@ public class DeathListener implements Listener {
         }
 
         Player player = interactEvent.getPlayer();
+        player.giveExp(xp);
+
         player.openInventory(deathInventory);
 
-        openedDeathInventories.put(player.getUniqueId(), clickedBlock);
+        UUID uuid = player.getUniqueId();
+        openedDeathInventories.put(uuid, clickedBlock);
     }
 
     @EventHandler
@@ -116,26 +136,19 @@ public class DeathListener implements Listener {
         Player player = (Player) closeEvent.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        if (openedDeathInventories.containsKey(uuid)) {
-            Block clickedBlock = openedDeathInventories.get(uuid);
+        if (!openedDeathInventories.containsKey(uuid)) return;
+        Block clickedBlock = openedDeathInventories.get(uuid);
 
-            // Beim Schließen XP geben
-            BlockState state = clickedBlock.getState();
-            if (state instanceof Skull skull) {
-                PersistentDataContainer container = skull.getPersistentDataContainer();
+        BlockState state = clickedBlock.getState();
+        if (!(state instanceof Skull skull)) return;
+        if (!skull.hasMetadata("death")) return;
 
-                if (container.has(XP_KEY, PersistentDataType.INTEGER)) {
-                    int xp = container.get(XP_KEY, PersistentDataType.INTEGER);
-                    player.giveExp(xp);
-                }
-            }
-
-            // Block löschen
-            clickedBlock.setType(Material.AIR);
-
-
-            // Entfernen aus Tracking
-            openedDeathInventories.remove(uuid);
+        Inventory inventory = closeEvent.getInventory();
+        for (ItemStack item : inventory.getContents()) {
+            clickedBlock.getWorld().dropItemNaturally(clickedBlock.getLocation(), item);
         }
+
+        clickedBlock.setType(Material.AIR);
+        openedDeathInventories.remove(uuid);
     }
 }
