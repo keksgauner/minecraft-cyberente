@@ -69,11 +69,11 @@ public class ChickenPlantListener implements Listener {
             c.setAgeLock(true);
             c.setAI(false);
             c.setSilent(true);
+            c.setInvulnerable(true);
             c.setGravity(false);
         });
 
         // Wachsen simulieren
-        // TODO: cancel task
         AtomicReference<ScheduledFuture<?>> futureRef = new AtomicReference<>();
 
         ScheduledFuture<?> futureTask = CyberEnte.getInstance()
@@ -90,14 +90,18 @@ public class ChickenPlantListener implements Listener {
                                     return;
                                 }
 
-                                if (tick >= 10) {
-                                    chicken.setAdult();
-                                    chicken.setAgeLock(false);
-                                    chicken.setAI(true);
-                                    chicken.setSilent(false);
-                                    chicken.setInvulnerable(false);
-                                    chicken.setGravity(true);
-                                    world.playSound(chicken.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 1f, 1f);
+                                if (tick >= 13) {
+                                    // Task syncron laufen lassen
+                                    Bukkit.getScheduler().runTask(CyberEnte.getInstance(), () -> {
+                                        if (!chicken.isValid()) return;
+                                        chicken.setAdult();
+                                        chicken.setAgeLock(false);
+                                        chicken.setAI(true);
+                                        chicken.setSilent(false);
+                                        chicken.setInvulnerable(false);
+                                        chicken.setGravity(true);
+                                        world.playSound(chicken.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 1f, 1f);
+                                    });
                                     futureRef.get().cancel(true);
                                     return;
                                 }
