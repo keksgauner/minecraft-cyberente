@@ -27,11 +27,16 @@ import de.datenente.cyberente.commands.*;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.utils.CustomShapedRecipe;
+import de.datenente.cyberente.recipes.BrotRezepte;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandMap;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -55,6 +60,11 @@ public final class CyberEnte extends JavaPlugin {
         // Load Config
         new StorageConfig(getLogger(), getDataFolder());
 
+        registerListener();
+        registerCommand();
+
+        // Lade die Brotrezepte
+        new BrotRezepte(this).register();
         // Register Commands & Listeners
         registerListeners();
         registerCommands();
