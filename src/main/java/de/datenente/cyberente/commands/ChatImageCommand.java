@@ -29,8 +29,11 @@ import de.datenente.cyberente.utils.Message;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,16 +52,18 @@ public class ChatImageCommand extends Command {
             try {
                 Image image = Image2Chat.getImageFromURL(args[0]);
                 if (image == null) {
-                    Message.send(sender, "<red>Das Bild konnte nicht geladen werden!");
+                    Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
                     return true;
                 }
+
+                if(sender instanceof ConsoleCommandSender consoleCommandSender) Image2Chat.sendResizedImage(consoleCommandSender, image, 30, 20);
 
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
                     Image2Chat.sendResizedImage(onlinePlayer, image, 30, 20);
                 }
             } catch (IOException ex) {
-                Message.send(sender, "<red>Das Bild konnte nicht geladen werden!");
-                CyberEnte.getInstance().getLogger().severe(ex.getMessage());
+                Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
+                CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
             }
 
             return true;
@@ -71,18 +76,20 @@ public class ChatImageCommand extends Command {
 
                 Image image = Image2Chat.getImageFromURL(args[0]);
                 if (image == null) {
-                    Message.send(sender, "<red>Das Bild konnte nicht geladen werden!");
+                    Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
                     return true;
                 }
+
+                if(sender instanceof ConsoleCommandSender consoleCommandSender) Image2Chat.sendResizedImage(consoleCommandSender, image, width, height);
 
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
                     Image2Chat.sendResizedImage(onlinePlayer, image, width, height);
                 }
             } catch (NumberFormatException ex) {
-                Message.send(sender, "<red>Die Breite und Höhe müssen Zahlen sein!");
+                Message.send(sender, "<red>Die Breite und Höhe müssen Zahlen sein!</red>");
             } catch (IOException ex) {
-                Message.send(sender, "<red>Das Bild konnte nicht geladen werden!");
-                CyberEnte.getInstance().getLogger().severe(ex.getMessage());
+                Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
+                CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
             }
 
             return true;

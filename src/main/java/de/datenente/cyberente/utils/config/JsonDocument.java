@@ -28,7 +28,10 @@ import com.google.gson.GsonBuilder;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.datenente.cyberente.CyberEnte;
 import lombok.Getter;
 
 /**
@@ -128,8 +131,8 @@ public abstract class JsonDocument<T> implements Config {
             } catch (InstantiationException
                     | IllegalAccessException
                     | InvocationTargetException
-                    | NoSuchMethodException e) {
-                this.getPluginLogger().severe("Could not create new instance of storage: " + e.getMessage());
+                    | NoSuchMethodException ex) {
+                this.getPluginLogger().log(Level.SEVERE, "Could not create new instance of storage: ", ex);
             }
             this.save();
             return;
@@ -147,8 +150,8 @@ public abstract class JsonDocument<T> implements Config {
     public void load() throws FileNotFoundException {
         try (final FileReader fileReader = new FileReader(this.getFile())) {
             this.storage = this.getGson().fromJson(fileReader, this.getClassOfT());
-        } catch (IOException e) {
-            this.getPluginLogger().severe("Could not load configuration file: " + e.getMessage());
+        } catch (IOException ex) {
+            this.getPluginLogger().log(Level.SEVERE, "Could not load configuration file: ", ex);
         }
     }
 
@@ -162,7 +165,7 @@ public abstract class JsonDocument<T> implements Config {
             this.load();
         } catch (FileNotFoundException ex) {
             // NOT MY EX ^^
-            this.getPluginLogger().severe("Could not load configuration file: " + ex.getMessage());
+            this.getPluginLogger().log(Level.SEVERE, "Could not load configuration file: ", ex);
         }
     }
 
@@ -174,7 +177,7 @@ public abstract class JsonDocument<T> implements Config {
         try (final FileWriter fileWriter = new FileWriter(this.getFile(), StandardCharsets.UTF_8, false)) {
             this.getGson().toJson(this.getStorage(), fileWriter);
         } catch (IOException ex) {
-            this.getPluginLogger().severe("Could not save configuration file: " + ex.getMessage());
+            this.getPluginLogger().log(Level.SEVERE, "Could not save configuration file: ", ex);
         }
     }
 }

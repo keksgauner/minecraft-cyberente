@@ -33,6 +33,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -186,7 +187,7 @@ public class Image2Chat {
         try {
             grabber.grabPixels();
         } catch (InterruptedException ex) {
-            CyberEnte.getInstance().getLogger().severe(ex.getMessage());
+            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
         }
         int c = pixels[x * width + y];
         int red = (c & 0xFF0000) >> 16;

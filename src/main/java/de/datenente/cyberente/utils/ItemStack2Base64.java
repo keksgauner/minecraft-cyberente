@@ -27,6 +27,8 @@ import de.datenente.cyberente.CyberEnte;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -48,7 +50,7 @@ public class ItemStack2Base64 {
             dataInput.close();
             return items;
         } catch (IOException | ClassNotFoundException ex) {
-            CyberEnte.getInstance().getLogger().severe(ex.getMessage());
+            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
         }
         return null;
     }
@@ -64,7 +66,7 @@ public class ItemStack2Base64 {
             dataOutput.close();
             return Base64Coder.encodeLines(outputStream.toByteArray());
         } catch (IOException ex) {
-            CyberEnte.getInstance().getLogger().severe(ex.getMessage());
+            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
         }
         return null;
     }
