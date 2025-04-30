@@ -29,7 +29,6 @@ import de.datenente.cyberente.utils.Message;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -86,33 +85,26 @@ public class DeathListener implements Listener {
         drops.clear();
         deathEvent.setDroppedExp(0);
 
-        CyberEnte.getInstance()
-                .getScheduledExecutorService()
-                .schedule(
-                        () -> {
-                            Location safeLocation = clickedBlock.getLocation();
-                            Block saveBlock = safeLocation.getBlock();
+        Location safeLocation = clickedBlock.getLocation();
+        Block saveBlock = safeLocation.getBlock();
 
-                            while (saveBlock.getType() != Material.AIR) {
-                                safeLocation = safeLocation.add(0, 1, 0);
-                                saveBlock = safeLocation.getBlock();
-                            }
+        while (saveBlock.getType() != Material.AIR) {
+            safeLocation = safeLocation.add(0, 1, 0);
+            saveBlock = safeLocation.getBlock();
+        }
 
-                            saveBlock.setType(Material.PLAYER_HEAD);
+        saveBlock.setType(Material.PLAYER_HEAD);
 
-                            BlockState state = saveBlock.getState();
-                            if (!(state instanceof Skull skull)) return;
-                            skull.setOwningPlayer(player);
-                            skull.setMetadata("death", DEATH_KEY);
+        BlockState state = saveBlock.getState();
+        if (!(state instanceof Skull skull)) return;
+        skull.setOwningPlayer(player);
+        skull.setMetadata("death", DEATH_KEY);
 
-                            PersistentDataContainer container = skull.getPersistentDataContainer();
-                            container.set(ITEMS_KEY, PersistentDataType.STRING, base64);
-                            container.set(XP_KEY, PersistentDataType.INTEGER, droppedExp);
+        PersistentDataContainer container = skull.getPersistentDataContainer();
+        container.set(ITEMS_KEY, PersistentDataType.STRING, base64);
+        container.set(XP_KEY, PersistentDataType.INTEGER, droppedExp);
 
-                            skull.update();
-                        },
-                        1,
-                        TimeUnit.MILLISECONDS);
+        skull.update();
     }
 
     @EventHandler

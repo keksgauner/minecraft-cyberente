@@ -23,53 +23,60 @@
  */
 package de.datenente.cyberente.recipes;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import de.datenente.cyberente.utils.CustomShapedRecipe;
+import de.datenente.cyberente.utils.Message;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 public class BrotRezepte {
 
-    private final Plugin plugin;
-
-    public BrotRezepte(Plugin plugin) {
-        this.plugin = plugin;
-    }
-
     public void register() {
-        Bukkit.addRecipe(rezept("halb_brot", create("Halbes Brot"), "   ", " B ", "  ", 'B', Material.BREAD));
-        Bukkit.addRecipe(rezept("viertel_brot", create("Viertel Brot"), "   ", " H ", "  ", 'H', Material.BREAD));
-        Bukkit.addRecipe(rezept("rett", create("Rett"), "   ", " V ", "  ", 'V', Material.BREAD));
-        Bukkit.addRecipe(rezept("dreh", create("Dreh"), " S ", " B ", "  ", 'S', Material.SUGAR, 'B', Material.BREAD));
-        Bukkit.addRecipe(rezept("bire", create("Bire"), " A ", " B ", "  ", 'A', Material.APPLE, 'B', Material.BREAD));
+        CustomShapedRecipe.of()
+                .key("half_bread")
+                .result(create("half bread"))
+                .shape("   ", " B ", "   ")
+                .ingredient('B', Material.BREAD)
+                .register();
+
+        CustomShapedRecipe.of()
+                .key("quarter_bread")
+                .result(create("quarter bread"))
+                .shape("   ", " H ", "   ")
+                .ingredient('H', create("half bread"))
+                .register();
+
+        CustomShapedRecipe.of()
+                .key("rett")
+                .result(create("rett"))
+                .shape("   ", " V ", "   ")
+                .ingredient('V', create("quarter bread"))
+                .register();
+
+        CustomShapedRecipe.of()
+                .key("drill")
+                .result(create("drill"))
+                .shape(" S ", " B ", "   ")
+                .ingredient('S', Material.SUGAR)
+                .ingredient('B', Material.BREAD)
+                .register();
+
+        CustomShapedRecipe.of()
+                .key("bire")
+                .result(create("bire"))
+                .shape(" A ", " B ", "   ")
+                .ingredient('A', Material.APPLE)
+                .ingredient('B', Material.BREAD)
+                .register();
     }
 
     private ItemStack create(String name) {
         ItemStack item = new ItemStack(Material.BREAD);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(ChatColor.GOLD + name);
+            meta.displayName(Message.text("<gold>" + name));
             item.setItemMeta(meta);
         }
         return item;
-    }
-
-    private ShapedRecipe rezept(
-            String keyName, ItemStack result, String row1, String row2, String row3, Object... ingredients) {
-        NamespacedKey key = new NamespacedKey(plugin, keyName);
-        ShapedRecipe recipe = new ShapedRecipe(key, result);
-        recipe.shape(row1, row2, row3);
-
-        for (int i = 0; i < ingredients.length; i += 2) {
-            char symbol = (char) ingredients[i];
-            Material material = (Material) ingredients[i + 1];
-            recipe.setIngredient(symbol, material);
-        }
-
-        return recipe;
     }
 }

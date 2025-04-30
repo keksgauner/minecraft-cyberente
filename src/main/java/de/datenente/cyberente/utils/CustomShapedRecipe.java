@@ -44,7 +44,7 @@ public class CustomShapedRecipe {
     String key;
     ItemStack result;
     List<String> shape = new ArrayList<>();
-    Map<Character, Material> ingredients = new HashMap<>();
+    Map<Character, ItemStack> ingredients = new HashMap<>();
 
     public static CustomShapedRecipe of() {
         return new CustomShapedRecipe();
@@ -76,7 +76,12 @@ public class CustomShapedRecipe {
     }
 
     public CustomShapedRecipe ingredient(char character, Material material) {
-        this.getIngredients().put(character, material);
+        this.getIngredients().put(character, new ItemStack(material));
+        return this;
+    }
+
+    public CustomShapedRecipe ingredient(char character, ItemStack itemStack) {
+        this.getIngredients().put(character, itemStack);
         return this;
     }
 
