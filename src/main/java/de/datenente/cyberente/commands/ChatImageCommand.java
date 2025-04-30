@@ -41,7 +41,6 @@ public class ChatImageCommand extends Command {
     }
 
     public boolean execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if (!(sender instanceof Player player)) return true;
 
         if (args.length == 1) {
             // InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images/cyberente.png");
@@ -50,15 +49,15 @@ public class ChatImageCommand extends Command {
             try {
                 Image image = Image2Chat.getImageFromURL(args[0]);
                 if (image == null) {
-                    player.sendMessage(Message.text("<red>Das Bild konnte nicht geladen werden!"));
+                    Message.send(sender, "<red>Das Bild konnte nicht geladen werden!");
                     return true;
                 }
 
-                for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
+                for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
                     Image2Chat.sendResizedImage(onlinePlayer, image, 30, 20);
                 }
             } catch (IOException ex) {
-                player.sendMessage(Message.text("<red>Das Bild konnte nicht geladen werden!"));
+                Message.send(sender, "<red>Das Bild konnte nicht geladen werden!");
                 CyberEnte.getInstance().getLogger().severe(ex.getMessage());
             }
 
@@ -72,25 +71,24 @@ public class ChatImageCommand extends Command {
 
                 Image image = Image2Chat.getImageFromURL(args[0]);
                 if (image == null) {
-                    player.sendMessage(Message.text("<red>Das Bild konnte nicht geladen werden!"));
+                    Message.send(sender, "<red>Das Bild konnte nicht geladen werden!");
                     return true;
                 }
 
-                for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
+                for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
                     Image2Chat.sendResizedImage(onlinePlayer, image, width, height);
                 }
             } catch (NumberFormatException ex) {
-                player.sendMessage(Message.text("<red>Die Breite und Höhe müssen Zahlen sein!"));
+                Message.send(sender, "<red>Die Breite und Höhe müssen Zahlen sein!");
             } catch (IOException ex) {
-                player.sendMessage(Message.text("<red>Das Bild konnte nicht geladen werden!"));
+                Message.send(sender, "<red>Das Bild konnte nicht geladen werden!");
                 CyberEnte.getInstance().getLogger().severe(ex.getMessage());
             }
 
             return true;
         }
 
-        player.sendMessage(
-                Message.text("<red>Bitte gib eine URL an! <green>Beispiel: /ci https://example.com/image.png 30 20"));
+        Message.send(sender, "<red>Bitte gib eine URL an! <green>Beispiel: /ci https://example.com/image.png 30 20");
 
         return true;
     }

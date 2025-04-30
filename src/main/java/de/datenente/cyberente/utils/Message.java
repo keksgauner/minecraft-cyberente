@@ -25,6 +25,7 @@ package de.datenente.cyberente.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.command.CommandSender;
 
 public class Message {
     /**
@@ -48,5 +49,25 @@ public class Message {
             message = message.replace("{" + i + "}", replacements[i]);
         }
         return text(message);
+    }
+
+    /**
+     * Send a message to the sender
+     * @param sender the sender
+     * @param message the message
+     */
+    public static void send(CommandSender sender, String message) {
+        sender.sendMessage(text(message));
+    }
+
+    /**
+     * Send a message to the sender with replacements
+     * {0} = {0}, {1} = {1}, ...
+     * @param sender the sender
+     * @param message the message
+     * @param replacements the replacements
+     */
+    public static void send(CommandSender sender, String message, String... replacements) {
+        sender.sendMessage(text(message, replacements));
     }
 }

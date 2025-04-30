@@ -24,7 +24,7 @@
 package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.utils.Base64;
+import de.datenente.cyberente.utils.ItemStack2Base64;
 import de.datenente.cyberente.utils.Message;
 import java.util.HashMap;
 import java.util.List;
@@ -64,8 +64,12 @@ public class DeathListener implements Listener {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
 
-        player.sendMessage(Message.text("<gray>Du bist bei <white>X: " + deathLocation.getBlockX() + " Y: "
-                + deathLocation.getBlockY() + " Z: " + deathLocation.getBlockZ() + " <gray>gestorben."));
+        Message.send(
+                player,
+                "<gray>Du bist bei <white>X: {0} Y: {1} Z: {2} <gray>gestorben.",
+                String.valueOf(deathLocation.getBlockX()),
+                String.valueOf(deathLocation.getBlockY()),
+                String.valueOf(deathLocation.getBlockZ()));
     }
 
     @EventHandler
@@ -76,7 +80,7 @@ public class DeathListener implements Listener {
 
         List<ItemStack> drops = deathEvent.getDrops();
         ItemStack[] contents = drops.toArray(new ItemStack[0]);
-        String base64 = Base64.itemStackArrayToBase64(contents);
+        String base64 = ItemStack2Base64.itemStackArrayToBase64(contents);
         int droppedExp = deathEvent.getDroppedExp();
 
         drops.clear();
@@ -123,8 +127,9 @@ public class DeathListener implements Listener {
         if (!(state instanceof Skull skull)) return;
         if (!skull.hasMetadata("death")) return;
 
+        Player player = interactEvent.getPlayer();
         if (openedDeathInventories.containsValue(clickedBlock)) {
-            interactEvent.getPlayer().sendMessage(Message.text("<red>Es ist bereits dieses Inventar geöffnet!"));
+            Message.send(player, "<red>Es ist bereits dieses Inventar geöffnet!");
             return;
         }
 
@@ -134,7 +139,7 @@ public class DeathListener implements Listener {
         if (!container.has(ITEMS_KEY, PersistentDataType.STRING) || !container.has(XP_KEY, PersistentDataType.INTEGER))
             return;
         String base64 = container.get(ITEMS_KEY, PersistentDataType.STRING);
-        ItemStack[] contents = Base64.itemStackArrayFromBase64(base64);
+        ItemStack[] contents = ItemStack2Base64.itemStackArrayFromBase64(base64);
         if (contents == null) return;
         int xp = container.get(XP_KEY, PersistentDataType.INTEGER);
 
@@ -144,7 +149,6 @@ public class DeathListener implements Listener {
             deathInventory.addItem(item);
         }
 
-        Player player = interactEvent.getPlayer();
         player.giveExp(xp);
 
         player.openInventory(deathInventory);

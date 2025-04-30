@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Image2Chat {
@@ -54,42 +55,42 @@ public class Image2Chat {
 
     /**
      * Send the image to the player
-     * @param player the player
+     * @param sender the sender
      * @param url the image URL
      * @param width the width
      * @param height the height
      */
-    public static void sendImageURL(Player player, String url, int width, int height) throws IOException {
+    public static void sendImageURL(CommandSender sender, String url, int width, int height) throws IOException {
         Image image = getImageFromURL(url);
         if (image == null) {
-            player.sendMessage(Message.text("<red>Could not load image!"));
+            Message.send(sender, "<red>Could not load image!");
             return;
         }
-        sendResizedImage(player, image, width, height);
+        sendResizedImage(sender, image, width, height);
     }
     /**
      * Send the image to the player
-     * @param player the player
+     * @param sender the sender
      * @param image the image
      * @param width the width
      * @param height the height
      */
-    public static void sendResizedImage(Player player, Image image, int width, int height) {
+    public static void sendResizedImage(CommandSender sender, Image image, int width, int height) {
         Image resizedImage = resizeImage(image, width, height);
-        sendImage(player, resizedImage, width, height);
+        sendImage(sender, resizedImage, width, height);
     }
 
     /**
      * Send the image to the player
-     * @param player the player
+     * @param sender the sender
      * @param image the image
      * @param width the width
      * @param height the height
      */
-    public static void sendImage(Player player, Image image, int width, int height) {
+    public static void sendImage(CommandSender sender, Image image, int width, int height) {
         List<Component> colorMap = getImageAsComponentList(resizeImage(image, width, height), '\u2588', width);
         for (Component component : colorMap) {
-            player.sendMessage(component);
+            sender.sendMessage(component);
         }
     }
 
@@ -177,7 +178,7 @@ public class Image2Chat {
      * @return Color
      */
     public static Color getSpecificColor(Image image, int x, int y) {
-        if (image instanceof BufferedImage bufferedImage) return new Color(bufferedImage).getRGB(x, y);
+        if (image instanceof BufferedImage bufferedImage) return new Color((bufferedImage).getRGB(x, y));
         int width = image.getWidth(null);
         int height = image.getHeight(null);
         int[] pixels = new int[width * height];

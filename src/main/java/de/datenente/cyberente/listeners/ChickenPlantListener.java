@@ -26,6 +26,7 @@ package de.datenente.cyberente.listeners;
 import de.datenente.cyberente.CyberEnte;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Chicken;
@@ -73,7 +74,8 @@ public class ChickenPlantListener implements Listener {
         player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, location, 10, 0.3, 0.5, 0.3);
 
         // Wachsen simulieren
-        // TODO: cancel task
+        AtomicReference<ScheduledFuture<?>> futureRef = new AtomicReference<>();
+
         ScheduledFuture<?> futureTask = CyberEnte.getInstance()
                 .getScheduledExecutorService()
                 .scheduleWithFixedDelay(
@@ -83,7 +85,9 @@ public class ChickenPlantListener implements Listener {
 
                             @Override
                             public void run() {
+
                                 if (!chicken.isValid()) {
+                                    futureRef.get().cancel(true);
                                     return;
                                 }
 
@@ -96,6 +100,7 @@ public class ChickenPlantListener implements Listener {
                                     chicken.setGravity(true);
                                     chicken.getWorld()
                                             .playSound(chicken.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 1f, 1f);
+                                    futureRef.get().cancel(true);
                                     return;
                                 }
 
@@ -107,5 +112,7 @@ public class ChickenPlantListener implements Listener {
                         0L,
                         1L,
                         TimeUnit.SECONDS);
+
+        futureRef.set(futureTask);
     }
 }

@@ -36,7 +36,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
  * @author Mxscha
  * from EndOfLife-EnderNation
  */
-public class Base64 {
+public class ItemStack2Base64 {
     public static ItemStack[] itemStackArrayFromBase64(String data) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
