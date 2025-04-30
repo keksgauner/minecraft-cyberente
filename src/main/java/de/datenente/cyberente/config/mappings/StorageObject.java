@@ -28,4 +28,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StorageObject {}
+public class StorageObject {
+    String prefix = "CyberEnte";
+}

@@ -47,6 +47,4 @@ public class StorageConfig extends JsonDocument<StorageObject> {
     public void loadContent() {
         this.reload();
     }
-
-    public void getLocation() {}
 }
