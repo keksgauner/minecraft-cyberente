@@ -64,7 +64,7 @@ public class CustomItem {
         return this.getItemStack();
     }
 
-    public CustomItem name(String name) {
+    public CustomItem displayName(String name) {
         this.getItemMeta().displayName(Message.text(name));
         return this;
     }
