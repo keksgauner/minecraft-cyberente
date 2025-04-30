@@ -23,150 +23,76 @@
  */
 package de.datenente.cyberente.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import org.bukkit.*;
+import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
+@Getter
+@Setter
 public class CustomItem {
 
-    private ItemStack item;
-    private ItemMeta itemMeta;
-    // subID = 1.8.9 Builder -> creates the ItemStack
-    public CustomItem(Material material, short subID) {
-        this.item = new ItemStack(material, 1, subID);
-        this.itemMeta = this.item.getItemMeta();
-    }
+    final ItemStack itemStack;
+    final ItemFactory itemFactory;
+    final ItemMeta itemMeta;
 
-    // For newer versions -> creates the ItemStack
     public CustomItem(Material material) {
-        this(material, (short) 0);
-    }
+        this.itemFactory = Bukkit.getItemFactory();
+        this.itemStack = new ItemStack(material);
 
-    public CustomItem setCustomModelData(Integer modelData) {
-        this.itemMeta.setCustomModelData(modelData);
-        return this;
-    }
-
-    // adding an Enchantment to your Item
-    public CustomItem addEnchantment(Enchantment enchantment, int amount, boolean test) {
-        this.itemMeta.addEnchant(enchantment, amount, test);
-        return this;
-    }
-
-    // adding the player head texture to the player head -> requires PLAYER_HEAD
-    public CustomItem setSkull(String displayName, Player player, String... lore) {
-        SkullMeta skullMeta = (SkullMeta) this.itemMeta;
-        skullMeta.setDisplayName(displayName);
-        skullMeta.setLore(Arrays.asList(lore));
-        skullMeta.setOwningPlayer(Bukkit.getPlayer(player.getUniqueId()));
-        this.itemMeta = skullMeta;
-        return this;
-    }
-
-    // adding the player head texture to the player head -> requires PLAYER_HEAD
-    public CustomItem setSkull(String displayName, String player, String... lore) {
-        SkullMeta skullMeta = (SkullMeta) this.itemMeta;
-        skullMeta.setDisplayName(displayName);
-        skullMeta.setLore(Arrays.asList(lore));
-        skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(player));
-        this.itemMeta = skullMeta;
-        return this;
-    }
-
-    public CustomItem createCustomSkull(String DisplayName, String url, String... lore) {
-        /*
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-        PropertyMap propertyMap = profile.getProperties();
-        if (propertyMap == null) {
-            throw new IllegalStateException("Profile doesn't contain a property map");
+        if (this.getItemStack().getItemMeta() == null) {
+            this.itemMeta =
+                    this.getItemFactory().getItemMeta(this.getItemStack().getType());
+        } else {
+            this.itemMeta = this.getItemStack().getItemMeta();
         }
-        byte[] encodedData = base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
-        propertyMap.put("textures", new Property("textures", new String(encodedData)));
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
-        ItemMeta headMeta = head.getItemMeta();
-        Class<?> headMetaClass = headMeta.getClass();
-        Reflections.getField(headMetaClass, "profile", GameProfile.class).set(headMeta, profile);
-        headMeta.setDisplayName(DisplayName);
-        headMeta.setLore(Arrays.asList(lore));
-        this.itemMeta = headMeta;
-        return this;
-         */
-        return null;
     }
 
-    // setting the Name of the Item
+    public ItemStack asItemStack() {
+        if (this.getItemStack().getType() == Material.AIR) {
+            return this.getItemStack();
+        }
+
+        this.getItemStack().setItemMeta(this.getItemFactory().asMetaFor(this.getItemMeta(), this.getItemStack()));
+        return this.getItemStack();
+    }
+
     public CustomItem setName(String name) {
-        this.itemMeta.setDisplayName(name);
+        this.getItemMeta().displayName(Message.text(name));
         return this;
     }
 
-    // setting the Lore of the Item
     public CustomItem setLore(String... lore) {
-        this.itemMeta.setLore(Arrays.asList(lore));
+        List<Component> loreList = new ArrayList<>();
+        Arrays.stream(lore).forEach(l -> loreList.add(Message.text(l)));
+        this.getItemMeta().lore(loreList);
         return this;
     }
 
-    // setting the Color of Leather Armor
-    public CustomItem setColor(Color color) {
-        LeatherArmorMeta meta = (LeatherArmorMeta) this.itemMeta;
-        meta.setColor(color);
+    public CustomItem setItemModel(String key) {
+        String[] splitKey = key.split(":");
+        if (splitKey.length == 2) {
+            this.getItemMeta().setItemModel(new NamespacedKey(splitKey[0], splitKey[1]));
+        }
         return this;
     }
 
-    // adding a PotionEffect to your Potion -> requires POTION
-    public CustomItem addPotionEffect(PotionEffectType effect, int duration, int amplifier, Color PotionColor) {
-        PotionMeta meta = (PotionMeta) this.itemMeta;
-        meta.addCustomEffect(new PotionEffect(effect, duration, amplifier), false);
-        meta.setColor(PotionColor);
+    public CustomItem setOwningPlayer(OfflinePlayer player) {
+        if (this.getItemStack().getType() == Material.PLAYER_HEAD) {
+            ((SkullMeta) this.getItemMeta()).setOwningPlayer(player);
+        }
         return this;
     }
 
-    // setting a PotionEffect to your Potion -> requires POTION
-    public CustomItem setPotionEffect(PotionEffectType effect, int duration, int amplifier, Color PotionColor) {
-        PotionMeta meta = (PotionMeta) this.itemMeta;
-        meta.addCustomEffect(new PotionEffect(effect, duration, amplifier), true);
-        meta.setColor(PotionColor);
+    public CustomItem setAmount(int size) {
+        this.getItemStack().setAmount(size);
         return this;
-    }
-
-    // setting the item Unbreackable
-    public CustomItem setUnbreakable(boolean isUnbreakable) {
-        this.itemMeta.setUnbreakable(isUnbreakable);
-        return this;
-    }
-
-    // setting the Amount of your Item
-    public CustomItem setAmount(int amount) {
-        this.item.setAmount(amount);
-        return this;
-    }
-
-    // adding ItemFlags to your Item
-    public CustomItem addItemFlag(ItemFlag itemFlag) {
-        this.itemMeta.addItemFlags(itemFlag);
-        return this;
-    }
-
-    // removing ItemFlags from your Item
-    public CustomItem removeItemFlag(ItemFlag itemFlag) {
-        this.itemMeta.removeItemFlags(itemFlag);
-        return this;
-    }
-
-    // creating the Item
-    public ItemStack toItemStack() {
-        this.item.setItemMeta(this.itemMeta);
-        return this.item;
     }
 }

@@ -26,12 +26,10 @@ package de.datenente.cyberente;
 import de.datenente.cyberente.commands.*;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.listeners.*;
-import de.datenente.cyberente.recipes.BrotRezepte;
-import de.datenente.cyberente.utils.CustomShapedRecipe;
+import de.datenente.cyberente.recipes.BreadRecipe;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
-import org.bukkit.Material;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,7 +59,7 @@ public final class CyberEnte extends JavaPlugin {
         registerCommands();
 
         // Lade die Brotrezepte
-        new BrotRezepte().register();
+        new BreadRecipe().register();
     }
 
     @Override
@@ -90,14 +88,5 @@ public final class CyberEnte extends JavaPlugin {
         commandMap.register("cyberente", new PingCommand());
         commandMap.register("cyberente", new ClearChatCommand());
         commandMap.register("cyberente", new ChatImageCommand());
-    }
-
-    void registerRecipes() {
-        CustomShapedRecipe.of()
-                .key("chicken_plant")
-                .shape(" C ", " C ", " C ")
-                .ingredient('C', Material.COOKED_CHICKEN)
-                .result(Material.BREAD)
-                .register();
     }
 }

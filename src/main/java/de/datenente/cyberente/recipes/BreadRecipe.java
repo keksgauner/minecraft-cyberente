@@ -23,39 +23,38 @@
  */
 package de.datenente.cyberente.recipes;
 
+import de.datenente.cyberente.utils.CustomItem;
 import de.datenente.cyberente.utils.CustomShapedRecipe;
-import de.datenente.cyberente.utils.Message;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-public class BrotRezepte {
+public class BreadRecipe {
 
     public void register() {
         CustomShapedRecipe.of()
                 .key("half_bread")
-                .result(create("half bread"))
+                .result(createItem("half bread"))
                 .shape("   ", " B ", "   ")
                 .ingredient('B', Material.BREAD)
                 .register();
 
         CustomShapedRecipe.of()
                 .key("quarter_bread")
-                .result(create("quarter bread"))
+                .result(createItem("quarter bread"))
                 .shape("   ", " H ", "   ")
-                .ingredient('H', create("half bread"))
+                .ingredient('H', createItem("half bread"))
                 .register();
 
         CustomShapedRecipe.of()
                 .key("rett")
-                .result(create("rett"))
-                .shape("   ", " V ", "   ")
-                .ingredient('V', create("quarter bread"))
+                .result(createItem("rett"))
+                .shape("   ", " Q ", "   ")
+                .ingredient('Q', createItem("quarter bread"))
                 .register();
 
         CustomShapedRecipe.of()
                 .key("drill")
-                .result(create("drill"))
+                .result(createItem("drill"))
                 .shape(" S ", " B ", "   ")
                 .ingredient('S', Material.SUGAR)
                 .ingredient('B', Material.BREAD)
@@ -63,20 +62,23 @@ public class BrotRezepte {
 
         CustomShapedRecipe.of()
                 .key("bire")
-                .result(create("bire"))
+                .result(createItem("bire"))
                 .shape(" A ", " B ", "   ")
                 .ingredient('A', Material.APPLE)
                 .ingredient('B', Material.BREAD)
                 .register();
     }
 
-    private ItemStack create(String name) {
-        ItemStack item = new ItemStack(Material.BREAD);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.displayName(Message.text("<gold>" + name));
-            item.setItemMeta(meta);
-        }
-        return item;
+    private ItemStack createItem(String name, String itemModel) {
+        CustomItem customItem = new CustomItem(Material.BREAD);
+        customItem.setName("<gold>" + name);
+        customItem.setItemModel(itemModel);
+        return customItem.asItemStack();
+    }
+
+    private ItemStack createItem(String name) {
+        CustomItem customItem = new CustomItem(Material.BREAD);
+        customItem.setName("<gold>" + name);
+        return customItem.asItemStack();
     }
 }

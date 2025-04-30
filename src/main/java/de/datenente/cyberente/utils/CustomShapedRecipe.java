@@ -60,11 +60,6 @@ public class CustomShapedRecipe {
         return this;
     }
 
-    public CustomShapedRecipe result(Material result, int amount) {
-        this.result = new ItemStack(result, amount);
-        return this;
-    }
-
     public CustomShapedRecipe result(ItemStack result) {
         this.result = result;
         return this;

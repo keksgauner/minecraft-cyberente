@@ -37,3 +37,5 @@
 - [x] **Konfiguration** – JSON-basiert, umgesetzt mit GSON
 - [x]  **ItemStack2Base64** – Konvertiert ItemStacks in Base64-Strings (und zurück)
 - [x]  **Image2Chat** – Konvertiert ein Bild in ein Chat-kompatibles Textformat
+- [x] **CustomItem** – Erstellen von benutzerdefinierten Items
+- [x] **CustomShapedRecipe** – Erstellen von benutzerdefinierten Rezepten
