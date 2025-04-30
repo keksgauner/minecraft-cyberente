@@ -33,7 +33,7 @@ jobs:
 
     - name: Rename JAR with tag name
       run: |
-        mv build/libs/CyberEnte-1.0-SNAPSHOT-shadow.jar build/libs/CyberEnte-${{ github.ref_name }}.jar
+        mv build/libs/CyberEnte-latest.jar build/libs/CyberEnte-${{ github.ref_name }}.jar
 
     - name: Archive Release Artifacts
       uses: actions/upload-artifact@v4
