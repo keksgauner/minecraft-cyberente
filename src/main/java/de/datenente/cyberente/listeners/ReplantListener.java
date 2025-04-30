@@ -23,6 +23,7 @@
  */
 package de.datenente.cyberente.listeners;
 
+import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -31,8 +32,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Random;
 
 public class ReplantListener implements Listener {
 
@@ -55,9 +54,14 @@ public class ReplantListener implements Listener {
         if (ageable.getAge() != ageable.getMaximumAge()) return; // Noch nicht ausgewachsen
 
         // Drop simulieren
-        clickedBlock.getWorld().dropItemNaturally(clickedBlock.getLocation().add(0.5, 0.5, 0.5), new ItemStack(Material.WHEAT));
+        clickedBlock
+                .getWorld()
+                .dropItemNaturally(clickedBlock.getLocation().add(0.5, 0.5, 0.5), new ItemStack(Material.WHEAT));
         int seeds = 1 + random.nextInt(2); // 1-2 Samen
-        clickedBlock.getWorld().dropItemNaturally(clickedBlock.getLocation().add(0.5, 0.5, 0.5), new ItemStack(Material.WHEAT_SEEDS, seeds));
+        clickedBlock
+                .getWorld()
+                .dropItemNaturally(
+                        clickedBlock.getLocation().add(0.5, 0.5, 0.5), new ItemStack(Material.WHEAT_SEEDS, seeds));
 
         ageable.setAge(0);
         clickedBlock.setBlockData(ageable);

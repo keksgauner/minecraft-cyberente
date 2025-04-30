@@ -30,8 +30,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import de.datenente.cyberente.CyberEnte;
 import lombok.Getter;
 
 /**

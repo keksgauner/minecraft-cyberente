@@ -30,7 +30,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -56,7 +55,8 @@ public class ChatImageCommand extends Command {
                     return true;
                 }
 
-                if(sender instanceof ConsoleCommandSender consoleCommandSender) Image2Chat.sendResizedImage(consoleCommandSender, image, 30, 20);
+                if (sender instanceof ConsoleCommandSender consoleCommandSender)
+                    Image2Chat.sendResizedImage(consoleCommandSender, image, 30, 20);
 
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
                     Image2Chat.sendResizedImage(onlinePlayer, image, 30, 20);
@@ -80,7 +80,8 @@ public class ChatImageCommand extends Command {
                     return true;
                 }
 
-                if(sender instanceof ConsoleCommandSender consoleCommandSender) Image2Chat.sendResizedImage(consoleCommandSender, image, width, height);
+                if (sender instanceof ConsoleCommandSender consoleCommandSender)
+                    Image2Chat.sendResizedImage(consoleCommandSender, image, width, height);
 
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
                     Image2Chat.sendResizedImage(onlinePlayer, image, width, height);
