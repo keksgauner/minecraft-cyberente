@@ -177,7 +177,7 @@ public class Image2Chat {
      * @return Color
      */
     public static Color getSpecificColor(Image image, int x, int y) {
-        if (image instanceof BufferedImage bufferedImage) return new Color(bufferedImage).getRGB(x, y));
+        if (image instanceof BufferedImage bufferedImage) return new Color(bufferedImage).getRGB(x, y);
         int width = image.getWidth(null);
         int height = image.getHeight(null);
         int[] pixels = new int[width * height];
