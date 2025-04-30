@@ -24,10 +24,10 @@
 - [x] **DropChest** – Items in Kisten werfen
 - [x] **DeathListener** – Spieler stirbt → Kopf + Items an Ort
 - [x] **StairSitting** – Schild auf Treppe = Spieler kann sitzen
-- [ ] **ChickenGrow** – Hühner auf Feldern anpflanzen und wachsen lassen
+- [X] **ChickenGrow** – Hühner auf Feldern anpflanzen und wachsen lassen
 - [ ] **AFK-Manager** – AFK-Spieler automatisch als AFK kennzeichnen
 - [ ] **Playtime** – Spielzeiten der Spieler erfassen und speichern
-- [ ] **Replanter** – Felder nach dem Ernten automatisch wieder bepflanzen
+- [X] **Replanter** – Felder nach dem Ernten automatisch wieder bepflanzen
 - [ ] **Todes Nachricht** – Zeigt beim Tod des Spielers eine zufällige Beleidigung an
 
 ---

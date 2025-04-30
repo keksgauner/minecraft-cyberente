@@ -69,7 +69,7 @@ public class ChickenPlantListener implements Listener {
             c.setAgeLock(true);
             c.setAI(false);
             c.setSilent(true);
-            // c.setInvulnerable(true);
+            c.setInvulnerable(true);
             c.setGravity(false);
         });
 
@@ -94,6 +94,7 @@ public class ChickenPlantListener implements Listener {
                                     // Task syncron laufen lassen
                                     Bukkit.getScheduler().runTask(CyberEnte.getInstance(), () -> {
                                         if (!chicken.isValid()) return;
+                                        chicken.teleport(clickedBlock.getLocation().add(0, 1, 0));
                                         chicken.setAdult();
                                         chicken.setAgeLock(false);
                                         chicken.setAI(true);

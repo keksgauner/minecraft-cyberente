@@ -62,14 +62,21 @@ public class Image2Chat {
      * @param height the height
      */
     public static void sendImage(CommandSender sender, String url, int width, int height) throws IOException {
-        List<Component> colorMap = getComponentList(url, width, height);
+        List<Component> colorMap = componentList(url, width, height);
         for (Component component : colorMap) {
             sender.sendMessage(component);
         }
     }
 
+    /**
+     * Send the image to the player
+     * @param sender the sender
+     * @param image the image
+     * @param width the width
+     * @param height the height
+     */
     public static void sendImage(CommandSender sender, Image image, int width, int height) {
-        List<Component> colorMap = getComponentList(image, width, height);
+        List<Component> colorMap = componentList(image, width, height);
         for (Component component : colorMap) {
             sender.sendMessage(component);
         }
@@ -82,7 +89,7 @@ public class Image2Chat {
      * @param height the height
      * @return the resized image
      */
-    public static Image getResizedImage(Image image, int width, int height) {
+    public static Image resizedImage(Image image, int width, int height) {
         BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics2D = resizedImage.createGraphics();
         graphics2D.drawImage(image, 0, 0, width, height, null);
@@ -95,7 +102,7 @@ public class Image2Chat {
      * @param imageUrl the image URL
      * @return the image
      */
-    public static Image getImageFromURL(String imageUrl) throws IOException {
+    public static Image imageFromURL(String imageUrl) throws IOException {
         URI uri = URI.create(imageUrl);
         if (uri.getScheme() == null) {
             return null;
@@ -104,23 +111,43 @@ public class Image2Chat {
         return ImageIO.read(url);
     }
 
-    public static Image getImageFromStream(InputStream inputStream) throws IOException {
+    /**
+     * Get the image from the input stream
+     * @param inputStream the input stream
+     * @return the image
+     * @throws IOException if the image could not be read
+     */
+    public static Image imageFromStream(InputStream inputStream) throws IOException {
         if (inputStream == null) {
             return null;
         }
         return ImageIO.read(inputStream);
     }
 
-    public static List<Component> getComponentList(Image image, int width) {
-        return getComponentList(image, '\u2588', width);
+    /**
+     * Get the image as a list of components
+     * @param image the image
+     * @param width the width per line
+     * @return the list of components
+     */
+    public static List<Component> componentList(Image image, int width) {
+        return componentList(image, '\u2588', width);
     }
 
-    public static List<Component> getComponentList(String url, int width, int height) throws IOException {
-        return getComponentList(getResizedImage(getImageFromURL(url), width, height), width);
+    /**
+     * Get the image as a list of components
+     * @param url the image URL
+     * @param width the width per line
+     * @param height the height per line
+     * @return the list of components
+     * @throws IOException if the image could not be read
+     */
+    public static List<Component> componentList(String url, int width, int height) throws IOException {
+        return componentList(resizedImage(imageFromURL(url), width, height), width);
     }
 
-    public static List<Component> getComponentList(Image image, int width, int height) {
-        return getComponentList(getResizedImage(image, width, height), width);
+    public static List<Component> componentList(Image image, int width, int height) {
+        return componentList(resizedImage(image, width, height), width);
     }
 
     /**
@@ -130,7 +157,7 @@ public class Image2Chat {
      * @param width the width per line
      * @return the list of components
      */
-    public static List<Component> getComponentList(Image image, char filler, int width) {
+    public static List<Component> componentList(Image image, char filler, int width) {
         int height = image.getHeight(null);
 
         List<Component> colorMap = new ArrayList<>();

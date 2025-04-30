@@ -38,9 +38,9 @@ public class ReplantListener implements Listener {
 
     final Map<Material, Material> REPLANTABLES = Map.of(
             Material.WHEAT, Material.WHEAT_SEEDS,
-            Material.CARROT, Material.CARROT,
-            Material.POTATO, Material.POTATO,
-            Material.BEETROOT, Material.BEETROOT_SEEDS);
+            Material.CARROTS, Material.CARROT,
+            Material.POTATOES, Material.POTATO,
+            Material.BEETROOTS, Material.BEETROOT_SEEDS);
 
     @EventHandler
     public void handleCropReplant(PlayerInteractEvent event) {

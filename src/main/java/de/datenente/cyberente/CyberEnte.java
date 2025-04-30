@@ -26,15 +26,12 @@ package de.datenente.cyberente;
 import de.datenente.cyberente.commands.*;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.listeners.*;
+import de.datenente.cyberente.utils.CustomShapedRecipe;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandMap;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,12 +56,21 @@ public final class CyberEnte extends JavaPlugin {
         new StorageConfig(getLogger(), getDataFolder());
 
         // Register Commands & Listeners
-        registerListener();
-        registerCommand();
+        registerListeners();
+        registerCommands();
+        registerRecipes();
     }
 
-    void registerListener() {
+    @Override
+    public void onDisable() {
+        getLogger().info("Plugin CyberEnte wird deaktiviert!");
+
+        getServer().resetRecipes();
+    }
+
+    void registerListeners() {
         PluginManager pluginManager = getServer().getPluginManager();
+
         pluginManager.registerEvents(new ChatListener(), this);
         pluginManager.registerEvents(new ChickenPlantListener(), this);
         pluginManager.registerEvents(new DeathListener(), this);
@@ -75,25 +81,20 @@ public final class CyberEnte extends JavaPlugin {
         pluginManager.registerEvents(new StairSittingListener(), this);
     }
 
-    void registerCommand() {
+    void registerCommands() {
         CommandMap commandMap = getServer().getCommandMap();
+
         commandMap.register("cyberente", new PingCommand());
         commandMap.register("cyberente", new ClearChatCommand());
         commandMap.register("cyberente", new ChatImageCommand());
     }
 
-    void createCustomRecipe() {
-        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-
-        NamespacedKey key = new NamespacedKey(this, "emerald_sword");
-
-        ShapedRecipe recipe = new ShapedRecipe(key, item);
-
-        recipe.shape(" E ", " E ", " S ");
-
-        recipe.setIngredient('C', Material.COBBLESTONE);
-        recipe.setIngredient('D', Material.COBBLED_DEEPSLATE);
-
-        Bukkit.addRecipe(recipe);
+    void registerRecipes() {
+        CustomShapedRecipe.of()
+                .key("chicken_plant")
+                .shape(" C ", " C ", " C ")
+                .ingredient('C', Material.COOKED_CHICKEN)
+                .result(Material.BREAD)
+                .register();
     }
 }

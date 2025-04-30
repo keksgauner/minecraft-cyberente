@@ -49,7 +49,7 @@ public class ChatImageCommand extends Command {
             // BufferedImage image = ImageIO.read(stream);
 
             try {
-                Image image = Image2Chat.getImageFromURL(args[0]);
+                Image image = Image2Chat.imageFromURL(args[0]);
                 if (image == null) {
                     Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
                     return true;
@@ -74,7 +74,7 @@ public class ChatImageCommand extends Command {
                 int width = Integer.parseInt(args[1]);
                 int height = Integer.parseInt(args[2]);
 
-                Image image = Image2Chat.getImageFromURL(args[0]);
+                Image image = Image2Chat.imageFromURL(args[0]);
                 if (image == null) {
                     Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
                     return true;
