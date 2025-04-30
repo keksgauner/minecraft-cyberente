@@ -56,6 +56,13 @@ public class ChickenPlantListener implements Listener {
 
         Location location = clickedBlock.getLocation().add(0.5, 1.0, 0.5);
         World world = location.getWorld();
+        Player player = interactEvent.getPlayer();
+
+        if (player.getGameMode() != GameMode.CREATIVE) {
+            item.setAmount(item.getAmount() - 1);
+        }
+
+        world.spawnParticle(Particle.HAPPY_VILLAGER, location, 10, 0.3, 0.5, 0.3);
 
         Chicken chicken = world.spawn(location.clone().add(0, -0.3, 0), Chicken.class, c -> {
             c.setBaby();
@@ -64,14 +71,6 @@ public class ChickenPlantListener implements Listener {
             c.setSilent(true);
             c.setGravity(false);
         });
-
-        Player player = interactEvent.getPlayer();
-
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            item.setAmount(item.getAmount() - 1);
-        }
-
-        player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, location, 10, 0.3, 0.5, 0.3);
 
         // Wachsen simulieren
         // TODO: cancel task
@@ -86,20 +85,19 @@ public class ChickenPlantListener implements Listener {
 
                             @Override
                             public void run() {
-                                if (!chicken.isDead()) {
+                                if (!chicken.isValid()) {
                                     futureRef.get().cancel(true);
                                     return;
                                 }
 
-                                if (tick >= 40) {
+                                if (tick >= 10) {
                                     chicken.setAdult();
                                     chicken.setAgeLock(false);
                                     chicken.setAI(true);
                                     chicken.setSilent(false);
                                     chicken.setInvulnerable(false);
                                     chicken.setGravity(true);
-                                    chicken.getWorld()
-                                            .playSound(chicken.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 1f, 1f);
+                                    world.playSound(chicken.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 1f, 1f);
                                     futureRef.get().cancel(true);
                                     return;
                                 }
@@ -111,7 +109,7 @@ public class ChickenPlantListener implements Listener {
                         },
                         0L,
                         1L,
-                        TimeUnit.MILLISECONDS);
+                        TimeUnit.SECONDS);
 
         futureRef.set(futureTask);
     }
