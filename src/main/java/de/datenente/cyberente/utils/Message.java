@@ -44,9 +44,9 @@ public class Message {
      * @param replacements the replacements
      * @return the message
      */
-    public static Component text(String message, String... replacements) {
+    public static Component text(String message, Object... replacements) {
         for (int i = 0; i < replacements.length; i++) {
-            message = message.replace("{" + i + "}", replacements[i]);
+            message = message.replace("{" + i + "}", String.valueOf(replacements[i]));
         }
         return text(message);
     }
@@ -67,7 +67,7 @@ public class Message {
      * @param message the message
      * @param replacements the replacements
      */
-    public static void send(CommandSender sender, String message, String... replacements) {
+    public static void send(CommandSender sender, String message, Object... replacements) {
         sender.sendMessage(text(message, replacements));
     }
 }

@@ -40,19 +40,19 @@ import org.bukkit.inventory.ItemStack;
 public class ChickenPlantListener implements Listener {
 
     @EventHandler
-    public void handleChickenPlant(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+    public void handleChickenPlant(PlayerInteractEvent interactEvent) {
+        if (interactEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        Block clickedBlock = event.getClickedBlock();
+        Block clickedBlock = interactEvent.getClickedBlock();
         if (clickedBlock == null) return;
         if (clickedBlock.getType() != Material.FARMLAND) return;
 
-        ItemStack item = event.getItem();
+        ItemStack item = interactEvent.getItem();
         if (item == null) return;
         Material material = item.getType();
         if (material != Material.CHICKEN && material != Material.COOKED_CHICKEN) return;
 
-        event.setCancelled(true);
+        interactEvent.setCancelled(true);
 
         Location location = clickedBlock.getLocation().add(0.5, 1.0, 0.5);
         World world = location.getWorld();
@@ -65,7 +65,7 @@ public class ChickenPlantListener implements Listener {
             c.setGravity(false);
         });
 
-        Player player = event.getPlayer();
+        Player player = interactEvent.getPlayer();
 
         if (player.getGameMode() != GameMode.CREATIVE) {
             item.setAmount(item.getAmount() - 1);
@@ -74,6 +74,7 @@ public class ChickenPlantListener implements Listener {
         player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, location, 10, 0.3, 0.5, 0.3);
 
         // Wachsen simulieren
+        // TODO: cancel task
         AtomicReference<ScheduledFuture<?>> futureRef = new AtomicReference<>();
 
         ScheduledFuture<?> futureTask = CyberEnte.getInstance()
@@ -85,8 +86,7 @@ public class ChickenPlantListener implements Listener {
 
                             @Override
                             public void run() {
-
-                                if (!chicken.isValid()) {
+                                if (!chicken.isDead()) {
                                     futureRef.get().cancel(true);
                                     return;
                                 }
@@ -111,7 +111,7 @@ public class ChickenPlantListener implements Listener {
                         },
                         0L,
                         1L,
-                        TimeUnit.SECONDS);
+                        TimeUnit.MILLISECONDS);
 
         futureRef.set(futureTask);
     }

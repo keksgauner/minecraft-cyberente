@@ -40,7 +40,7 @@ public class PingCommand extends Command {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
         if (sender instanceof Player player && args.length == 0) {
-            Message.send(player, "Dein Ping ist: <green>{0}", String.valueOf(player.getPing()));
+            Message.send(player, "Dein Ping ist: <green>{0}", player.getPing());
             return true;
         }
 
@@ -53,11 +53,7 @@ public class PingCommand extends Command {
                 return true;
             }
 
-            Message.send(
-                    sender,
-                    "Der Ping vom Spieler {0} ist <green>{1}",
-                    target.getName(),
-                    String.valueOf(target.getPing()));
+            Message.send(sender, "Der Ping vom Spieler {0} ist <green>{1}", target.getName(), target.getPing());
             return true;
         }
 

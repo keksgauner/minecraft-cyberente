@@ -66,12 +66,13 @@ public final class CyberEnte extends JavaPlugin {
     void registerListener() {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new ChatListener(), this);
+        pluginManager.registerEvents(new ChickenPlantListener(), this);
         pluginManager.registerEvents(new DeathListener(), this);
         pluginManager.registerEvents(new DropChestListener(), this);
         pluginManager.registerEvents(new CheatBlockListener(), this);
         pluginManager.registerEvents(new JoinLeaveListener(), this);
+        pluginManager.registerEvents(new ReplantListener(), this);
         pluginManager.registerEvents(new StairSittingListener(), this);
-        pluginManager.registerEvents(new ChickenPlantListener(), this);
     }
 
     void registerCommand() {

@@ -67,9 +67,9 @@ public class DeathListener implements Listener {
         Message.send(
                 player,
                 "<gray>Du bist bei <white>X: {0} Y: {1} Z: {2} <gray>gestorben.",
-                String.valueOf(deathLocation.getBlockX()),
-                String.valueOf(deathLocation.getBlockY()),
-                String.valueOf(deathLocation.getBlockZ()));
+                deathLocation.getBlockX(),
+                deathLocation.getBlockY(),
+                deathLocation.getBlockZ());
     }
 
     @EventHandler
@@ -175,7 +175,14 @@ public class DeathListener implements Listener {
             clickedBlock.getWorld().dropItemNaturally(clickedBlock.getLocation(), item);
         }
 
-        clickedBlock.setType(Material.AIR);
+        CyberEnte.getInstance()
+                .getScheduledExecutorService()
+                .schedule(
+                        () -> {
+                            clickedBlock.setType(Material.AIR);
+                        },
+                        1,
+                        TimeUnit.MILLISECONDS);
         openedDeathInventories.remove(uuid);
     }
 }
