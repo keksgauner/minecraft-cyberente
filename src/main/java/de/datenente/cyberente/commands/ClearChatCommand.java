@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class ClearChatCommand extends Command {
 
     public ClearChatCommand() {
-        super("clearchat", "Löscht den Chat", "/", List.of("cc"));
+        super("clearchat", "Löscht den Chat.", "/", List.of("cc"));
     }
 
     @Override

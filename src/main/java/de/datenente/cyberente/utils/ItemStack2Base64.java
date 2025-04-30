@@ -24,49 +24,38 @@
 package de.datenente.cyberente.utils;
 
 import de.datenente.cyberente.CyberEnte;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.logging.Level;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-/**
- * @author Mxscha
- * from EndOfLife-EnderNation
- */
 public class ItemStack2Base64 {
     public static ItemStack[] itemStackArrayFromBase64(String data) {
-        try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
-            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            ItemStack[] items = new ItemStack[dataInput.readInt()];
-            for (int i = 0; i < items.length; i++) {
-                items[i] = (ItemStack) dataInput.readObject();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+        try (ObjectInputStream in = new ObjectInputStream(inputStream)) {
+            int length = in.readInt();
+            ItemStack[] items = new ItemStack[length];
+            for (int i = 0; i < length; i++) {
+                items[i] = (ItemStack) in.readObject();
             }
-            dataInput.close();
             return items;
         } catch (IOException | ClassNotFoundException ex) {
-            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
+            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "Failed to deserialize item array", ex);
+            return null;
         }
-        return null;
     }
 
     public static String itemStackArrayToBase64(ItemStack[] items) {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
-            dataOutput.writeInt(items.length);
-            for (int i = 0; i < items.length; i++) {
-                dataOutput.writeObject(items[i]);
+        try (ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                ObjectOutputStream out = new ObjectOutputStream(byteOut)) {
+            out.writeInt(items.length);
+            for (ItemStack item : items) {
+                out.writeObject(item);
             }
-            dataOutput.close();
-            return Base64Coder.encodeLines(outputStream.toByteArray());
+            return Base64Coder.encodeLines(byteOut.toByteArray());
         } catch (IOException ex) {
-            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
+            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "Failed to serialize item array", ex);
+            return null;
         }
-        return null;
     }
 }

@@ -34,13 +34,13 @@ import org.jetbrains.annotations.NotNull;
 public class PingCommand extends Command {
 
     public PingCommand() {
-        super("ping");
+        super("ping", "Zeigt den Ping von Spielern.", "/", List.of());
     }
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
         if (sender instanceof Player player && args.length == 0) {
-            Message.send(player, "Dein Ping ist: <green>{0}", player.getPing());
+            Message.send(player, "Dein Ping ist: <green>{0}</green>", player.getPing());
             return true;
         }
 
@@ -49,15 +49,15 @@ public class PingCommand extends Command {
             Player target = Bukkit.getPlayer(targetName);
 
             if (target == null) {
-                Message.send(sender, "<red>Der Spieler {0} ist nicht Online!", targetName);
+                Message.send(sender, "<red>Der Spieler {0} ist nicht <green>Online</green>!</red>", targetName);
                 return true;
             }
 
-            Message.send(sender, "Der Ping vom Spieler {0} ist <green>{1}", target.getName(), target.getPing());
+            Message.send(sender, "Der Ping vom Spieler {0} ist <green>{1}</green>", target.getName(), target.getPing());
             return true;
         }
 
-        Message.send(sender, "<red>Befehl wurde falsch eingegeben! /ping [player]");
+        Message.send(sender, "<red>Befehl wurde falsch eingegeben!</red> <green>/ping [player]</green>");
 
         return true;
     }

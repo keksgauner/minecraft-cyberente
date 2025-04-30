@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 public class ChatImageCommand extends Command {
 
     public ChatImageCommand() {
-        super("chatimage", "Sende im Chat ein Bild", "/", List.of("ci"));
+        super("chatimage", "Sende im Chat ein Bild.", "/", List.of("ci"));
     }
 
     public boolean execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
@@ -56,10 +56,10 @@ public class ChatImageCommand extends Command {
                 }
 
                 if (sender instanceof ConsoleCommandSender consoleCommandSender)
-                    Image2Chat.sendResizedImage(consoleCommandSender, image, 30, 20);
+                    Image2Chat.sendImage(consoleCommandSender, image, 50, 30);
 
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
-                    Image2Chat.sendResizedImage(onlinePlayer, image, 30, 20);
+                    Image2Chat.sendImage(onlinePlayer, image, 30, 20);
                 }
             } catch (IOException ex) {
                 Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
@@ -81,10 +81,10 @@ public class ChatImageCommand extends Command {
                 }
 
                 if (sender instanceof ConsoleCommandSender consoleCommandSender)
-                    Image2Chat.sendResizedImage(consoleCommandSender, image, width, height);
+                    Image2Chat.sendImage(consoleCommandSender, image, width, height);
 
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
-                    Image2Chat.sendResizedImage(onlinePlayer, image, width, height);
+                    Image2Chat.sendImage(onlinePlayer, image, width, height);
                 }
             } catch (NumberFormatException ex) {
                 Message.send(sender, "<red>Die Breite und Höhe müssen Zahlen sein!</red>");
@@ -96,7 +96,9 @@ public class ChatImageCommand extends Command {
             return true;
         }
 
-        Message.send(sender, "<red>Bitte gib eine URL an! <green>Beispiel: /ci https://example.com/image.png 30 20");
+        Message.send(
+                sender,
+                "<red>Bitte gib eine URL an!</red> <green>Beispiel: /ci https://example.com/image.png breite höhe</green>");
 
         return true;
     }

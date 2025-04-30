@@ -23,7 +23,7 @@
  */
 package de.datenente.cyberente.listeners;
 
-import java.util.Random;
+import java.util.Map;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -36,74 +36,33 @@ import org.bukkit.inventory.ItemStack;
 
 public class ReplantListener implements Listener {
 
-    private final Random random = new Random();
+    final Map<Material, Material> REPLANTABLES = Map.of(
+            Material.WHEAT, Material.WHEAT_SEEDS,
+            Material.CARROT, Material.CARROT,
+            Material.POTATO, Material.POTATO,
+            Material.BEETROOT, Material.BEETROOT_SEEDS);
 
     @EventHandler
-    public void handleReplantWheat(PlayerInteractEvent interactEvent) {
-        if (interactEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+    public void handleCropReplant(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        Block clickedBlock = interactEvent.getClickedBlock();
-        if (clickedBlock == null) return;
-        if (clickedBlock.getType() != Material.WHEAT) return;
+        Block block = event.getClickedBlock();
+        if (block == null) return;
 
-        ItemStack item = interactEvent.getItem();
-        if (item == null) return;
-        Material material = item.getType();
-        if (material != Material.WHEAT_SEEDS) return;
+        Material crop = block.getType();
+        Material seed = REPLANTABLES.get(crop);
+        if (seed == null) return;
 
-        clickedBlock.breakNaturally();
+        ItemStack item = event.getItem();
+        if (item == null || item.getType() != seed) return;
 
-        Player player = interactEvent.getPlayer();
+        block.breakNaturally();
+
+        Player player = event.getPlayer();
         if (player.getGameMode() != GameMode.CREATIVE) {
             item.setAmount(item.getAmount() - 1);
         }
 
-        clickedBlock.setType(Material.WHEAT);
-    }
-
-    @EventHandler
-    public void handleReplantCarrot(PlayerInteractEvent interactEvent) {
-        if (interactEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-
-        Block clickedBlock = interactEvent.getClickedBlock();
-        if (clickedBlock == null) return;
-        if (clickedBlock.getType() != Material.CARROT) return;
-
-        ItemStack item = interactEvent.getItem();
-        if (item == null) return;
-        Material material = item.getType();
-        if (material != Material.CARROT) return;
-
-        clickedBlock.breakNaturally();
-
-        Player player = interactEvent.getPlayer();
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            item.setAmount(item.getAmount() - 1);
-        }
-
-        clickedBlock.setType(Material.CARROT);
-    }
-
-    @EventHandler
-    public void handleReplantPotato(PlayerInteractEvent interactEvent) {
-        if (interactEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-
-        Block clickedBlock = interactEvent.getClickedBlock();
-        if (clickedBlock == null) return;
-        if (clickedBlock.getType() != Material.POTATO) return;
-
-        ItemStack item = interactEvent.getItem();
-        if (item == null) return;
-        Material material = item.getType();
-        if (material != Material.POTATO) return;
-
-        clickedBlock.breakNaturally();
-
-        Player player = interactEvent.getPlayer();
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            item.setAmount(item.getAmount() - 1);
-        }
-
-        clickedBlock.setType(Material.POTATO);
+        block.setType(crop);
     }
 }

@@ -69,7 +69,7 @@ public class ChickenPlantListener implements Listener {
             c.setAgeLock(true);
             c.setAI(false);
             c.setSilent(true);
-            c.setInvulnerable(true);
+            // c.setInvulnerable(true);
             c.setGravity(false);
         });
 

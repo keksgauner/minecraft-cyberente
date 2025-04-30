@@ -51,7 +51,7 @@ public class Image2Chat {
         // 'https://cravatar.eu/helmavatar/{Player}/8.png'
         // 'https://mc-heads.net/avatar/{Player}/8'
 
-        sendImageURL(player, pageURL + player.getName() + "/8", 8, 8);
+        sendImage(player, pageURL + player.getName() + "/8", 8, 8);
     }
 
     /**
@@ -61,35 +61,15 @@ public class Image2Chat {
      * @param width the width
      * @param height the height
      */
-    public static void sendImageURL(CommandSender sender, String url, int width, int height) throws IOException {
-        Image image = getImageFromURL(url);
-        if (image == null) {
-            Message.send(sender, "<red>Could not load image!");
-            return;
+    public static void sendImage(CommandSender sender, String url, int width, int height) throws IOException {
+        List<Component> colorMap = getComponentList(url, width, height);
+        for (Component component : colorMap) {
+            sender.sendMessage(component);
         }
-        sendResizedImage(sender, image, width, height);
-    }
-    /**
-     * Send the image to the player
-     * @param sender the sender
-     * @param image the image
-     * @param width the width
-     * @param height the height
-     */
-    public static void sendResizedImage(CommandSender sender, Image image, int width, int height) {
-        Image resizedImage = resizeImage(image, width, height);
-        sendImage(sender, resizedImage, width, height);
     }
 
-    /**
-     * Send the image to the player
-     * @param sender the sender
-     * @param image the image
-     * @param width the width
-     * @param height the height
-     */
     public static void sendImage(CommandSender sender, Image image, int width, int height) {
-        List<Component> colorMap = getImageAsComponentList(resizeImage(image, width, height), '\u2588', width);
+        List<Component> colorMap = getComponentList(image, width, height);
         for (Component component : colorMap) {
             sender.sendMessage(component);
         }
@@ -102,7 +82,7 @@ public class Image2Chat {
      * @param height the height
      * @return the resized image
      */
-    public static Image resizeImage(Image image, int width, int height) {
+    public static Image getResizedImage(Image image, int width, int height) {
         BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics2D = resizedImage.createGraphics();
         graphics2D.drawImage(image, 0, 0, width, height, null);
@@ -131,6 +111,18 @@ public class Image2Chat {
         return ImageIO.read(inputStream);
     }
 
+    public static List<Component> getComponentList(Image image, int width) {
+        return getComponentList(image, '\u2588', width);
+    }
+
+    public static List<Component> getComponentList(String url, int width, int height) throws IOException {
+        return getComponentList(getResizedImage(getImageFromURL(url), width, height), width);
+    }
+
+    public static List<Component> getComponentList(Image image, int width, int height) {
+        return getComponentList(getResizedImage(image, width, height), width);
+    }
+
     /**
      * Get the image as a list of components
      * @param image the image
@@ -138,7 +130,7 @@ public class Image2Chat {
      * @param width the width per line
      * @return the list of components
      */
-    public static List<Component> getImageAsComponentList(Image image, char filler, int width) {
+    public static List<Component> getComponentList(Image image, char filler, int width) {
         int height = image.getHeight(null);
 
         List<Component> colorMap = new ArrayList<>();
