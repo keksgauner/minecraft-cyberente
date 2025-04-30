@@ -64,19 +64,19 @@ public class CustomItem {
         return this.getItemStack();
     }
 
-    public CustomItem setName(String name) {
+    public CustomItem name(String name) {
         this.getItemMeta().displayName(Message.text(name));
         return this;
     }
 
-    public CustomItem setLore(String... lore) {
+    public CustomItem lore(String... lore) {
         List<Component> loreList = new ArrayList<>();
         Arrays.stream(lore).forEach(l -> loreList.add(Message.text(l)));
         this.getItemMeta().lore(loreList);
         return this;
     }
 
-    public CustomItem setItemModel(String key) {
+    public CustomItem itemModel(String key) {
         String[] splitKey = key.split(":");
         if (splitKey.length == 2) {
             this.getItemMeta().setItemModel(new NamespacedKey(splitKey[0], splitKey[1]));
@@ -84,14 +84,14 @@ public class CustomItem {
         return this;
     }
 
-    public CustomItem setOwningPlayer(OfflinePlayer player) {
+    public CustomItem owningPlayer(OfflinePlayer player) {
         if (this.getItemStack().getType() == Material.PLAYER_HEAD) {
             ((SkullMeta) this.getItemMeta()).setOwningPlayer(player);
         }
         return this;
     }
 
-    public CustomItem setAmount(int size) {
+    public CustomItem amount(int size) {
         this.getItemStack().setAmount(size);
         return this;
     }

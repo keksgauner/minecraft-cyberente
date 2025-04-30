@@ -71,14 +71,14 @@ public class BreadRecipe {
 
     private ItemStack createItem(String name, String itemModel) {
         CustomItem customItem = new CustomItem(Material.BREAD);
-        customItem.setName("<gold>" + name);
-        customItem.setItemModel(itemModel);
+        customItem.name("<gold>" + name);
+        customItem.itemModel(itemModel);
         return customItem.asItemStack();
     }
 
     private ItemStack createItem(String name) {
         CustomItem customItem = new CustomItem(Material.BREAD);
-        customItem.setName("<gold>" + name);
+        customItem.name("<gold>" + name);
         return customItem.asItemStack();
     }
 }
