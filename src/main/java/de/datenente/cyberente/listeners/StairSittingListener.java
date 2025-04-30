@@ -25,7 +25,7 @@ package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
 import java.util.List;
-import org.bukkit.Bukkit;
+import java.util.concurrent.TimeUnit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -92,11 +92,9 @@ public class StairSittingListener implements Listener {
     @EventHandler
     public void onDismount(EntityDismountEvent entityDismountEvent) {
         if (!entityDismountEvent.getDismounted().hasMetadata("stair")) return;
-        Bukkit.getScheduler()
-                .runTaskLater(
-                        CyberEnte.getInstance(),
-                        () -> entityDismountEvent.getDismounted().remove(),
-                        1L);
+        CyberEnte.getInstance()
+                .getScheduledExecutorService()
+                .schedule(() -> entityDismountEvent.getDismounted().remove(), 1, TimeUnit.MILLISECONDS);
     }
 
     public void setPlayerSitting(Player player, Location location) {

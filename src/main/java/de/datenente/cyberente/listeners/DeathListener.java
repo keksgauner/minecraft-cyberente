@@ -29,6 +29,7 @@ import de.datenente.cyberente.utils.Message;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -81,9 +82,9 @@ public class DeathListener implements Listener {
         drops.clear();
         deathEvent.setDroppedExp(0);
 
-        Bukkit.getScheduler()
-                .runTaskLater(
-                        CyberEnte.getInstance(),
+        CyberEnte.getInstance()
+                .getScheduledExecutorService()
+                .schedule(
                         () -> {
                             Location safeLocation = clickedBlock.getLocation();
                             Block saveBlock = safeLocation.getBlock();
@@ -92,7 +93,6 @@ public class DeathListener implements Listener {
                                 safeLocation = safeLocation.add(0, 1, 0);
                                 saveBlock = safeLocation.getBlock();
                             }
-                            ;
 
                             saveBlock.setType(Material.PLAYER_HEAD);
 
@@ -107,7 +107,8 @@ public class DeathListener implements Listener {
 
                             skull.update();
                         },
-                        1L);
+                        1,
+                        TimeUnit.MILLISECONDS);
     }
 
     @EventHandler
