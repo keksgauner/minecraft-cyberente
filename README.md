@@ -37,7 +37,7 @@ cd minecraft-cyberente
 ```
 
 🗃️ Das fertige Plugin befindet sich anschließend in `build/libs` und trägt den Namen:
-`<pluginname>-<version>-shadow.jar`
+`CyberEnte-<version>-shadow.jar`
 
 ---
 
