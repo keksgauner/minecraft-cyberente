@@ -25,12 +25,14 @@
 - [x] **StairSitting** – Schild auf Treppe = Spieler kann sitzen
 - [ ] **ChickenGrow** – Hühner auf Feldern anpflanzen und wachsen lassen
 - [ ] **AFK-Manager** – AFK-Spieler automatisch als AFK kennzeichnen
-- [ ] **Playtime-Statistiken** – Spielzeiten der Spieler erfassen und speichern
+- [ ] **Playtime** – Spielzeiten der Spieler erfassen und speichern
 - [ ] **Replanter** – Felder nach dem Ernten automatisch wieder bepflanzen
-- [ ] **Beleidigung bei Tod** – Zeigt beim Tod des Spielers eine zufällige Beleidigung an
+- [ ] **Todes Nachricht** – Zeigt beim Tod des Spielers eine zufällige Beleidigung an
 
 ---
 
 ## 🔧 Utils
 
 - [x] **Konfiguration** – JSON-basiert, umgesetzt mit GSON
+- [x]  **ItemStack2Base64** – Konvertiert ItemStacks in Base64-Strings (und zurück)
+- [x]  **Image2Chat** – Konvertiert ein Bild in ein Chat-kompatibles Textformat
