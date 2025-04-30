@@ -175,14 +175,7 @@ public class DeathListener implements Listener {
             clickedBlock.getWorld().dropItemNaturally(clickedBlock.getLocation(), item);
         }
 
-        CyberEnte.getInstance()
-                .getScheduledExecutorService()
-                .schedule(
-                        () -> {
-                            clickedBlock.setType(Material.AIR);
-                        },
-                        1,
-                        TimeUnit.MILLISECONDS);
+        clickedBlock.setType(Material.AIR);
         openedDeathInventories.remove(uuid);
     }
 }
