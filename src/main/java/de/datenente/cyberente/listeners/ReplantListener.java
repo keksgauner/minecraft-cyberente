@@ -48,13 +48,6 @@ public class ReplantListener implements Listener {
         Material material = item.getType();
         if (material != Material.WHEAT_SEEDS) return;
 
-        CyberEnte.getInstance()
-                .getScheduledExecutorService()
-                .schedule(
-                        () -> {
-                            clickedBlock.setType(Material.WHEAT_SEEDS);
-                        },
-                        1,
-                        TimeUnit.MILLISECONDS);
+        clickedBlock.setType(Material.WHEAT_SEEDS);
     }
 }
