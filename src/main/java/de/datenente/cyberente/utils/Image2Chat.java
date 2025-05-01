@@ -207,6 +207,7 @@ public class Image2Chat {
             grabber.grabPixels();
         } catch (InterruptedException ex) {
             CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
+            return null;
         }
         int c = pixels[x * width + y];
         int red = (c & 0xFF0000) >> 16;
