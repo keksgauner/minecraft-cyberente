@@ -31,7 +31,6 @@ import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 @Getter
 public class StorageConfig extends JsonDocument<StorageObject> {
@@ -92,19 +91,16 @@ public class StorageConfig extends JsonDocument<StorageObject> {
     }
 
     private String serializeLocation(Location location) {
-        return location.getWorld().getName() + ":" +
-                location.getBlockX() + ":" +
-                location.getBlockY() + ":" +
-                location.getBlockZ();
+        return location.getWorld().getName() + ":" + location.getBlockX()
+                + ":" + location.getBlockY()
+                + ":" + location.getBlockZ();
     }
 
     public void setDeathSkull(Location location, String base64, Integer xp) {
         HashMap<String, StorageObject.DeathSkull> deathSkulls =
                 this.getStorage().getDeathSkulls();
 
-        deathSkulls.put(
-                serializeLocation(location),
-                new StorageObject.DeathSkull(base64, xp));
+        deathSkulls.put(serializeLocation(location), new StorageObject.DeathSkull(base64, xp));
         this.save();
     }
 
@@ -112,9 +108,7 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         HashMap<String, StorageObject.DeathSkull> deathSkulls =
                 this.getStorage().getDeathSkulls();
 
-        return deathSkulls.getOrDefault(
-                serializeLocation(location),
-                null);
+        return deathSkulls.getOrDefault(serializeLocation(location), null);
     }
 
     public void removeDeathSkull(Location location) {

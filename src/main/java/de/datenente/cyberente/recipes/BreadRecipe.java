@@ -77,6 +77,7 @@ public class BreadRecipe {
         CustomItem customItem = new CustomItem(Material.BREAD);
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);
+        customItem.customModelData(1);
         return customItem.asItemStack();
     }
 
