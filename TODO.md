@@ -30,13 +30,15 @@
 - [ ] **Playtime** – Spielzeiten der Spieler erfassen und speichern
 - [X] **Replanter** – Felder nach dem Ernten automatisch wieder bepflanzen
 - [ ] **Todes Nachricht** – Zeigt beim Tod des Spielers eine zufällige Beleidigung an
+- [ ] **Death Zähler** – Zählt die Tode der Spieler
+- [ ] **Fahrzeuge** – Fahrzeuge mit dem man rumfahren kann
 
 ---
 
 ## 🔧 Utils
 
 - [x] **Konfiguration** – JSON-basiert, umgesetzt mit GSON
-- [x]  **ItemStack2Base64** – Konvertiert ItemStacks in Base64-Strings (und zurück)
-- [x]  **Image2Chat** – Konvertiert ein Bild in ein Chat-kompatibles Textformat
+- [x] **ItemStack2Base64** – Konvertiert ItemStacks in Base64-Strings (und zurück)
+- [x] **Image2Chat** – Konvertiert ein Bild in ein Chat-kompatibles Textformat
 - [x] **CustomItem** – Erstellen von benutzerdefinierten Items
 - [x] **CustomShapedRecipe** – Erstellen von benutzerdefinierten Rezepten

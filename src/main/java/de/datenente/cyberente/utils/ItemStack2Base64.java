@@ -63,7 +63,8 @@ public class ItemStack2Base64 {
         }
         return null;
     }
-    /*
+
+    /* TODO: Not working for some reason
     public static ItemStack[] itemStackArrayFromBase64(String data) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
         try (ObjectInputStream in = new ObjectInputStream(inputStream)) {
