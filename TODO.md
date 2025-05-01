@@ -4,6 +4,7 @@
 
 > *Hinweis: Entwicklung ggf. später geplant*
 - [ ] **InfoWorld** – Eigene Hub-Welt mit Infos (z.B. Koordinaten)
+- [ ] **MondWorld** – Mond-Welt mit Mond-Items (Astronautenanzug, Mondstein, etc.) -> andere Gravitation und Mobs
 
 ---
 

@@ -26,8 +26,11 @@ package de.datenente.cyberente.config.mappings;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+
 @Getter
 @Setter
 public class StorageObject {
     String prefix = "CyberEnte";
+    HashMap<String, Long> playTime = new HashMap<>();
 }

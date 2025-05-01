@@ -26,6 +26,8 @@ package de.datenente.cyberente.config;
 import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.config.JsonDocument;
 import java.io.File;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
 
@@ -46,5 +48,15 @@ public class StorageConfig extends JsonDocument<StorageObject> {
     @Override
     public void loadContent() {
         this.reload();
+    }
+
+    public void addPlayTime(UUID uuid, long time) {
+        String uuidString = uuid.toString();
+        HashMap<String, Long> playTime = this.getStorage().getPlayTime();
+
+        if (playTime.containsKey(uuidString)) {
+            time += playTime.get(uuidString);
+        }
+        playTime.put(uuidString, time);
     }
 }

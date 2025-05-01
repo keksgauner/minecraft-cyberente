@@ -29,6 +29,8 @@ import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import de.datenente.cyberente.special.PlayTime;
 import lombok.Getter;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.PluginManager;
@@ -58,8 +60,9 @@ public final class CyberEnte extends JavaPlugin {
         registerListeners();
         registerCommands();
 
-        // Lade die Brotrezepte
+        // Special Features
         new BreadRecipe().register();
+        new PlayTime().startTimer();
     }
 
     @Override

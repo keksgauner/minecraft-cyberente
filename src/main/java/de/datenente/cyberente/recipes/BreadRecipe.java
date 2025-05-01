@@ -31,41 +31,45 @@ import org.bukkit.inventory.ItemStack;
 public class BreadRecipe {
 
     public void register() {
+        ItemStack halfBread = createItem("half bread", "cyberente:half_bread");
         CustomShapedRecipe.of()
                 .key("half_bread")
-                .result(createItem("half bread"))
                 .shape("   ", " B ", "   ")
                 .ingredient('B', Material.BREAD)
+                .result(halfBread)
                 .register();
 
+        ItemStack quarterBread = createItem("quarter bread", "cyberente:quarter_bread");
         CustomShapedRecipe.of()
                 .key("quarter_bread")
-                .result(createItem("quarter bread"))
                 .shape("   ", " H ", "   ")
-                .ingredient('H', createItem("half bread"))
+                .ingredient('H', halfBread)
+                .result(quarterBread)
                 .register();
 
         CustomShapedRecipe.of()
                 .key("rett")
-                .result(createItem("rett"))
                 .shape("   ", " Q ", "   ")
-                .ingredient('Q', createItem("quarter bread"))
+                .ingredient('Q', quarterBread)
+                .result(createItem("rett"))
                 .register();
 
+        ItemStack drill = createItem("drill", "cyberente:drill");
         CustomShapedRecipe.of()
                 .key("drill")
-                .result(createItem("drill"))
                 .shape(" S ", " B ", "   ")
                 .ingredient('S', Material.SUGAR)
                 .ingredient('B', Material.BREAD)
+                .result(drill)
                 .register();
 
+        ItemStack bire = createItem("bire", "cyberente:bire");
         CustomShapedRecipe.of()
                 .key("bire")
-                .result(createItem("bire"))
                 .shape(" A ", " B ", "   ")
                 .ingredient('A', Material.APPLE)
                 .ingredient('B', Material.BREAD)
+                .result(bire)
                 .register();
     }
 
