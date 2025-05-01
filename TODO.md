@@ -28,6 +28,7 @@
 - [X] **ChickenGrow** – Hühner auf Feldern anpflanzen und wachsen lassen
 - [ ] **AFK-Manager** – AFK-Spieler automatisch als AFK kennzeichnen
 - [ ] **Playtime** – Spielzeiten der Spieler erfassen und speichern
+- [ ] **Seen** – Zeigt den letzten Online-Zeitpunkt eines Spielers an
 - [X] **Replanter** – Felder nach dem Ernten automatisch wieder bepflanzen
 - [ ] **Todes Nachricht** – Zeigt beim Tod des Spielers eine zufällige Beleidigung an
 - [ ] **Death Zähler** – Zählt die Tode der Spieler

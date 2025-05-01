@@ -100,6 +100,7 @@ public class DeathListener implements Listener {
         skull.setOwningPlayer(player);
         skull.setMetadata("death", DEATH_KEY);
 
+        // TODO: nach dem serverneustart ist es nicht mehr möglich, die skulls zu öffnen
         PersistentDataContainer container = skull.getPersistentDataContainer();
         container.set(ITEMS_KEY, PersistentDataType.STRING, base64);
         container.set(XP_KEY, PersistentDataType.INTEGER, droppedExp);
