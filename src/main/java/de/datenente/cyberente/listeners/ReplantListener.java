@@ -27,6 +27,8 @@ import java.util.Map;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -55,6 +57,11 @@ public class ReplantListener implements Listener {
 
         ItemStack item = event.getItem();
         if (item == null || item.getType() != seed) return;
+
+        BlockState state = block.getState();
+        if (!(state.getBlockData() instanceof Ageable ageable)) return;
+
+        if (ageable.getAge() < ageable.getMaximumAge()) return;
 
         block.breakNaturally();
 

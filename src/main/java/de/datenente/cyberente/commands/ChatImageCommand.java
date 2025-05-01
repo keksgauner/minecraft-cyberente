@@ -108,15 +108,15 @@ public class ChatImageCommand extends Command {
             @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
             throws IllegalArgumentException {
 
-        if (args.length == 0) {
+        if (args.length == 1) {
             return List.of("https://example.com/image.png");
         }
 
-        if (args.length == 1) {
+        if (args.length == 2) {
             return List.of("8", "10", "30");
         }
 
-        if (args.length == 2) {
+        if (args.length == 3) {
             return List.of("8", "10", "20");
         }
 

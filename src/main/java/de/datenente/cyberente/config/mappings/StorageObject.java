@@ -23,10 +23,9 @@
  */
 package de.datenente.cyberente.config.mappings;
 
+import java.util.HashMap;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.HashMap;
 
 @Getter
 @Setter
