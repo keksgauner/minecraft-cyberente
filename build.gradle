@@ -34,7 +34,7 @@ dependencies {
 
 shadowJar {
     // archiveFileName.set("${project.name}-${version}-shadow.jar")
-    archiveFileName.set("${project.name}-Paper.jar")
+    archiveFileName.set("${project.name}-paper.jar")
     configurations = [
         project.configurations.runtimeClasspath,
         project.configurations.shadow

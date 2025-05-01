@@ -24,11 +24,52 @@
 package de.datenente.cyberente.config.mappings;
 
 import java.util.HashMap;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 @Getter
 @Setter
 public class StorageObject {
-    HashMap<String, Long> playTime = new HashMap<>();
+    HashMap<String, Long> playTime = new HashMap<>(); // UUID, Time in minutes
+    HashMap<String, Long> lastSeen = new HashMap<>(); // UUID, Current system time
+
+    HashMap<String, DeathSkull> deathSkulls = new HashMap<>(); // Location, Skull storage
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class LocationObject {
+        final String world;
+        final double x;
+        final double y;
+        final double z;
+        final float yaw;
+        final float pitch;
+
+        public LocationObject(Location location) {
+            this.world = location.getWorld().getName();
+            this.x = location.getX();
+            this.y = location.getY();
+            this.z = location.getZ();
+            this.yaw = location.getYaw();
+            this.pitch = location.getPitch();
+        }
+
+        public Location getLocation() {
+            World realWorld = Bukkit.getWorld(world);
+            return new Location(realWorld, x, y, z, yaw, pitch);
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class DeathSkull {
+        final String base64; // Base64 encoded inventory
+        final Integer xp; // XP
+    }
 }

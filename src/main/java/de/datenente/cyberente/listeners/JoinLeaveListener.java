@@ -23,6 +23,7 @@
  */
 package de.datenente.cyberente.listeners;
 
+import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.utils.Message;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -57,5 +58,7 @@ public class JoinLeaveListener implements Listener {
                 currentTime, player.getName());
 
         quitEvent.quitMessage(finalMessage);
+
+        StorageConfig.getInstance().updateLastSeen(player.getUniqueId());
     }
 }

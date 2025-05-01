@@ -21,29 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.special;
+package de.datenente.cyberente.config.mappings;
 
-import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.config.StorageConfig;
-import java.util.concurrent.TimeUnit;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class PlayTime {
-    public void startTimer() {
-        CyberEnte.getInstance()
-                .getScheduledExecutorService()
-                .schedule(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                StorageConfig storageConfig = StorageConfig.getInstance();
-                                for (Player player : Bukkit.getOnlinePlayers()) {
-                                    storageConfig.addPlayTime(player.getUniqueId(), 1L);
-                                }
-                            }
-                        },
-                        1L,
-                        TimeUnit.MINUTES);
-    }
+/**
+ * Class representing the configuration for a MySQL database connection.
+ */
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+public class MySQLObject {
+    /** The host of the MySQL database. */
+    String host = "localhost";
+
+    /** The port of the MySQL database. */
+    int port = 3306;
+
+    /** The username for the MySQL database connection. */
+    String username = "root";
+
+    /** The password for the MySQL database connection. */
+    String password = "secret";
+
+    /** The name of the MySQL database. */
+    String database = "cyberente";
+
+    /** if the sql query should be shown */
+    boolean showSql = false;
 }

@@ -24,6 +24,8 @@
 package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
+import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.ItemStack2Base64;
 import de.datenente.cyberente.utils.Message;
 import java.util.HashMap;
@@ -33,7 +35,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
@@ -47,14 +48,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 public class DeathListener implements Listener {
 
     private static final FixedMetadataValue DEATH_KEY = new FixedMetadataValue(CyberEnte.getInstance(), Boolean.TRUE);
-    private static final NamespacedKey ITEMS_KEY = new NamespacedKey(CyberEnte.getInstance(), "items");
-    private static final NamespacedKey XP_KEY = new NamespacedKey(CyberEnte.getInstance(), "xp");
 
     private final HashMap<UUID, Block> openedDeathInventories = new HashMap<>();
 
@@ -75,7 +72,7 @@ public class DeathListener implements Listener {
     public void handleDeathSkull(PlayerDeathEvent deathEvent) {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
-        Block clickedBlock = deathLocation.getBlock();
+        Block deathBlock = deathLocation.getBlock();
 
         List<ItemStack> drops = deathEvent.getDrops();
         ItemStack[] contents = drops.toArray(new ItemStack[0]);
@@ -85,27 +82,21 @@ public class DeathListener implements Listener {
         drops.clear();
         deathEvent.setDroppedExp(0);
 
-        Location safeLocation = clickedBlock.getLocation();
-        Block saveBlock = safeLocation.getBlock();
-
-        while (saveBlock.getType() != Material.AIR) {
-            safeLocation = safeLocation.add(0, 1, 0);
-            saveBlock = safeLocation.getBlock();
+        while (deathBlock.getType() != Material.AIR) {
+            deathLocation = deathLocation.add(0, 1, 0);
+            deathBlock = deathLocation.getBlock();
         }
 
-        saveBlock.setType(Material.PLAYER_HEAD);
+        deathBlock.setType(Material.PLAYER_HEAD);
 
-        BlockState state = saveBlock.getState();
+        BlockState state = deathBlock.getState();
         if (!(state instanceof Skull skull)) return;
         skull.setOwningPlayer(player);
         skull.setMetadata("death", DEATH_KEY);
-
-        // TODO: nach dem serverneustart ist es nicht mehr möglich, die skulls zu öffnen
-        PersistentDataContainer container = skull.getPersistentDataContainer();
-        container.set(ITEMS_KEY, PersistentDataType.STRING, base64);
-        container.set(XP_KEY, PersistentDataType.INTEGER, droppedExp);
-
         skull.update();
+
+        StorageConfig storageConfig = StorageConfig.getInstance();
+        storageConfig.setDeathSkull(deathLocation, base64, droppedExp);
     }
 
     @EventHandler
@@ -122,19 +113,22 @@ public class DeathListener implements Listener {
 
         Player player = interactEvent.getPlayer();
         if (openedDeathInventories.containsValue(clickedBlock)) {
-            Message.send(player, "<red>Es ist bereits dieses Inventar geöffnet!");
             return;
         }
 
         interactEvent.setCancelled(true);
 
-        PersistentDataContainer container = skull.getPersistentDataContainer();
-        if (!container.has(ITEMS_KEY, PersistentDataType.STRING) || !container.has(XP_KEY, PersistentDataType.INTEGER))
+        StorageConfig storageConfig = StorageConfig.getInstance();
+        StorageObject.DeathSkull deathSkull = storageConfig.getDeathSkull(clickedBlock.getLocation());
+        if (deathSkull == null) {
+            Message.send(player, "<red>Es ist kein Inventar vorhanden!");
             return;
-        String base64 = container.get(ITEMS_KEY, PersistentDataType.STRING);
-        ItemStack[] contents = ItemStack2Base64.itemStackArrayFromBase64(base64);
+        }
+        ItemStack[] contents = ItemStack2Base64.itemStackArrayFromBase64(deathSkull.getBase64());
         if (contents == null) return;
-        int xp = container.get(XP_KEY, PersistentDataType.INTEGER);
+        int xp = deathSkull.getXp();
+
+        storageConfig.removeDeathSkull(clickedBlock.getLocation());
 
         Inventory deathInventory = Bukkit.createInventory(null, 9 * 6, Component.text("Letzte Items"));
         for (ItemStack item : contents) {

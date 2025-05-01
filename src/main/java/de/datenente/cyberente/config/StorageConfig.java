@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 @Getter
 public class StorageConfig extends JsonDocument<StorageObject> {
@@ -58,5 +60,68 @@ public class StorageConfig extends JsonDocument<StorageObject> {
             time += playTime.get(uuidString);
         }
         playTime.put(uuidString, time);
+        this.save();
+    }
+
+    public long getPlayTime(UUID uuid) {
+        String uuidString = uuid.toString();
+        HashMap<String, Long> playTime = this.getStorage().getPlayTime();
+
+        if (playTime.containsKey(uuidString)) {
+            return playTime.get(uuidString);
+        }
+        return 0L;
+    }
+
+    public void updateLastSeen(UUID uuid) {
+        String uuidString = uuid.toString();
+        HashMap<String, Long> lastSeen = this.getStorage().getLastSeen();
+
+        lastSeen.put(uuidString, System.currentTimeMillis());
+        this.save();
+    }
+
+    public Long getLastSeen(UUID uuid) {
+        String uuidString = uuid.toString();
+        HashMap<String, Long> lastSeen = this.getStorage().getLastSeen();
+
+        if (lastSeen.containsKey(uuidString)) {
+            return lastSeen.get(uuidString);
+        }
+        return null;
+    }
+
+    private String serializeLocation(Location location) {
+        return location.getWorld().getName() + ":" +
+                location.getBlockX() + ":" +
+                location.getBlockY() + ":" +
+                location.getBlockZ();
+    }
+
+    public void setDeathSkull(Location location, String base64, Integer xp) {
+        HashMap<String, StorageObject.DeathSkull> deathSkulls =
+                this.getStorage().getDeathSkulls();
+
+        deathSkulls.put(
+                serializeLocation(location),
+                new StorageObject.DeathSkull(base64, xp));
+        this.save();
+    }
+
+    public StorageObject.DeathSkull getDeathSkull(Location location) {
+        HashMap<String, StorageObject.DeathSkull> deathSkulls =
+                this.getStorage().getDeathSkulls();
+
+        return deathSkulls.getOrDefault(
+                serializeLocation(location),
+                null);
+    }
+
+    public void removeDeathSkull(Location location) {
+        HashMap<String, StorageObject.DeathSkull> deathSkulls =
+                this.getStorage().getDeathSkulls();
+
+        deathSkulls.remove(serializeLocation(location));
+        this.save();
     }
 }
