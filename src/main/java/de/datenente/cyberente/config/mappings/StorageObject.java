@@ -30,6 +30,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StorageObject {
-    String prefix = "CyberEnte";
     HashMap<String, Long> playTime = new HashMap<>();
 }

@@ -84,6 +84,12 @@ public class CustomItem {
         return this;
     }
 
+    @Deprecated
+    public CustomItem customModelData(int id) {
+        this.getItemMeta().setCustomModelData(id);
+        return this;
+    }
+
     public CustomItem owningPlayer(OfflinePlayer player) {
         if (this.getItemStack().getType() == Material.PLAYER_HEAD) {
             ((SkullMeta) this.getItemMeta()).setOwningPlayer(player);

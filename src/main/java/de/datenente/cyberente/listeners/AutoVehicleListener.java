@@ -37,7 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-public class AutoVehicle implements Listener {
+public class AutoVehicleListener implements Listener {
     private static final HashMap<UUID, ArmorStand> vehicles = new HashMap<>();
 
     public static void spawn(Player player) {
