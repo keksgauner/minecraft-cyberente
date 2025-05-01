@@ -27,10 +27,9 @@ import de.datenente.cyberente.commands.*;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
+import de.datenente.cyberente.special.PlayTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import de.datenente.cyberente.special.PlayTime;
 import lombok.Getter;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.PluginManager;
@@ -83,6 +82,7 @@ public final class CyberEnte extends JavaPlugin {
         pluginManager.registerEvents(new JoinLeaveListener(), this);
         pluginManager.registerEvents(new ReplantListener(), this);
         pluginManager.registerEvents(new StairSittingListener(), this);
+        pluginManager.registerEvents(new AutoVehicle(), this);
     }
 
     void registerCommands() {
@@ -91,5 +91,6 @@ public final class CyberEnte extends JavaPlugin {
         commandMap.register("cyberente", new PingCommand());
         commandMap.register("cyberente", new ClearChatCommand());
         commandMap.register("cyberente", new ChatImageCommand());
+        commandMap.register("cyberente", new AutoVehicleCommand());
     }
 }
