@@ -51,10 +51,10 @@ public class BreadRecipe {
                 .key("rett")
                 .shape("   ", " Q ", "   ")
                 .ingredient('Q', quarterBread)
-                .result(createItem("rett"))
+                .result(createItem("rett", "cyberente:rett", 3))
                 .register();
 
-        ItemStack drill = createItem("drill", "cyberente:drill", 3);
+        ItemStack drill = createItem("drill", "cyberente:drill", 4);
         CustomShapedRecipe.of()
                 .key("drill")
                 .shape(" S ", " B ", "   ")
@@ -63,7 +63,7 @@ public class BreadRecipe {
                 .result(drill)
                 .register();
 
-        ItemStack bire = createItem("bire", "cyberente:bire", 4);
+        ItemStack bire = createItem("bire", "cyberente:bire", 5);
         CustomShapedRecipe.of()
                 .key("bire")
                 .shape(" A ", " B ", "   ")
@@ -78,6 +78,13 @@ public class BreadRecipe {
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);
         customItem.customModelData(customModelData);
+        return customItem.asItemStack();
+    }
+
+    private ItemStack createItem(String name, String itemModel) {
+        CustomItem customItem = new CustomItem(Material.BREAD);
+        customItem.displayName("<gold>" + name);
+        customItem.itemModel(itemModel);
         return customItem.asItemStack();
     }
 

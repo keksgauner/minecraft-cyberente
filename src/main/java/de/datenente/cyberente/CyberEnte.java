@@ -24,6 +24,7 @@
 package de.datenente.cyberente;
 
 import de.datenente.cyberente.commands.*;
+import de.datenente.cyberente.config.MySQLConfig;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
@@ -52,10 +53,7 @@ public final class CyberEnte extends JavaPlugin {
             instance = this;
         }
 
-        // Load Config
-        new StorageConfig(getLogger(), getDataFolder());
-
-        // Register Commands & Listeners
+        registerConfigs();
         registerListeners();
         registerCommands();
 
@@ -69,6 +67,11 @@ public final class CyberEnte extends JavaPlugin {
         getLogger().info("Plugin CyberEnte wird deaktiviert!");
 
         getServer().resetRecipes();
+    }
+
+    void registerConfigs() {
+        new MySQLConfig(getLogger(), getDataFolder());
+        new StorageConfig(getLogger(), getDataFolder());
     }
 
     void registerListeners() {
