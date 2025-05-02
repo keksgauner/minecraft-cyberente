@@ -28,6 +28,7 @@ import de.datenente.cyberente.config.MySQLConfig;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
+import de.datenente.cyberente.recipes.PotionRecipe;
 import de.datenente.cyberente.special.PlayTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -59,6 +60,7 @@ public final class CyberEnte extends JavaPlugin {
 
         // Special Features
         new BreadRecipe().register();
+        new PotionRecipe().register();
         new PlayTime().startTimer();
     }
 
