@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack;
 public class BreadRecipe {
 
     public void register() {
-        ItemStack halfBread = createItem("half bread", "cyberente:half_bread");
+        ItemStack halfBread = createItem("half bread", "cyberente:half_bread", 1);
         CustomShapedRecipe.of()
                 .key("half_bread")
                 .shape("   ", " B ", "   ")
@@ -39,7 +39,7 @@ public class BreadRecipe {
                 .result(halfBread)
                 .register();
 
-        ItemStack quarterBread = createItem("quarter bread", "cyberente:quarter_bread");
+        ItemStack quarterBread = createItem("quarter bread", "cyberente:quarter_bread", 2);
         CustomShapedRecipe.of()
                 .key("quarter_bread")
                 .shape("   ", " H ", "   ")
@@ -54,7 +54,7 @@ public class BreadRecipe {
                 .result(createItem("rett"))
                 .register();
 
-        ItemStack drill = createItem("drill", "cyberente:drill");
+        ItemStack drill = createItem("drill", "cyberente:drill", 3);
         CustomShapedRecipe.of()
                 .key("drill")
                 .shape(" S ", " B ", "   ")
@@ -63,7 +63,7 @@ public class BreadRecipe {
                 .result(drill)
                 .register();
 
-        ItemStack bire = createItem("bire", "cyberente:bire");
+        ItemStack bire = createItem("bire", "cyberente:bire", 4);
         CustomShapedRecipe.of()
                 .key("bire")
                 .shape(" A ", " B ", "   ")
@@ -73,11 +73,11 @@ public class BreadRecipe {
                 .register();
     }
 
-    private ItemStack createItem(String name, String itemModel) {
+    private ItemStack createItem(String name, String itemModel, int customModelData) {
         CustomItem customItem = new CustomItem(Material.BREAD);
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);
-        customItem.customModelData(1);
+        customItem.customModelData(customModelData);
         return customItem.asItemStack();
     }
 
