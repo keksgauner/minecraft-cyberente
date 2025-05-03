@@ -42,6 +42,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -100,7 +102,7 @@ public class DeathListener implements Listener {
     }
 
     @EventHandler
-    public void onSkullClick(PlayerInteractEvent interactEvent) {
+    public void onSkullInteract(PlayerInteractEvent interactEvent) {
         if (interactEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         Block clickedBlock = interactEvent.getClickedBlock();
@@ -145,7 +147,7 @@ public class DeathListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent closeEvent) {
+    public void onSkullInventoryClose(InventoryCloseEvent closeEvent) {
         Player player = (Player) closeEvent.getPlayer();
         UUID uuid = player.getUniqueId();
 
@@ -164,5 +166,15 @@ public class DeathListener implements Listener {
 
         clickedBlock.setType(Material.AIR);
         openedDeathInventories.remove(uuid);
+    }
+
+    @EventHandler
+    public void onSkullBreak(BlockBreakEvent blockBreakEvent) {
+        if(blockBreakEvent.getBlock().getType() != Material.PLAYER_HEAD) return;
+        Block block = blockBreakEvent.getBlock();
+        BlockState state = block.getState();
+        if (!(state instanceof Skull skull)) return;
+        if (!skull.hasMetadata("death")) return;
+        blockBreakEvent.setCancelled(true);
     }
 }

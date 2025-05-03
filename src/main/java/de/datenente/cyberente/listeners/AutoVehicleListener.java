@@ -56,7 +56,7 @@ public class AutoVehicleListener implements Listener {
         Entity entity = location.getWorld().spawnEntity(location, EntityType.OAK_BOAT);
         if (!(entity instanceof Boat boat)) return;
 
-        boat.customName(Message.text("Auto"));
+        boat.customName(Message.text("<red>Auto"));
         boat.setMetadata("car", CAR_VALUE);
         boat.addPassenger(player);
     }
