@@ -24,16 +24,18 @@
 package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
-import io.papermc.paper.event.entity.EntityMoveEvent;
+import de.datenente.cyberente.utils.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.*;
+import org.bukkit.entity.boat.OakBoat;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.Vector;
 
 public class AutoVehicleListener implements Listener {
 
@@ -42,40 +44,36 @@ public class AutoVehicleListener implements Listener {
     public static void clean() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
-                if (entity instanceof Pig pig && pig.hasMetadata("car")) {
-                    pig.remove();
+                if (entity instanceof OakBoat boat && boat.hasMetadata("car")) {
+                    boat.remove();
                 }
             }
         }
     }
 
     public static void spawnBoat(Player player) {
-        Location loc = player.getLocation();
-        Boat boat = (Boat) loc.getWorld().spawnEntity(loc, EntityType.OAK_BOAT);
-        boat.setCustomName("CyberEnte Boot");
+        Location location = player.getLocation();
+        Entity entity = location.getWorld().spawnEntity(location, EntityType.OAK_BOAT);
+        if (!(entity instanceof Boat boat)) return;
+
+        boat.customName(Message.text("Auto"));
         boat.setMetadata("car", CAR_VALUE);
         boat.addPassenger(player);
     }
 
     @EventHandler
     public void onDismount(EntityDismountEvent event) {
-        if (event.getDismounted() instanceof Boat boat) {
-            if (boat.hasMetadata("car")) {
-                boat.remove();
-            }
-        }
+        if (!(event.getDismounted() instanceof OakBoat boat)) return;
+        if (!boat.hasMetadata("car")) return;
+        boat.remove();
     }
 
     @EventHandler
-    public void onEntityMove(EntityMoveEvent event) {
-        if (event.getEntity() instanceof Boat boat) {
+    public void onEntityMove(PlayerMoveEvent event) {
+        if (event.getPlayer().getVehicle() instanceof OakBoat boat) {
             if (boat.hasMetadata("car")) {
-                for (Entity passenger : boat.getPassengers()) {
-                    if (passenger instanceof Player player) {
-                        player.sendMessage("You are in a car!");
-                    }
-                }
-                boat.setVelocity(boat.getVelocity().multiply(1.5));
+                Vector direction = event.getPlayer().getLocation().getDirection();
+                boat.setVelocity(direction.multiply(2.0));
             }
         }
     }

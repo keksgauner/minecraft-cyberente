@@ -86,7 +86,9 @@ public final class CyberEnte extends JavaPlugin {
         Databases.getInstance().getHibernateConnection().close();
 
         getServer().resetRecipes();
+
         StairSittingListener.clean();
+        AutoVehicleListener.clean();
     }
 
     void registerConfigs() {
