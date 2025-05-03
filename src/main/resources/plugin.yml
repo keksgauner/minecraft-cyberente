@@ -4,7 +4,7 @@ version: '1.2-SNAPSHOT'
 main: de.datenente.cyberente.CyberEnte
 api-version: '1.21'
 
-sof: [CyberEnte-Extended]
+depend: [CyberEnte-Extended]
 
 description: Ein maßgeschneidertes Minecraft Paper-Plugin für den privaten CyberEnte-Server.
 authors: [CyberEnte, KeksGauner]

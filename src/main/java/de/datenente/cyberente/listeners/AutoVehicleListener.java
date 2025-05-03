@@ -85,7 +85,6 @@ public class AutoVehicleListener implements Listener {
         if (!(player.getVehicle() instanceof OakBoat boat)) return;
         if (!boat.hasMetadata("car")) return;
 
-        Vector direction = player.getLocation().getDirection();
-        boat.setVelocity(direction.multiply(2.0));
+        boat.setVelocity(boat.getVelocity().multiply(1.5));
     }
 }
