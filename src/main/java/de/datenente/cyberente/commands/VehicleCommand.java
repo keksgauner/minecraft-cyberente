@@ -31,10 +31,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class AutoVehicleCommand extends Command {
+public class VehicleCommand extends Command {
 
-    public AutoVehicleCommand() {
-        super("autovehicle", "Fahre mit dem Auto", "/autovehicle", List.of("av"));
+    public VehicleCommand() {
+        super("vehicle", "Fahre mit dem Auto", "/vehicle", List.of("av"));
     }
 
     @Override
@@ -47,11 +47,11 @@ public class AutoVehicleCommand extends Command {
         }
 
         if (args.length == 0) {
-            AutoVehicleListener.spawnBoat(player);
+            AutoVehicleListener.spawnCar(player);
             return true;
         }
 
-        Message.send(sender, "<red>Benutze /autovehicle");
+        Message.send(sender, "<red>Benutze /vehicle");
         return false;
     }
 

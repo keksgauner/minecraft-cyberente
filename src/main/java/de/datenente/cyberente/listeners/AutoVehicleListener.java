@@ -51,7 +51,7 @@ public class AutoVehicleListener implements Listener {
         }
     }
 
-    public static void spawnBoat(Player player) {
+    public static void spawnCar(Player player) {
         Location location = player.getLocation();
         Entity entity = location.getWorld().spawnEntity(location, EntityType.OAK_BOAT);
         if (!(entity instanceof Boat boat)) return;
