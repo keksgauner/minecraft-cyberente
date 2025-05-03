@@ -38,7 +38,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class JoinLeaveListener implements Listener {
 
     @EventHandler
-    public void handleJoin(PlayerJoinEvent joinEvent) {
+    public void onJoin(PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
         String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -52,7 +52,7 @@ public class JoinLeaveListener implements Listener {
     }
 
     @EventHandler
-    public void handleLeave(PlayerQuitEvent quitEvent) {
+    public void onQuit(PlayerQuitEvent quitEvent) {
         Player player = quitEvent.getPlayer();
         String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 

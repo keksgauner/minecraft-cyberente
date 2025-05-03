@@ -26,10 +26,8 @@ package de.datenente.cyberente.utils.hibernate;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @MappedSuperclass
 public abstract class TimestampEntity {
 

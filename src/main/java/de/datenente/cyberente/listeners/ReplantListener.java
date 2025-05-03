@@ -45,7 +45,7 @@ public class ReplantListener implements Listener {
             Material.BEETROOTS, Material.BEETROOT_SEEDS);
 
     @EventHandler
-    public void handleCropReplant(PlayerInteractEvent event) {
+    public void onCropReplant(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         Block block = event.getClickedBlock();

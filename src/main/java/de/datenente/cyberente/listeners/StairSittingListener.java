@@ -25,11 +25,13 @@ package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Stairs;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,14 +39,35 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class StairSittingListener implements Listener {
 
-    static final FixedMetadataValue STAIRS_KEY = new FixedMetadataValue(CyberEnte.getInstance(), Boolean.TRUE);
+    static final FixedMetadataValue STAIRS_VALUE = new FixedMetadataValue(CyberEnte.getInstance(), Boolean.TRUE);
+
+    public static void clean() {
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                if (entity instanceof Pig pig && pig.hasMetadata("stair")) {
+                    pig.remove();
+                }
+            }
+        }
+    }
+
+    public void setPlayerSitting(Player player, Location location) {
+        Pig seat = location.getWorld().spawn(location, Pig.class);
+        seat.setInvisible(true);
+        seat.setGravity(false);
+        seat.setInvulnerable(true);
+        seat.setAI(false);
+        seat.setMetadata("stair", STAIRS_VALUE);
+        seat.addPassenger(player);
+    }
 
     @EventHandler
-    public void handleClickStair(PlayerInteractEvent playerInteractEvent) {
+    public void onClickStair(PlayerInteractEvent playerInteractEvent) {
         if (playerInteractEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         Block clickedBlock = playerInteractEvent.getClickedBlock();
@@ -90,20 +113,18 @@ public class StairSittingListener implements Listener {
     }
 
     @EventHandler
-    public void onDismount(EntityDismountEvent entityDismountEvent) {
+    public void onEntityDismount(EntityDismountEvent entityDismountEvent) {
         if (!entityDismountEvent.getDismounted().hasMetadata("stair")) return;
-        CyberEnte.getInstance()
-                .getScheduledExecutorService()
-                .schedule(() -> entityDismountEvent.getDismounted().remove(), 1, TimeUnit.MILLISECONDS);
+        entityDismountEvent.getDismounted().remove();
     }
 
-    public void setPlayerSitting(Player player, Location location) {
-        Pig seat = location.getWorld().spawn(location, Pig.class);
-        seat.setInvisible(true);
-        seat.setGravity(false);
-        seat.setInvulnerable(true);
-        seat.setAI(false);
-        seat.setMetadata("stair", STAIRS_KEY);
-        seat.addPassenger(player);
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        Entity vehicle = player.getVehicle();
+
+        if (vehicle instanceof Pig pig && pig.hasMetadata("stair")) {
+            pig.remove();
+        }
     }
 }

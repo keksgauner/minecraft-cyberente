@@ -56,7 +56,7 @@ public class DeathListener implements Listener {
     private final HashMap<UUID, Block> openedDeathInventories = new HashMap<>();
 
     @EventHandler
-    public void handleDeathLocation(PlayerDeathEvent deathEvent) {
+    public void onDeathLocation(PlayerDeathEvent deathEvent) {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
 
@@ -69,7 +69,7 @@ public class DeathListener implements Listener {
     }
 
     @EventHandler
-    public void handleDeathSkull(PlayerDeathEvent deathEvent) {
+    public void onDeathSkull(PlayerDeathEvent deathEvent) {
         Player player = deathEvent.getEntity();
         Location deathLocation = player.getLocation();
         Block deathBlock = deathLocation.getBlock();
@@ -100,7 +100,7 @@ public class DeathListener implements Listener {
     }
 
     @EventHandler
-    public void handleSkullClick(PlayerInteractEvent interactEvent) {
+    public void onSkullClick(PlayerInteractEvent interactEvent) {
         if (interactEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         Block clickedBlock = interactEvent.getClickedBlock();
@@ -145,7 +145,7 @@ public class DeathListener implements Listener {
     }
 
     @EventHandler
-    public void handleInventoryClose(InventoryCloseEvent closeEvent) {
+    public void onInventoryClose(InventoryCloseEvent closeEvent) {
         Player player = (Player) closeEvent.getPlayer();
         UUID uuid = player.getUniqueId();
 

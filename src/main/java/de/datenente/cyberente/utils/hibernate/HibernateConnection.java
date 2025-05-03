@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -36,7 +35,6 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.JdbcSettings;
 import org.hibernate.cfg.SchemaToolingSettings;
 
-@Setter
 @Getter
 public class HibernateConnection {
 

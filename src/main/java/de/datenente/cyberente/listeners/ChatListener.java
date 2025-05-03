@@ -41,7 +41,7 @@ import org.bukkit.event.Listener;
 public class ChatListener implements Listener {
 
     @EventHandler
-    public void handleChat(AsyncChatEvent chatEvent) {
+    public void onChat(AsyncChatEvent chatEvent) {
         Player player = chatEvent.getPlayer();
         Component message = chatEvent.message();
         String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));

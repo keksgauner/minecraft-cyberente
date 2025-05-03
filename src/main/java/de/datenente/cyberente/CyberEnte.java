@@ -83,7 +83,10 @@ public final class CyberEnte extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Plugin CyberEnte wird deaktiviert!");
 
+        Databases.getInstance().getHibernateConnection().close();
+
         getServer().resetRecipes();
+        StairSittingListener.clean();
     }
 
     void registerConfigs() {

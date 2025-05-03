@@ -14,6 +14,7 @@
 - [x] **/ping** – Zeigt den Ping eines Spielers (nur Java-Spieler)
 - [X] **/imagechat** – Bilder im Chat senden können
 - [ ] **/afk** – Setzt den Spieler in den AFK Modus
+- [ ] **/autovehicle** - Spawnt ein Auto
 
 ---
 

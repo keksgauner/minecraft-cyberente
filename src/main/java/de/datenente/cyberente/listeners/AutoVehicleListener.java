@@ -25,28 +25,42 @@ package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
 import io.papermc.paper.event.entity.EntityMoveEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDismountEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class AutoVehicleListener implements Listener {
 
+    static final FixedMetadataValue CAR_VALUE = new FixedMetadataValue(CyberEnte.getInstance(), Boolean.TRUE);
+
+    public static void clean() {
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                if (entity instanceof Pig pig && pig.hasMetadata("car")) {
+                    pig.remove();
+                }
+            }
+        }
+    }
+
     public static void spawnBoat(Player player) {
         Location loc = player.getLocation();
         Boat boat = (Boat) loc.getWorld().spawnEntity(loc, EntityType.OAK_BOAT);
-        boat.setBoatType(Boat.Type.OAK);
         boat.setCustomName("CyberEnte Boot");
-        boat.setMetadata("Auto", new FixedMetadataValue(CyberEnte.getInstance(), true));
+        boat.setMetadata("car", CAR_VALUE);
         boat.addPassenger(player);
     }
 
     @EventHandler
     public void onDismount(EntityDismountEvent event) {
         if (event.getDismounted() instanceof Boat boat) {
-            if (boat.hasMetadata("Auto")) {
+            if (boat.hasMetadata("car")) {
                 boat.remove();
             }
         }
@@ -55,7 +69,12 @@ public class AutoVehicleListener implements Listener {
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
         if (event.getEntity() instanceof Boat boat) {
-            if (boat.hasMetadata("Auto")) {
+            if (boat.hasMetadata("car")) {
+                for (Entity passenger : boat.getPassengers()) {
+                    if (passenger instanceof Player player) {
+                        player.sendMessage("You are in a car!");
+                    }
+                }
                 boat.setVelocity(boat.getVelocity().multiply(1.5));
             }
         }

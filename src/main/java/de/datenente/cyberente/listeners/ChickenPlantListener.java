@@ -40,7 +40,7 @@ import org.bukkit.inventory.ItemStack;
 public class ChickenPlantListener implements Listener {
 
     @EventHandler
-    public void handleChickenPlant(PlayerInteractEvent interactEvent) {
+    public void onChickenPlant(PlayerInteractEvent interactEvent) {
         if (interactEvent.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         Block clickedBlock = interactEvent.getClickedBlock();

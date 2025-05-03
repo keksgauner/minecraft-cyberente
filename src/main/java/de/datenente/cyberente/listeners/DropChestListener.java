@@ -38,7 +38,7 @@ import org.bukkit.inventory.ItemStack;
 public class DropChestListener implements Listener {
 
     @EventHandler
-    public void handleDropChest(PlayerDropItemEvent playerDropItemEvent) {
+    public void onDropChest(PlayerDropItemEvent playerDropItemEvent) {
         Item item = playerDropItemEvent.getItemDrop();
         Player player = playerDropItemEvent.getPlayer();
 

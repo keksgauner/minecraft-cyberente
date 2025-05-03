@@ -36,7 +36,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class CheatBlockListener implements Listener {
 
     @EventHandler
-    public void handleGameModeChange(PlayerGameModeChangeEvent gameModeChangeEvent) {
+    public void onGameModeChange(PlayerGameModeChangeEvent gameModeChangeEvent) {
         gameModeChangeEvent.setCancelled(true);
         Player player = gameModeChangeEvent.getPlayer();
         Bukkit.broadcast(Message.text(
@@ -46,13 +46,13 @@ public class CheatBlockListener implements Listener {
     }
 
     @EventHandler
-    public void handleGameRuleChange(WorldGameRuleChangeEvent gameRuleChangeEvent) {
+    public void onGameRuleChange(WorldGameRuleChangeEvent gameRuleChangeEvent) {
         gameRuleChangeEvent.setCancelled(true);
         Bukkit.broadcast(Message.text("<red>Die Gamerule darf nicht verändert werden.</red>"));
     }
 
     @EventHandler
-    public void handleTeleport(PlayerTeleportEvent teleportEvent) {
+    public void onTeleport(PlayerTeleportEvent teleportEvent) {
         if (teleportEvent.getCause() == PlayerTeleportEvent.TeleportCause.COMMAND) {
             teleportEvent.setCancelled(true);
             Bukkit.broadcast(Message.text(
