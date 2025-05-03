@@ -31,7 +31,7 @@ public class CustomWorldCreator {
         WorldCreator creator = new WorldCreator("moon");
 
         creator.environment(World.Environment.THE_END);
-        creator.generator(new MoonChunkGenerator());
+        creator.generator(new MoonGenerator());
 
         return creator.createWorld();
     }
@@ -40,7 +40,7 @@ public class CustomWorldCreator {
         WorldCreator creator = new WorldCreator("mars");
 
         creator.environment(World.Environment.NETHER);
-        creator.generator(new MarsChunkGenerator());
+        creator.generator(new MarsGenerator());
 
         return creator.createWorld();
     }

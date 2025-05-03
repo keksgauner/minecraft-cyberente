@@ -28,7 +28,7 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 
-public class MarsChunkGenerator extends ChunkGenerator {
+public class MarsGenerator extends ChunkGenerator {
     @Override
     public void generateSurface(
             @NotNull WorldInfo worldInfo,

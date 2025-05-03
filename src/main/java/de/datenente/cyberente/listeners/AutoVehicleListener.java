@@ -62,19 +62,30 @@ public class AutoVehicleListener implements Listener {
     }
 
     @EventHandler
-    public void onDismount(EntityDismountEvent event) {
-        if (!(event.getDismounted() instanceof OakBoat boat)) return;
+    public void onDismount(EntityDismountEvent entityDismountEvent) {
+        if (!(entityDismountEvent.getDismounted() instanceof OakBoat boat)) return;
         if (!boat.hasMetadata("car")) return;
         boat.remove();
     }
 
     @EventHandler
-    public void onEntityMove(PlayerMoveEvent event) {
-        if (event.getPlayer().getVehicle() instanceof OakBoat boat) {
-            if (boat.hasMetadata("car")) {
-                Vector direction = event.getPlayer().getLocation().getDirection();
-                boat.setVelocity(direction.multiply(2.0));
-            }
+    public void onEntityMove(PlayerMoveEvent playerMoveEvent) {
+        Player player = playerMoveEvent.getPlayer();
+        Location locationFrom = playerMoveEvent.getFrom();
+        Location locationTo = playerMoveEvent.getTo();
+
+        // Wenn der Spieler sich nicht bewegt hat, return
+        if (locationFrom.getBlockX() == locationTo.getBlockX()
+                && locationFrom.getBlockY() == locationTo.getBlockY()
+                && locationFrom.getBlockZ() == locationTo.getBlockZ()) {
+            return;
         }
+
+        if (player.getVehicle() == null) return;
+        if (!(player.getVehicle() instanceof OakBoat boat)) return;
+        if (!boat.hasMetadata("car")) return;
+
+        Vector direction = player.getLocation().getDirection();
+        boat.setVelocity(direction.multiply(2.0));
     }
 }
