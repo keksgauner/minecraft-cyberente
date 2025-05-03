@@ -115,6 +115,7 @@ public final class CyberEnte extends JavaPlugin {
         getServer().getCommandMap().register("cyberente", new ClearChatCommand());
         getServer().getCommandMap().register("cyberente", new ChatImageCommand());
         getServer().getCommandMap().register("cyberente", new AutoVehicleCommand());
+        getServer().getCommandMap().register("cyberente", new WorldCommand("world"));
     }
 
     private void registerAutomobilityRecipes() {

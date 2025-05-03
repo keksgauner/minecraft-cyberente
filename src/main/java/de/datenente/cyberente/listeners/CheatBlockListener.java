@@ -37,6 +37,10 @@ public class CheatBlockListener implements Listener {
 
     @EventHandler
     public void onGameModeChange(PlayerGameModeChangeEvent gameModeChangeEvent) {
+        if (gameModeChangeEvent.getNewGameMode() == GameMode.SPECTATOR
+                || gameModeChangeEvent.getNewGameMode() == GameMode.SURVIVAL) {
+            return;
+        }
         gameModeChangeEvent.setCancelled(true);
         Player player = gameModeChangeEvent.getPlayer();
         Bukkit.broadcast(Message.text(
