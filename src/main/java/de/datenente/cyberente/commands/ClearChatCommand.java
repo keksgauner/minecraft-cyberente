@@ -37,7 +37,8 @@ public class ClearChatCommand extends Command {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
+    public boolean execute(
+            @NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
 
         for (int i = 0; i < 100; i++) {
             Bukkit.broadcast(Component.text(""));

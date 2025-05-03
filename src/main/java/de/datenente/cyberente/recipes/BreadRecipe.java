@@ -73,7 +73,7 @@ public class BreadRecipe {
                 .register();
     }
 
-    static  ItemStack createItem(String name, String itemModel, int customModelData) {
+    static ItemStack createItem(String name, String itemModel, int customModelData) {
         CustomItem customItem = new CustomItem(Material.BREAD);
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);

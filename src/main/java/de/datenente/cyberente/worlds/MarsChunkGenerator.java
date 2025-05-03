@@ -23,11 +23,10 @@
  */
 package de.datenente.cyberente.worlds;
 
+import java.util.Random;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Random;
 
 public class MarsChunkGenerator extends ChunkGenerator {
     @Override

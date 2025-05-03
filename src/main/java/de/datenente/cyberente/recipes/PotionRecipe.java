@@ -46,7 +46,7 @@ public class PotionRecipe {
                 .register();
     }
 
-    static  ItemStack createItem(String name, String itemModel, int customModelData) {
+    static ItemStack createItem(String name, String itemModel, int customModelData) {
         CustomItem customItem = CustomItem.of(Material.POTION);
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);

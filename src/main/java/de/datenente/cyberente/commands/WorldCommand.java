@@ -25,6 +25,7 @@ package de.datenente.cyberente.commands;
 
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.worlds.CustomWorldCreator;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -32,8 +33,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class WorldCommand extends Command {
 
@@ -48,8 +47,8 @@ public class WorldCommand extends Command {
         if (args.length == 2) {
             String type = args[0].toLowerCase();
             String world = args[1].toLowerCase();
-            if(type.equals("tp")) {
-                if(!(sender instanceof Player player)) {
+            if (type.equals("tp")) {
+                if (!(sender instanceof Player player)) {
                     sender.sendMessage(Message.text("You must be a player to use this command!"));
                     return true;
                 }
@@ -61,12 +60,13 @@ public class WorldCommand extends Command {
                 }
 
                 Location spawnLocation = realWorld.getSpawnLocation();
-                Location location = new Location(realWorld, spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ());
+                Location location =
+                        new Location(realWorld, spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ());
 
                 player.teleport(location);
                 return true;
             }
-            if(type.equals("generate")) {
+            if (type.equals("generate")) {
                 if (world.equals("moon")) {
                     sender.sendMessage(Message.text("Generating Moon World..."));
                     CustomWorldCreator.createMoonWorld();
@@ -104,7 +104,7 @@ public class WorldCommand extends Command {
         if (args.length == 2) {
             // Wenn es sich um den ersten Parameter "tp" handelt, gebe die Welten zurück
             String type = args[0].toLowerCase();
-            if(type.equals("tp")) {
+            if (type.equals("tp")) {
                 return List.of("moon", "mars", "world");
             }
             return List.of("moon", "mars");

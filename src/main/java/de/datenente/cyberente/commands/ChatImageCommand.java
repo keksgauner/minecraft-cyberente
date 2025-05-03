@@ -42,7 +42,8 @@ public class ChatImageCommand extends Command {
         super("chatimage", "Sende im Chat ein Bild.", "/", List.of("ci"));
     }
 
-    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
+    public boolean execute(
+            @NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
 
         if (args.length == 1) {
             // InputStream stream = this.getClass().getClassLoader().getResourceAsStream("images/cyberente.png");
