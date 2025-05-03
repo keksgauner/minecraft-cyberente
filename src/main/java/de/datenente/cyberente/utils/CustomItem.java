@@ -41,9 +41,9 @@ import org.bukkit.potion.PotionType;
 @Setter
 public class CustomItem {
 
-    final ItemStack itemStack;
-    final ItemFactory itemFactory;
-    final ItemMeta itemMeta;
+    ItemStack itemStack;
+    ItemFactory itemFactory;
+    ItemMeta itemMeta;
 
     public static CustomItem of(Material material) {
         return new CustomItem(material);
@@ -90,7 +90,7 @@ public class CustomItem {
         return this;
     }
 
-    @Deprecated
+    @Deprecated(since = "1.21.5")
     public CustomItem customModelData(int id) {
         this.getItemMeta().setCustomModelData(id);
         return this;

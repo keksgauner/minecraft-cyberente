@@ -52,9 +52,6 @@ tasks {
         dependsOn(spotlessApply)
         dependsOn(shadowJar)
     }
-    jar {
-        dependsOn(spotlessApply)
-    }
 }
 
 def targetJavaVersion = 21
