@@ -40,6 +40,7 @@ import org.bukkit.util.Vector;
 public class AutoVehicleListener implements Listener {
     private static final HashMap<UUID, ArmorStand> vehicles = new HashMap<>();
 
+    // deprecated:
     public static void spawn(Player player) {
         Location loc = player.getLocation()
                 .add(player.getLocation().getDirection().normalize().multiply(2));
@@ -52,6 +53,17 @@ public class AutoVehicleListener implements Listener {
         stand.setCustomNameVisible(false);
         stand.getEquipment().setHelmet(new ItemStack(Material.DIAMOND_BLOCK));
         vehicles.put(player.getUniqueId(), stand);
+    }
+
+    // neu:
+    public static  void spawn(Player player, Vehicle vehicle)
+    {
+        Location loc = player.getLocation()
+                .add(player.getLocation().getDirection().normalize().multiply(2));
+
+        Vehicle visibleVehicle = vehicle;
+
+        vehicle = new
     }
 
     @EventHandler
