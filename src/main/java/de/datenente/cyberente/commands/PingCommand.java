@@ -38,7 +38,7 @@ public class PingCommand extends Command {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
         if (sender instanceof Player player && args.length == 0) {
             Message.send(player, "Dein Ping ist: <green>{0}</green>", player.getPing());
             return true;
@@ -67,7 +67,7 @@ public class PingCommand extends Command {
             @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
             throws IllegalArgumentException {
 
-        if (args.length == 0) {
+        if (args.length == 1) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
         }
 

@@ -31,7 +31,7 @@ import org.bukkit.potion.PotionType;
 
 public class PotionRecipe {
 
-    public void register() {
+    public static void register() {
         ItemStack colaPotion = createItem("cola potion", "cyberente:cola_potion", 1);
         CustomShapedRecipe.of()
                 .key("cola_potion")
@@ -46,7 +46,7 @@ public class PotionRecipe {
                 .register();
     }
 
-    private ItemStack createItem(String name, String itemModel, int customModelData) {
+    static  ItemStack createItem(String name, String itemModel, int customModelData) {
         CustomItem customItem = CustomItem.of(Material.POTION);
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);

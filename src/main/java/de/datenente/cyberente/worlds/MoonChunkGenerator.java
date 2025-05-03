@@ -23,23 +23,19 @@
  */
 package de.datenente.cyberente.worlds;
 
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import java.util.Random;
+import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.WorldInfo;
+import org.jetbrains.annotations.NotNull;
 
-public class MoonWorld {
-
-    public static World createCustomWorld(String name) {
-        WorldCreator creator = new WorldCreator(name);
-        if (name == "moon") creator.environment(World.Environment.THE_END);
-
-        if (name == "mars") {
-            creator.environment(World.Environment.NETHER);
-            creator.generator(new EmptyChunkGenerator());
-        }
-
-        creator.type(WorldType.FLAT);
-        // creator.generator(new EmptyChunkGenerator()); // Optional, wenn du z. B. eine leere Welt willst
-        return creator.createWorld();
+public class MoonChunkGenerator extends ChunkGenerator {
+    @Override
+    public void generateSurface(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull ChunkData chunkData) {
+        super.generateSurface(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 }

@@ -37,8 +37,7 @@ public class CheatBlockListener implements Listener {
 
     @EventHandler
     public void onGameModeChange(PlayerGameModeChangeEvent gameModeChangeEvent) {
-        if (gameModeChangeEvent.getNewGameMode() == GameMode.SPECTATOR
-                || gameModeChangeEvent.getNewGameMode() == GameMode.SURVIVAL) {
+        if (gameModeChangeEvent.getNewGameMode() == GameMode.SURVIVAL) {
             return;
         }
         gameModeChangeEvent.setCancelled(true);

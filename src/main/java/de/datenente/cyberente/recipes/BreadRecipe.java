@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BreadRecipe {
 
-    public void register() {
+    public static void register() {
         ItemStack halfBread = createItem("half bread", "cyberente:half_bread", 1);
         CustomShapedRecipe.of()
                 .key("half_bread")
@@ -73,24 +73,11 @@ public class BreadRecipe {
                 .register();
     }
 
-    private ItemStack createItem(String name, String itemModel, int customModelData) {
+    static  ItemStack createItem(String name, String itemModel, int customModelData) {
         CustomItem customItem = new CustomItem(Material.BREAD);
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);
         customItem.customModelData(customModelData);
-        return customItem.asItemStack();
-    }
-
-    private ItemStack createItem(String name, String itemModel) {
-        CustomItem customItem = new CustomItem(Material.BREAD);
-        customItem.displayName("<gold>" + name);
-        customItem.itemModel(itemModel);
-        return customItem.asItemStack();
-    }
-
-    private ItemStack createItem(String name) {
-        CustomItem customItem = new CustomItem(Material.BREAD);
-        customItem.displayName("<gold>" + name);
         return customItem.asItemStack();
     }
 }

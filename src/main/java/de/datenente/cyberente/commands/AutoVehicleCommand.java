@@ -54,4 +54,11 @@ public class AutoVehicleCommand extends Command {
         Message.send(sender, "<red>Benutze /autovehicle");
         return false;
     }
+
+    @Override
+    public @NotNull List<String> tabComplete(
+            @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
+            throws IllegalArgumentException {
+        return List.of();
+    }
 }

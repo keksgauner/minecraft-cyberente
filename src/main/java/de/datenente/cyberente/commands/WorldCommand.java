@@ -23,85 +23,93 @@
  */
 package de.datenente.cyberente.commands;
 
-import de.datenente.cyberente.worlds.MoonWorld;
+import de.datenente.cyberente.utils.Message;
+import de.datenente.cyberente.worlds.CustomWorldCreator;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class WorldCommand extends Command {
 
-    public WorldCommand(@NotNull String name) {
-        super(name);
+    public WorldCommand() {
+        super("world");
     }
 
     @Override
     public boolean execute(
             @NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
-        if (args.length == 0) {
-            sender.sendMessage("Usage: /world <name>");
-            return false;
+
+        if (args.length == 2) {
+            String type = args[0].toLowerCase();
+            String world = args[1].toLowerCase();
+            if(type.equals("tp")) {
+                if(!(sender instanceof Player player)) {
+                    sender.sendMessage(Message.text("You must be a player to use this command!"));
+                    return true;
+                }
+
+                World realWorld = Bukkit.getWorld(world);
+                if (realWorld == null) {
+                    sender.sendMessage(Message.text("World not found!"));
+                    return true;
+                }
+
+                Location spawnLocation = realWorld.getSpawnLocation();
+                Location location = new Location(realWorld, spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ());
+
+                player.teleport(location);
+                return true;
+            }
+            if(type.equals("generate")) {
+                if (world.equals("moon")) {
+                    sender.sendMessage(Message.text("Generating Moon World..."));
+                    CustomWorldCreator.createMoonWorld();
+                    sender.sendMessage(Message.text("Moon World generated!"));
+                    return true;
+                }
+                if (world.equals("mars")) {
+                    sender.sendMessage(Message.text("Generating Mars World..."));
+                    CustomWorldCreator.createMarsWorld();
+                    sender.sendMessage(Message.text("Mars World generated!"));
+                    return true;
+                }
+
+                sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
+                return true;
+            }
+
+            sender.sendMessage(Message.text("Invalid command! Available: tp, generate"));
+            return true;
         }
 
+        sender.sendMessage(Message.text("Usage: /world <tp/generate> <moon/mars/world>"));
+        return true;
+    }
+
+    @Override
+    public @NotNull List<String> tabComplete(
+            @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
+            throws IllegalArgumentException {
+
         if (args.length == 1) {
-            String arg = args[0];
-            Player player = (Player) sender;
-            switch (arg) {
-                case "moon":
-                    sender.sendMessage("Creating Moon World...");
-                    // MoonGenerator moonGenerator = new MoonGenerator();
-                    MoonWorld.createCustomWorld("MoonWorld");
-                    sender.sendMessage("Moon World created!");
-                    return true;
-                case "mars":
-                    sender.sendMessage("Creating Mars World...");
-                    // MarsGenerator marsGenerator = new MarsGenerator();
-                    MoonWorld.createCustomWorld("MarsWorld");
-                    sender.sendMessage("Mars World created!");
-                    return true;
-                case "tp":
-                    sender.sendMessage("Teleporting to Moon World...");
-                    player.teleport(new Location(Bukkit.getWorld("MoonWorld"), 0, 62, 0));
-                    player.setGameMode(GameMode.CREATIVE);
-                    player.getVehicle().addPassenger(player);
-                    return true;
-                case "tpback":
-                    sender.sendMessage("Teleporting back to the original world...");
-                    player.teleport(new Location(Bukkit.getWorld("world"), -168, 68, -54));
-                    return true;
-                default:
-                    sender.sendMessage("moon,tp,tpback");
-                    return false;
-            }
+            return List.of("tp", "generate");
         }
 
         if (args.length == 2) {
-            String arg = args[0];
-            String arg2 = args[1];
-            Player player = (Player) sender;
-            switch (arg) {
-                case "tp":
-                    if (arg2.equals("moon")) {
-                        sender.sendMessage("Teleporting to Moon World...");
-                        player.teleport(new Location(Bukkit.getWorld("MoonWorld"), 0, 62, 0));
-                        player.setGameMode(GameMode.CREATIVE);
-                    } else if (arg2.equals("mars")) {
-                        sender.sendMessage("Teleporting to Mars World...");
-                        player.teleport(new Location(Bukkit.getWorld("MarsWorld"), 0, 62, 0));
-                        player.setGameMode(GameMode.CREATIVE);
-                    }
-                    return true;
-                default:
-                    sender.sendMessage("moon,tp,tpback");
-                    return false;
+            // Wenn es sich um den ersten Parameter "tp" handelt, gebe die Welten zurück
+            String type = args[0].toLowerCase();
+            if(type.equals("tp")) {
+                return List.of("moon", "mars", "world");
             }
+            return List.of("moon", "mars");
         }
 
-        // MoonGenerator moonGenerator = new MoonGenerator();
-        //  MoonWorld.createCustomWorld("MoonWorld");
-        return true;
+        return List.of();
     }
 }

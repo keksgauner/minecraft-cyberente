@@ -23,4 +23,25 @@
  */
 package de.datenente.cyberente.worlds;
 
-public class MoonGenerator {}
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+
+public class CustomWorldCreator {
+    public static World createMoonWorld() {
+        WorldCreator creator = new WorldCreator("moon");
+
+        creator.environment(World.Environment.THE_END);
+        creator.generator(new MoonChunkGenerator());
+
+        return creator.createWorld();
+    }
+
+    public static World createMarsWorld() {
+        WorldCreator creator = new WorldCreator("mars");
+
+        creator.environment(World.Environment.NETHER);
+        creator.generator(new MarsChunkGenerator());
+
+        return creator.createWorld();
+    }
+}
