@@ -26,6 +26,7 @@ package de.datenente.cyberente;
 import de.datenente.cyberente.commands.*;
 import de.datenente.cyberente.config.MySQLConfig;
 import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
 import de.datenente.cyberente.recipes.PotionRecipe;
@@ -55,6 +56,12 @@ public final class CyberEnte extends JavaPlugin {
         }
 
         registerConfigs();
+
+        // Hibernate
+        new Databases(getLogger());
+        Databases.getInstance().openDatabaseConnection();
+        Databases.getInstance().startDatabaseConnectTask();
+
         registerListeners();
         registerCommands();
 

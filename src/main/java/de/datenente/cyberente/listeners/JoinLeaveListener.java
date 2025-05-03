@@ -24,6 +24,7 @@
 package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.utils.Message;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +47,8 @@ public class JoinLeaveListener implements Listener {
                 currentTime, player.getName());
 
         joinEvent.joinMessage(finalMessage);
+
+        Databases.getInstance().getPlayerDatabase().createOrUpdate(player.getUniqueId(), player.getName());
     }
 
     @EventHandler
