@@ -47,7 +47,7 @@ public class AutoVehicleCommand extends Command {
         }
 
         if (args.length == 0) {
-            AutoVehicleListener.spawn(player);
+            AutoVehicleListener.spawnBoat(player);
             return true;
         }
 

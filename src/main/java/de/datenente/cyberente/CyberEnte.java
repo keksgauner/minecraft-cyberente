@@ -34,7 +34,12 @@ import de.datenente.cyberente.special.PlayTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
-import org.bukkit.command.CommandMap;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -69,6 +74,9 @@ public final class CyberEnte extends JavaPlugin {
         new BreadRecipe().register();
         new PotionRecipe().register();
         new PlayTime().startTimer();
+
+        // Automobility Recipes
+        registerAutomobilityRecipes();
     }
 
     @Override
@@ -98,11 +106,49 @@ public final class CyberEnte extends JavaPlugin {
     }
 
     void registerCommands() {
-        CommandMap commandMap = getServer().getCommandMap();
+        getServer().getCommandMap().register("cyberente", new PingCommand());
+        getServer().getCommandMap().register("cyberente", new ClearChatCommand());
+        getServer().getCommandMap().register("cyberente", new ChatImageCommand());
+        getServer().getCommandMap().register("cyberente", new AutoVehicleCommand());
+    }
 
-        commandMap.register("cyberente", new PingCommand());
-        commandMap.register("cyberente", new ClearChatCommand());
-        commandMap.register("cyberente", new ChatImageCommand());
-        commandMap.register("cyberente", new AutoVehicleCommand());
+    private void registerAutomobilityRecipes() {
+        // Auto Mechanic Table
+        ItemStack mechanicTable = new ItemStack(Material.CRAFTING_TABLE);
+        ItemMeta mechanicMeta = mechanicTable.getItemMeta();
+        mechanicMeta.setDisplayName("Auto Mechanic Table");
+        mechanicTable.setItemMeta(mechanicMeta);
+
+        ShapedRecipe mechanicRecipe = new ShapedRecipe(new NamespacedKey(this, "auto_mechanic_table"), mechanicTable);
+        mechanicRecipe.shape("AA", "BB");
+        mechanicRecipe.setIngredient('A', Material.COPPER_INGOT);
+        mechanicRecipe.setIngredient('B', Material.STONE);
+        Bukkit.addRecipe(mechanicRecipe);
+
+        // Automobile Assembler
+        ItemStack assembler = new ItemStack(Material.SMITHING_TABLE);
+        ItemMeta assemblerMeta = assembler.getItemMeta();
+        assemblerMeta.setDisplayName("Automobile Assembler");
+        assembler.setItemMeta(assemblerMeta);
+
+        ShapedRecipe assemblerRecipe = new ShapedRecipe(new NamespacedKey(this, "automobile_assembler"), assembler);
+        assemblerRecipe.shape("AAA", " B ", "BBB");
+        assemblerRecipe.setIngredient('A', Material.COPPER_INGOT);
+        assemblerRecipe.setIngredient('B', Material.STONE);
+        Bukkit.addRecipe(assemblerRecipe);
+
+        // Autopilot Sign (x6)
+        ItemStack autopilotSign = new ItemStack(Material.OAK_SIGN, 6);
+        ItemMeta signMeta = autopilotSign.getItemMeta();
+        signMeta.setDisplayName("Autopilot Sign");
+        autopilotSign.setItemMeta(signMeta);
+
+        ShapedRecipe autopilotRecipe = new ShapedRecipe(new NamespacedKey(this, "autopilot_sign"), autopilotSign);
+        autopilotRecipe.shape("ACA", "ABA", " D ");
+        autopilotRecipe.setIngredient('A', Material.IRON_INGOT);
+        autopilotRecipe.setIngredient('B', Material.REDSTONE);
+        autopilotRecipe.setIngredient('C', Material.EMERALD);
+        autopilotRecipe.setIngredient('D', Material.IRON_BARS);
+        Bukkit.addRecipe(autopilotRecipe);
     }
 }
