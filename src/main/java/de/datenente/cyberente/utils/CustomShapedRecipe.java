@@ -46,6 +46,11 @@ public class CustomShapedRecipe {
     List<String> shape = new ArrayList<>();
     Map<Character, ItemStack> ingredients = new HashMap<>();
 
+    /**
+     * Creates a new CustomShapedRecipe instance.
+     *
+     * @return a new instance of CustomShapedRecipe
+     */
     public static CustomShapedRecipe of() {
         return new CustomShapedRecipe();
     }

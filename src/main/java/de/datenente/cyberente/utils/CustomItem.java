@@ -33,7 +33,9 @@ import org.bukkit.*;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionType;
 
 @Getter
 @Setter
@@ -42,6 +44,10 @@ public class CustomItem {
     final ItemStack itemStack;
     final ItemFactory itemFactory;
     final ItemMeta itemMeta;
+
+    public static CustomItem of(Material material) {
+        return new CustomItem(material);
+    }
 
     public CustomItem(Material material) {
         this.itemFactory = Bukkit.getItemFactory();
@@ -99,6 +105,13 @@ public class CustomItem {
 
     public CustomItem amount(int size) {
         this.getItemStack().setAmount(size);
+        return this;
+    }
+
+    public CustomItem potionType(PotionType potionType) {
+        if (this.getItemStack().getType() == Material.POTION) {
+            ((PotionMeta) this.getItemMeta()).setBasePotionType(potionType);
+        }
         return this;
     }
 }

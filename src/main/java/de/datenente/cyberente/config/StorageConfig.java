@@ -62,7 +62,7 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         this.save();
     }
 
-    public long getPlayTime(UUID uuid) {
+    public Long getPlayTime(UUID uuid) {
         String uuidString = uuid.toString();
         HashMap<String, Long> playTime = this.getStorage().getPlayTime();
 

@@ -27,6 +27,7 @@ import de.datenente.cyberente.utils.CustomItem;
 import de.datenente.cyberente.utils.CustomShapedRecipe;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionType;
 
 public class PotionRecipe {
 
@@ -36,7 +37,11 @@ public class PotionRecipe {
                 .key("cola_potion")
                 .shape(" S ", " P ", "   ")
                 .ingredient('S', Material.SUGAR)
-                .ingredient('P', Material.POTION)
+                .ingredient(
+                        'P',
+                        CustomItem.of(Material.POTION)
+                                .potionType(PotionType.WATER)
+                                .asItemStack())
                 .result(colaPotion)
                 .register();
     }
