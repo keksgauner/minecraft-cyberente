@@ -34,10 +34,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class WorldCommand extends Command {
+public class WorldsCommand extends Command {
 
-    public WorldCommand() {
-        super("world");
+    public WorldsCommand() {
+        super("worlds");
     }
 
     @Override

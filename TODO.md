@@ -15,7 +15,7 @@
 - [X] **/imagechat** – Bilder im Chat senden können
 - [ ] **/afk** – Setzt den Spieler in den AFK Modus
 - [ ] **/vehicle** - Spawnt ein Auto
-- [ ] **/world** - Teleportiert den Spieler in andere Welten
+- [ ] **/worlds** - Teleportiert/Generiert andere Welten
 
 ---
 

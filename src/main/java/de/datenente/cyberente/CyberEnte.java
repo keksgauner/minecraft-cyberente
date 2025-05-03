@@ -109,6 +109,6 @@ public final class CyberEnte extends JavaPlugin {
         commandMap.register("cyberente", new ClearChatCommand());
         commandMap.register("cyberente", new ChatImageCommand());
         commandMap.register("cyberente", new VehicleCommand());
-        commandMap.register("cyberente", new WorldCommand());
+        commandMap.register("cyberente", new WorldsCommand());
     }
 }
