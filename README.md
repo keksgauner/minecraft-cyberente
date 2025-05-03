@@ -22,6 +22,13 @@ Eine vollständige Übersicht findest du in der Datei: [📄 Funktionen](TODO.md
 
 ---
 
+## 📥 Installation
+
+1. Lade die neueste Version von der [**Releases-Seite**](https://github.com/keksgauner/minecraft-cyberente/releases) herunter.
+2. Kopiere die `CyberEnte-paper.jar` in den `plugins`-Ordner deines Paper-Servers.
+3. Installiere das [Extended-Plugin](https://github.com/keksgauner/minecraft-cyberente-extended) der Abhängigkeiten für das Paper-Plugin **CyberEnte** enthält.
+4. Starte den Server neu.
+
 ## 🧪 Kompilieren aus dem Quellcode
 
 **Voraussetzungen:**
