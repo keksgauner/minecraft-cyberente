@@ -27,9 +27,15 @@ import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 
 public class MoonGenerator extends ChunkGenerator {
+
+    // Moon generator
+    // Using: https://www.spigotmc.org/threads/1-17-1-world-generator-api.521870/
+    // Outdated: https://bukkit.fandom.com/wiki/Developing_a_World_Generator_Plugin
+
     @Override
     public void generateNoise(
             @NotNull WorldInfo worldInfo,
@@ -37,7 +43,26 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        super.generateNoise(worldInfo, random, chunkX, chunkZ, chunkData);
+        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
+        generator.setScale(0.008);
+
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+
+                double noise = generator.noise(worldX + x, worldZ + z, 1, 1, true);
+                int height = (int) (noise * 40);
+                height += 84;
+                if (height > chunkData.getMaxHeight()) {
+                    height = chunkData.getMaxHeight();
+                }
+                for (int y = 0; y < height; y++) {
+                    chunkData.setBlock(x, y, z, Material.END_STONE);
+                }
+            }
+        }
     }
 
     @Override
@@ -47,30 +72,7 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        int baseHeight = 64; // Standardhöhe der Mondoberfläche
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                int worldX = chunkX * 16 + x;
-                int worldZ = chunkZ * 16 + z;
-
-                // Leichte Höhenunterschiede
-                int height = baseHeight + random.nextInt(3) - 1; // 63–65
-
-                double noise = Math.sin(worldX * 0.05) + Math.cos(worldZ * 0.05) + random.nextDouble();
-                if (noise > 1.8) {
-                    height -= 4 + random.nextInt(3); // Tieferer Krater
-                }
-
-                // Mondoberflächenblöcke
-                chunkData.setBlock(x, height, z, Material.END_STONE);
-
-                // Untere Schichten mit Stein oder ähnlichem auffüllen
-                for (int y = height - 1; y > 0; y--) {
-                    chunkData.setBlock(x, y, z, Material.STONE);
-                }
-            }
-        }
+        super.generateSurface(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 
     @Override
@@ -80,7 +82,13 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        super.generateBedrock(worldInfo, random, chunkX, chunkZ, chunkData);
+        if (chunkData.getMinHeight() == worldInfo.getMinHeight()) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    chunkData.setBlock(x, chunkData.getMinHeight(), z, Material.BEDROCK);
+                }
+            }
+        }
     }
 
     @Override
