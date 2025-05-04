@@ -91,22 +91,22 @@ public class WorldsCommand extends Command {
                     return true;
                 }
 
-                case "unload" -> {
+                case "delete" -> {
                     if (!sender.isOp()) {
                         sender.sendMessage(Message.text("You do not have permission to use this command!"));
                         return true;
                     }
 
                     if (world.equals("world_moon")) {
-                        sender.sendMessage(Message.text("Unload Moon World..."));
-                        CustomWorldCreator.unloadWorld("world_moon");
-                        sender.sendMessage(Message.text("Moon World unloaded!"));
+                        sender.sendMessage(Message.text("Delete Moon World..."));
+                        CustomWorldCreator.deleteWorld("world_moon");
+                        sender.sendMessage(Message.text("Moon World deleted!"));
                         return true;
                     }
                     if (world.equals("world_mars")) {
-                        sender.sendMessage(Message.text("Unload Mars World..."));
-                        CustomWorldCreator.unloadWorld("world_mars");
-                        sender.sendMessage(Message.text("Mars World unloaded!"));
+                        sender.sendMessage(Message.text("Delete Mars World..."));
+                        CustomWorldCreator.deleteWorld("world_mars");
+                        sender.sendMessage(Message.text("Mars World deleted!"));
                         return true;
                     }
 
@@ -119,7 +119,7 @@ public class WorldsCommand extends Command {
             return true;
         }
 
-        sender.sendMessage(Message.text("Usage: /world <tp/generate/unload> <world_moon/world_mars/world>"));
+        sender.sendMessage(Message.text("Usage: /world <tp/generate/delete> <world_moon/world_mars/world>"));
         return true;
     }
 
@@ -129,7 +129,7 @@ public class WorldsCommand extends Command {
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return List.of("tp", "generate", "unload");
+            return List.of("tp", "generate", "delete");
         }
 
         if (args.length == 2) {

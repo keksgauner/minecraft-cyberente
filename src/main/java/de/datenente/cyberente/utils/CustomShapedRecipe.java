@@ -90,7 +90,7 @@ public class CustomShapedRecipe {
         ShapedRecipe recipe = new ShapedRecipe(namespacedKey, this.getResult());
 
         recipe.shape(this.getShape().toArray(new String[0]));
-        ingredients.forEach(recipe::setIngredient);
+        this.getIngredients().forEach(recipe::setIngredient);
 
         CyberEnte.getInstance().getServer().addRecipe(recipe);
     }

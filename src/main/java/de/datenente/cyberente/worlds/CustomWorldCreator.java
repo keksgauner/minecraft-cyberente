@@ -25,10 +25,13 @@ package de.datenente.cyberente.worlds;
 
 import de.datenente.cyberente.CyberEnte;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.codehaus.plexus.util.FileUtils;
 
 public class CustomWorldCreator {
     public static World createMoonWorld() {
@@ -73,12 +76,13 @@ public class CustomWorldCreator {
         return Bukkit.unloadWorld(world, true);
     }
 
-    public static boolean deleteWorld(String worldName) {
-        World world = Bukkit.getWorld(worldName);
-        if (world == null) return false;
-
+    public static void deleteWorld(String worldName) {
         unloadWorld(worldName);
         File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
-        return worldFolder.delete();
+        try {
+            FileUtils.deleteDirectory(worldFolder);
+        } catch (IOException ex) {
+            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "Failed to delete world folder", ex);
+        }
     }
 }
