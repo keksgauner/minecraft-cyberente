@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.codehaus.plexus.util.FileUtils;
@@ -39,11 +40,14 @@ public class CustomWorldCreator {
         creator.environment(World.Environment.NORMAL);
         creator.generator(new MoonGenerator());
 
+        creator.generateStructures(false);
         World world = creator.createWorld();
         if (world == null) {
             CyberEnte.getInstance().getLogger().severe("Failed to create world: world_moon");
             return null;
         }
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+
         return world;
     }
 
@@ -53,11 +57,13 @@ public class CustomWorldCreator {
         creator.environment(World.Environment.NORMAL);
         creator.generator(new MarsGenerator());
 
+        creator.generateStructures(false);
         World world = creator.createWorld();
         if (world == null) {
             CyberEnte.getInstance().getLogger().severe("Failed to create world: world_mars");
             return null;
         }
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         return world;
     }
 
