@@ -47,69 +47,70 @@ public class WorldsCommand extends Command {
         if (args.length == 2) {
             String type = args[0].toLowerCase();
             String world = args[1].toLowerCase();
-            if (type.equals("tp")) {
-                if (!(sender instanceof Player player)) {
-                    sender.sendMessage(Message.text("You must be a player to use this command!"));
+            switch (type) {
+                case "tp" -> {
+                    if (!(sender instanceof Player player)) {
+                        sender.sendMessage(Message.text("You must be a player to use this command!"));
+                        return true;
+                    }
+
+                    World realWorld = Bukkit.getWorld(world);
+                    if (realWorld == null) {
+                        sender.sendMessage(Message.text("World not found!"));
+                        return true;
+                    }
+
+                    Location spawnLocation = realWorld.getSpawnLocation();
+                    Location location =
+                            new Location(realWorld, spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ());
+
+                    player.teleport(location);
                     return true;
                 }
+                case "generate" -> {
+                    if (!sender.isOp()) {
+                        sender.sendMessage(Message.text("You do not have permission to use this command!"));
+                        return true;
+                    }
 
-                World realWorld = Bukkit.getWorld(world);
-                if (realWorld == null) {
-                    sender.sendMessage(Message.text("World not found!"));
+                    if (world.equals("moon")) {
+                        sender.sendMessage(Message.text("Generating Moon World..."));
+                        CustomWorldCreator.createMoonWorld();
+                        sender.sendMessage(Message.text("Moon World generated!"));
+                        return true;
+                    }
+                    if (world.equals("mars")) {
+                        sender.sendMessage(Message.text("Generating Mars World..."));
+                        CustomWorldCreator.createMarsWorld();
+                        sender.sendMessage(Message.text("Mars World generated!"));
+                        return true;
+                    }
+
+                    sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
                     return true;
                 }
+                case "unload" -> {
+                    if (!sender.isOp()) {
+                        sender.sendMessage(Message.text("You do not have permission to use this command!"));
+                        return true;
+                    }
 
-                Location spawnLocation = realWorld.getSpawnLocation();
-                Location location =
-                        new Location(realWorld, spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ());
+                    if (world.equals("moon")) {
+                        sender.sendMessage(Message.text("Deleting Moon World..."));
+                        CustomWorldCreator.unloadWorld("world_moon");
+                        sender.sendMessage(Message.text("Moon World deleted!"));
+                        return true;
+                    }
+                    if (world.equals("mars")) {
+                        sender.sendMessage(Message.text("Deleting Mars World..."));
+                        CustomWorldCreator.unloadWorld("world_mars");
+                        sender.sendMessage(Message.text("Mars World deleted!"));
+                        return true;
+                    }
 
-                player.teleport(location);
-                return true;
-            }
-            if (type.equals("generate")) {
-                if (!sender.isOp()) {
-                    sender.sendMessage(Message.text("You do not have permission to use this command!"));
+                    sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
                     return true;
                 }
-
-                if (world.equals("moon")) {
-                    sender.sendMessage(Message.text("Generating Moon World..."));
-                    CustomWorldCreator.createMoonWorld();
-                    sender.sendMessage(Message.text("Moon World generated!"));
-                    return true;
-                }
-                if (world.equals("mars")) {
-                    sender.sendMessage(Message.text("Generating Mars World..."));
-                    CustomWorldCreator.createMarsWorld();
-                    sender.sendMessage(Message.text("Mars World generated!"));
-                    return true;
-                }
-
-                sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
-                return true;
-            }
-
-            if (type.equals("unload")) {
-                if (!sender.isOp()) {
-                    sender.sendMessage(Message.text("You do not have permission to use this command!"));
-                    return true;
-                }
-
-                if (world.equals("moon")) {
-                    sender.sendMessage(Message.text("Deleting Moon World..."));
-                    CustomWorldCreator.unloadWorld("world_moon");
-                    sender.sendMessage(Message.text("Moon World deleted!"));
-                    return true;
-                }
-                if (world.equals("mars")) {
-                    sender.sendMessage(Message.text("Deleting Mars World..."));
-                    CustomWorldCreator.unloadWorld("world_mars");
-                    sender.sendMessage(Message.text("Mars World deleted!"));
-                    return true;
-                }
-
-                sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
-                return true;
             }
 
             sender.sendMessage(Message.text("Invalid command! Available: tp, generate"));
