@@ -94,7 +94,7 @@ public class VehicleListener implements Listener {
         Vector moveVector =
                 locationTo.toVector().subtract(locationFrom.toVector()).normalize();
 
-       double dot = playerDirection.dot(moveVector);
+        double dot = playerDirection.dot(moveVector);
         Vector currentVelocity = boat.getVelocity();
 
         if (dot > 0.7) {
