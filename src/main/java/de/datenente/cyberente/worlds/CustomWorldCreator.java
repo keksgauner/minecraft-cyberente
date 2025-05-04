@@ -23,12 +23,14 @@
  */
 package de.datenente.cyberente.worlds;
 
+import de.datenente.cyberente.CyberEnte;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 
 public class CustomWorldCreator {
     public static World createMoonWorld() {
-        WorldCreator creator = new WorldCreator("moon");
+        WorldCreator creator = new WorldCreator("world_moon");
 
         creator.environment(World.Environment.THE_END);
         creator.generator(new MoonGenerator());
@@ -37,11 +39,19 @@ public class CustomWorldCreator {
     }
 
     public static World createMarsWorld() {
-        WorldCreator creator = new WorldCreator("mars");
+        WorldCreator creator = new WorldCreator("world_mars");
 
         creator.environment(World.Environment.NETHER);
         creator.generator(new MarsGenerator());
 
         return creator.createWorld();
+    }
+
+    public static void unloadWorld(String worldName) {
+        World world = Bukkit.getWorld(worldName);
+        if (world == null) return;
+
+        world.getPlayers().forEach(player -> player.teleport(org.bukkit.Bukkit.getWorlds().getFirst().getSpawnLocation()));
+        Bukkit.unloadWorld(world, true);
     }
 }

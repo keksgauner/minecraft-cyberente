@@ -67,7 +67,10 @@ public class WorldsCommand extends Command {
                 return true;
             }
             if (type.equals("generate")) {
-                if (!sender.isOp()) return true;
+                if (!sender.isOp()) {
+                    sender.sendMessage(Message.text("You do not have permission to use this command!"));
+                    return true;
+                }
 
                 if (world.equals("moon")) {
                     sender.sendMessage(Message.text("Generating Moon World..."));
@@ -79,6 +82,29 @@ public class WorldsCommand extends Command {
                     sender.sendMessage(Message.text("Generating Mars World..."));
                     CustomWorldCreator.createMarsWorld();
                     sender.sendMessage(Message.text("Mars World generated!"));
+                    return true;
+                }
+
+                sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
+                return true;
+            }
+
+            if (type.equals("unload")) {
+                if (!sender.isOp()) {
+                    sender.sendMessage(Message.text("You do not have permission to use this command!"));
+                    return true;
+                }
+
+                if (world.equals("moon")) {
+                    sender.sendMessage(Message.text("Deleting Moon World..."));
+                    CustomWorldCreator.unloadWorld("world_moon");
+                    sender.sendMessage(Message.text("Moon World deleted!"));
+                    return true;
+                }
+                if (world.equals("mars")) {
+                    sender.sendMessage(Message.text("Deleting Mars World..."));
+                    CustomWorldCreator.unloadWorld("world_mars");
+                    sender.sendMessage(Message.text("Mars World deleted!"));
                     return true;
                 }
 
@@ -100,7 +126,7 @@ public class WorldsCommand extends Command {
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return List.of("tp", "generate");
+            return List.of("tp", "generate", "delete");
         }
 
         if (args.length == 2) {

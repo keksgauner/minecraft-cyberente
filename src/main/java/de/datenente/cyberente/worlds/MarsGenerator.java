@@ -24,18 +24,55 @@
 package de.datenente.cyberente.worlds;
 
 import java.util.Random;
+
+import org.bukkit.Material;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 
 public class MarsGenerator extends ChunkGenerator {
+
     @Override
-    public void generateSurface(
-            @NotNull WorldInfo worldInfo,
-            @NotNull Random random,
-            int chunkX,
-            int chunkZ,
-            @NotNull ChunkData chunkData) {
-        super.generateSurface(worldInfo, random, chunkX, chunkZ, chunkData);
+    public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        super.generateNoise(worldInfo, random, chunkX, chunkZ, chunkData);
+    }
+
+    @Override
+    public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        int baseHeight = 64;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                // Geringe Höhenunterschiede
+                int height = baseHeight + random.nextInt(3) - 1;
+
+                // Krater selten hinzufügen
+                if (random.nextDouble() < 0.02) {
+                    height -= 3 + random.nextInt(2); // kleine Dellen
+                }
+
+                // Oberfläche
+                chunkData.setBlock(x, height, z, Material.RED_SAND);
+
+                // Darunter rot-gelbe Steinschichten
+                for (int y = height - 1; y > 0; y--) {
+                    if (y > height - 3) {
+                        chunkData.setBlock(x, y, z, Material.TERRACOTTA); // rötlich
+                    } else {
+                        chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void generateBedrock(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        super.generateBedrock(worldInfo, random, chunkX, chunkZ, chunkData);
+    }
+
+    @Override
+    public void generateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        super.generateCaves(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 }
