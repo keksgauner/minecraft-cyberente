@@ -69,8 +69,7 @@ public class CustomWorldCreator {
         if (world == null) return false;
 
         world.getPlayers()
-                .forEach(player ->
-                        player.teleport(Bukkit.getWorlds().getFirst().getSpawnLocation()));
+                .forEach(player -> player.teleport(Bukkit.getWorlds().getFirst().getSpawnLocation()));
         return Bukkit.unloadWorld(world, true);
     }
 

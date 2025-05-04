@@ -53,7 +53,7 @@ public class PotionRecipe {
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);
         customItem.customModelData(customModelData);
-        customItem.addCustomPotionEffect( new PotionEffect(PotionEffectType.SPEED, 10, 0), false);
+        customItem.addCustomPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 10, 2), false);
         return customItem.asItemStack();
     }
 }

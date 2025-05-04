@@ -23,11 +23,10 @@
  */
 package de.datenente.cyberente.utils;
 
+import de.datenente.cyberente.CyberEnte;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -38,7 +37,6 @@ import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -104,12 +102,14 @@ public class CustomItem {
         String[] splitKey = key.split(":");
         if (splitKey.length == 2) {
             this.getItemMeta().setItemModel(new NamespacedKey(splitKey[0], splitKey[1]));
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Invalid item model key: " + key);
         return this;
     }
 
     public CustomItem itemModel(NamespacedKey namespacedKey) {
-            this.getItemMeta().setItemModel(namespacedKey);
+        this.getItemMeta().setItemModel(namespacedKey);
 
         return this;
     }
@@ -142,14 +142,15 @@ public class CustomItem {
 
     public boolean isPlayerHead() {
         ItemStack itemStack = this.getItemStack();
-        return itemStack.getType() == Material.PLAYER_HEAD ||
-                itemStack.getType() == Material.PLAYER_WALL_HEAD;
+        return itemStack.getType() == Material.PLAYER_HEAD || itemStack.getType() == Material.PLAYER_WALL_HEAD;
     }
 
     public CustomItem owningPlayer(OfflinePlayer player) {
         if (this.getItemMeta() instanceof SkullMeta skullMeta) {
             skullMeta.setOwningPlayer(player);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a player head");
         return this;
     }
 
@@ -161,60 +162,76 @@ public class CustomItem {
     public CustomItem durability(int durability) {
         if (this.getItemMeta() instanceof Damageable damageable) {
             damageable.setDamage((short) durability);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not damageable");
         return this;
     }
 
     public CustomItem damage(int damage) {
         if (this.getItemMeta() instanceof Damageable damageable) {
             damageable.setDamage(damage);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not damageable");
         return this;
     }
 
     public CustomItem addDamage(int damage) {
         if (this.getItemMeta() instanceof Damageable damageable) {
             damageable.setDamage(damageable.getDamage() + damage);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not damageable");
         return this;
     }
 
     public CustomItem removeDamage(int damage) {
         if (this.getItemMeta() instanceof Damageable damageable) {
             damageable.setDamage(damageable.getDamage() - damage);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not damageable");
         return this;
     }
 
     public CustomItem potionType(PotionType potionType) {
         if (this.getItemMeta() instanceof PotionMeta potionMeta) {
             potionMeta.setBasePotionType(potionType);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a potion");
         return this;
     }
 
     public CustomItem addCustomPotionEffect(PotionEffect potionEffect, boolean overwrite) {
         if (this.getItemMeta() instanceof PotionMeta potionMeta) {
             potionMeta.addCustomEffect(potionEffect, overwrite);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a potion");
         return this;
     }
 
     public CustomItem removeCustomPotionEffect(PotionEffectType potionEffectType) {
-        if (this.getItemMeta()instanceof PotionMeta potionMeta) {
+        if (this.getItemMeta() instanceof PotionMeta potionMeta) {
             potionMeta.removeCustomEffect(potionEffectType);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a potion");
         return this;
     }
 
     public CustomItem clearCustomPotionEffects() {
-        if (this.getItemMeta()instanceof PotionMeta potionMeta) {
+        if (this.getItemMeta() instanceof PotionMeta potionMeta) {
             potionMeta.clearCustomEffects();
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a potion");
         return this;
     }
 
-    public CustomItem addItemFlags(ItemFlag ... itemFlags) {
+    public CustomItem addItemFlags(ItemFlag... itemFlags) {
         this.getItemMeta().addItemFlags(itemFlags);
         return this;
     }
@@ -226,133 +243,139 @@ public class CustomItem {
 
     public boolean isLeatherArmor() {
         Material material = this.getItemStack().getType();
-        return (
-                material == Material.LEATHER_HELMET ||
-                        material == Material.LEATHER_CHESTPLATE ||
-                        material == Material.LEATHER_LEGGINGS ||
-                        material == Material.LEATHER_BOOTS
-        );
+        return (material == Material.LEATHER_HELMET
+                || material == Material.LEATHER_CHESTPLATE
+                || material == Material.LEATHER_LEGGINGS
+                || material == Material.LEATHER_BOOTS);
     }
 
     public boolean isIronArmor() {
         Material material = this.getItemStack().getType();
-        return (
-                material == Material.IRON_HELMET ||
-                        material == Material.IRON_CHESTPLATE ||
-                        material == Material.IRON_LEGGINGS ||
-                        material == Material.IRON_BOOTS
-        );
+        return (material == Material.IRON_HELMET
+                || material == Material.IRON_CHESTPLATE
+                || material == Material.IRON_LEGGINGS
+                || material == Material.IRON_BOOTS);
     }
 
     public boolean isGoldenArmor() {
         Material material = this.getItemStack().getType();
-        return (
-                material == Material.GOLDEN_HELMET ||
-                        material == Material.GOLDEN_CHESTPLATE ||
-                        material == Material.GOLDEN_LEGGINGS ||
-                        material == Material.GOLDEN_BOOTS
-        );
+        return (material == Material.GOLDEN_HELMET
+                || material == Material.GOLDEN_CHESTPLATE
+                || material == Material.GOLDEN_LEGGINGS
+                || material == Material.GOLDEN_BOOTS);
     }
 
     public boolean isChainmailArmor() {
         Material material = this.getItemStack().getType();
-        return (
-                material == Material.CHAINMAIL_HELMET ||
-                        material == Material.CHAINMAIL_CHESTPLATE ||
-                        material == Material.CHAINMAIL_LEGGINGS ||
-                        material == Material.CHAINMAIL_BOOTS
-        );
+        return (material == Material.CHAINMAIL_HELMET
+                || material == Material.CHAINMAIL_CHESTPLATE
+                || material == Material.CHAINMAIL_LEGGINGS
+                || material == Material.CHAINMAIL_BOOTS);
     }
 
     public boolean isDiamondArmor() {
         Material material = this.getItemStack().getType();
-        return (
-                material == Material.DIAMOND_HELMET ||
-                        material == Material.DIAMOND_CHESTPLATE ||
-                        material == Material.DIAMOND_LEGGINGS ||
-                        material == Material.DIAMOND_BOOTS
-        );
+        return (material == Material.DIAMOND_HELMET
+                || material == Material.DIAMOND_CHESTPLATE
+                || material == Material.DIAMOND_LEGGINGS
+                || material == Material.DIAMOND_BOOTS);
     }
 
     public boolean isNetheriteArmor() {
         Material material = this.getItemStack().getType();
-        return (
-                material == Material.NETHERITE_HELMET ||
-                        material == Material.NETHERITE_CHESTPLATE ||
-                        material == Material.NETHERITE_LEGGINGS ||
-                        material == Material.NETHERITE_BOOTS
-        );
+        return (material == Material.NETHERITE_HELMET
+                || material == Material.NETHERITE_CHESTPLATE
+                || material == Material.NETHERITE_LEGGINGS
+                || material == Material.NETHERITE_BOOTS);
     }
 
     public CustomItem armorColor(Color color) {
         if (this.getItemMeta() instanceof LeatherArmorMeta leatherArmorMeta) {
             leatherArmorMeta.setColor(color);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not leather armor");
         return this;
     }
 
     public CustomItem resetArmorColor() {
         if (this.getItemMeta() instanceof LeatherArmorMeta leatherArmorMeta) {
-            leatherArmorMeta.setColor(
-                    this.getItemFactory().getDefaultLeatherColor()
-            );
+            leatherArmorMeta.setColor(this.getItemFactory().getDefaultLeatherColor());
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not leather armor");
         return this;
     }
 
     public CustomItem fireworkPower(int power) {
         if (this.getItemMeta() instanceof FireworkMeta fireworkMeta) {
             fireworkMeta.setPower(power);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a firework");
         return this;
     }
 
     public CustomItem removeFireworkEffect(int index) {
         if (this.getItemMeta() instanceof FireworkMeta fireworkMeta) {
             fireworkMeta.removeEffect(index);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a firework");
         return this;
     }
 
     public CustomItem addFireworkEffects(FireworkEffect... effect) {
         if (this.getItemMeta() instanceof FireworkMeta fireworkMeta) {
             fireworkMeta.addEffects(effect);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a firework");
         return this;
     }
 
     public CustomItem chargeEffect(FireworkEffect effect) {
         if (this.getItemMeta() instanceof FireworkEffectMeta fireworkEffectMeta) {
             fireworkEffectMeta.setEffect(effect);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a firework effect");
         return this;
     }
 
     public CustomItem setBannerPattern(int i, Pattern pattern) {
         if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
             bannerMeta.setPattern(i, pattern);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
         return this;
     }
 
     public CustomItem setBannerPatterns(List<Pattern> patterns) {
         if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
             bannerMeta.setPatterns(patterns);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
         return this;
     }
 
     public CustomItem removeBannerPattern(int i) {
         if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
             bannerMeta.removePattern(i);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
         return this;
     }
 
     public CustomItem addBannerPattern(Pattern pattern) {
         if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
             bannerMeta.addPattern(pattern);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
         return this;
     }
 
@@ -361,42 +384,54 @@ public class CustomItem {
             for (Pattern pattern : patterns) {
                 bannerMeta.addPattern(pattern);
             }
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
         return this;
     }
 
     public CustomItem addBookPage(String... pages) {
         if (this.getItemMeta() instanceof WritableBookMeta writableBookMeta) {
             writableBookMeta.addPage(pages);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a book");
         return this;
     }
 
     public CustomItem bookAuthor(String author) {
         if (this.getItemMeta() instanceof BookMeta bookMeta) {
             bookMeta.setAuthor(author);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a book");
         return this;
     }
 
     public CustomItem setBookPage(int page, String data) {
         if (this.getItemMeta() instanceof WritableBookMeta writableBookMeta) {
             writableBookMeta.setPage(page, data);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a book");
         return this;
     }
 
     public CustomItem bookTitle(String title) {
         if (this.getItemMeta() instanceof BookMeta bookMeta) {
             bookMeta.setTitle(title);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a book");
         return this;
     }
 
     public CustomItem setBookPages(String... pages) {
         if (this.getItemMeta() instanceof WritableBookMeta writableBookMeta) {
             writableBookMeta.setPages(pages);
+            return this;
         }
+        CyberEnte.getInstance().getLogger().warning("Item is not a book");
         return this;
     }
 }
