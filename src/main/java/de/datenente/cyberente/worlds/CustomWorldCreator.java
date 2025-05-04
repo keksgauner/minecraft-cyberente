@@ -64,13 +64,22 @@ public class CustomWorldCreator {
         return world;
     }
 
-    public static void unloadWorld(String worldName) {
+    public static boolean unloadWorld(String worldName) {
         World world = Bukkit.getWorld(worldName);
-        if (world == null) return;
+        if (world == null) return false;
 
         world.getPlayers()
                 .forEach(player ->
                         player.teleport(Bukkit.getWorlds().getFirst().getSpawnLocation()));
-        Bukkit.unloadWorld(world, true);
+        return Bukkit.unloadWorld(world, true);
+    }
+
+    public static boolean deleteWorld(String worldName) {
+        World world = Bukkit.getWorld(worldName);
+        if (world == null) return false;
+
+        unloadWorld(worldName);
+        File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
+        return worldFolder.delete();
     }
 }
