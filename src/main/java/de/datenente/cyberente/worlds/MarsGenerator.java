@@ -24,7 +24,6 @@
 package de.datenente.cyberente.worlds;
 
 import java.util.Random;
-
 import org.bukkit.Material;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
@@ -33,12 +32,22 @@ import org.jetbrains.annotations.NotNull;
 public class MarsGenerator extends ChunkGenerator {
 
     @Override
-    public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+    public void generateNoise(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull ChunkData chunkData) {
         super.generateNoise(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 
     @Override
-    public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+    public void generateSurface(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull ChunkData chunkData) {
         int baseHeight = 64;
 
         for (int x = 0; x < 16; x++) {
@@ -67,12 +76,22 @@ public class MarsGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void generateBedrock(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+    public void generateBedrock(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull ChunkData chunkData) {
         super.generateBedrock(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 
     @Override
-    public void generateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+    public void generateCaves(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull ChunkData chunkData) {
         super.generateCaves(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 }

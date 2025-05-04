@@ -117,7 +117,7 @@ public class WorldsCommand extends Command {
             return true;
         }
 
-        sender.sendMessage(Message.text("Usage: /world <tp/generate> <moon/mars/world>"));
+        sender.sendMessage(Message.text("Usage: /world <tp/generate/unload> <moon/mars/world>"));
         return true;
     }
 
@@ -127,7 +127,7 @@ public class WorldsCommand extends Command {
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return List.of("tp", "generate", "delete");
+            return List.of("tp", "generate", "unload");
         }
 
         if (args.length == 2) {

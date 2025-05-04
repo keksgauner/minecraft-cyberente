@@ -23,7 +23,6 @@
  */
 package de.datenente.cyberente.worlds;
 
-import de.datenente.cyberente.CyberEnte;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -51,7 +50,9 @@ public class CustomWorldCreator {
         World world = Bukkit.getWorld(worldName);
         if (world == null) return;
 
-        world.getPlayers().forEach(player -> player.teleport(org.bukkit.Bukkit.getWorlds().getFirst().getSpawnLocation()));
+        world.getPlayers()
+                .forEach(player ->
+                        player.teleport(org.bukkit.Bukkit.getWorlds().getFirst().getSpawnLocation()));
         Bukkit.unloadWorld(world, true);
     }
 }
