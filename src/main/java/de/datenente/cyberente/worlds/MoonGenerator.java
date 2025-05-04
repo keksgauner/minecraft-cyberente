@@ -46,11 +46,12 @@ public class MoonGenerator extends ChunkGenerator {
         SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
         generator.setScale(0.008);
 
+        int minY = chunkData.getMinHeight();
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
+        for (int x = minY; x < 16; x++) {
+            for (int z = minY; z < 16; z++) {
 
                 double noise = generator.noise(worldX + x, worldZ + z, 1, 1, true);
                 int height = (int) (noise * 40);
@@ -83,9 +84,19 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkZ,
             @NotNull ChunkData chunkData) {
         if (chunkData.getMinHeight() == worldInfo.getMinHeight()) {
+            int minY = chunkData.getMinHeight();
+            int maxY = 5;
+
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
-                    chunkData.setBlock(x, chunkData.getMinHeight(), z, Material.BEDROCK);
+                    int depth = 1 + random.nextInt(4);
+
+                    for (int y = 0; y < depth; y++) {
+                        int yPos = minY + y;
+                        if (yPos < maxY) {
+                            chunkData.setBlock(x, yPos, z, Material.BEDROCK);
+                        }
+                    }
                 }
             }
         }
