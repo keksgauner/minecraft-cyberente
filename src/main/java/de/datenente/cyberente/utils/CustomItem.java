@@ -26,15 +26,21 @@ package de.datenente.cyberente.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 @Getter
@@ -70,8 +76,20 @@ public class CustomItem {
         return this.getItemStack();
     }
 
+    public CustomItem displayName(Component component) {
+        this.getItemMeta().displayName(component);
+        return this;
+    }
+
     public CustomItem displayName(String name) {
-        this.getItemMeta().displayName(Message.text(name));
+        this.displayName(Message.text(name));
+        return this;
+    }
+
+    public CustomItem lore(Component... lore) {
+        List<Component> loreList = new ArrayList<>();
+        Arrays.stream(lore).forEach(l -> loreList.add(l));
+        this.getItemMeta().lore(loreList);
         return this;
     }
 
@@ -90,15 +108,47 @@ public class CustomItem {
         return this;
     }
 
+    public CustomItem itemModel(NamespacedKey namespacedKey) {
+            this.getItemMeta().setItemModel(namespacedKey);
+
+        return this;
+    }
+
     @Deprecated(since = "1.21.5")
     public CustomItem customModelData(int id) {
         this.getItemMeta().setCustomModelData(id);
         return this;
     }
 
+    public CustomItem unbreakable(boolean unbreakable) {
+        this.getItemMeta().setUnbreakable(unbreakable);
+        return this;
+    }
+
+    public CustomItem addEnchantment(Enchantment enchantment, int level) {
+        this.getItemMeta().addEnchant(enchantment, level, false);
+        return this;
+    }
+
+    public CustomItem addUnsafeEnchantment(Enchantment enchantment, int level) {
+        this.getItemMeta().addEnchant(enchantment, level, true);
+        return this;
+    }
+
+    public CustomItem removeEnchantment(Enchantment enchantment) {
+        this.getItemMeta().removeEnchant(enchantment);
+        return this;
+    }
+
+    public boolean isPlayerHead() {
+        ItemStack itemStack = this.getItemStack();
+        return itemStack.getType() == Material.PLAYER_HEAD ||
+                itemStack.getType() == Material.PLAYER_WALL_HEAD;
+    }
+
     public CustomItem owningPlayer(OfflinePlayer player) {
-        if (this.getItemStack().getType() == Material.PLAYER_HEAD) {
-            ((SkullMeta) this.getItemMeta()).setOwningPlayer(player);
+        if (this.getItemMeta() instanceof SkullMeta skullMeta) {
+            skullMeta.setOwningPlayer(player);
         }
         return this;
     }
@@ -108,9 +158,244 @@ public class CustomItem {
         return this;
     }
 
+    public CustomItem durability(int durability) {
+        if (this.getItemMeta() instanceof Damageable damageable) {
+            damageable.setDamage((short) durability);
+        }
+        return this;
+    }
+
+    public CustomItem damage(int damage) {
+        if (this.getItemMeta() instanceof Damageable damageable) {
+            damageable.setDamage(damage);
+        }
+        return this;
+    }
+
+    public CustomItem addDamage(int damage) {
+        if (this.getItemMeta() instanceof Damageable damageable) {
+            damageable.setDamage(damageable.getDamage() + damage);
+        }
+        return this;
+    }
+
+    public CustomItem removeDamage(int damage) {
+        if (this.getItemMeta() instanceof Damageable damageable) {
+            damageable.setDamage(damageable.getDamage() - damage);
+        }
+        return this;
+    }
+
     public CustomItem potionType(PotionType potionType) {
-        if (this.getItemStack().getType() == Material.POTION) {
-            ((PotionMeta) this.getItemMeta()).setBasePotionType(potionType);
+        if (this.getItemMeta() instanceof PotionMeta potionMeta) {
+            potionMeta.setBasePotionType(potionType);
+        }
+        return this;
+    }
+
+    public CustomItem addCustomPotionEffect(PotionEffect potionEffect, boolean overwrite) {
+        if (this.getItemMeta() instanceof PotionMeta potionMeta) {
+            potionMeta.addCustomEffect(potionEffect, overwrite);
+        }
+        return this;
+    }
+
+    public CustomItem removeCustomPotionEffect(PotionEffectType potionEffectType) {
+        if (this.getItemMeta()instanceof PotionMeta potionMeta) {
+            potionMeta.removeCustomEffect(potionEffectType);
+        }
+        return this;
+    }
+
+    public CustomItem clearCustomPotionEffects() {
+        if (this.getItemMeta()instanceof PotionMeta potionMeta) {
+            potionMeta.clearCustomEffects();
+        }
+        return this;
+    }
+
+    public CustomItem addItemFlags(ItemFlag ... itemFlags) {
+        this.getItemMeta().addItemFlags(itemFlags);
+        return this;
+    }
+
+    public CustomItem hasItemFlag(ItemFlag itemFlag) {
+        this.getItemMeta().hasItemFlag(itemFlag);
+        return this;
+    }
+
+    public boolean isLeatherArmor() {
+        Material material = this.getItemStack().getType();
+        return (
+                material == Material.LEATHER_HELMET ||
+                        material == Material.LEATHER_CHESTPLATE ||
+                        material == Material.LEATHER_LEGGINGS ||
+                        material == Material.LEATHER_BOOTS
+        );
+    }
+
+    public boolean isIronArmor() {
+        Material material = this.getItemStack().getType();
+        return (
+                material == Material.IRON_HELMET ||
+                        material == Material.IRON_CHESTPLATE ||
+                        material == Material.IRON_LEGGINGS ||
+                        material == Material.IRON_BOOTS
+        );
+    }
+
+    public boolean isGoldenArmor() {
+        Material material = this.getItemStack().getType();
+        return (
+                material == Material.GOLDEN_HELMET ||
+                        material == Material.GOLDEN_CHESTPLATE ||
+                        material == Material.GOLDEN_LEGGINGS ||
+                        material == Material.GOLDEN_BOOTS
+        );
+    }
+
+    public boolean isChainmailArmor() {
+        Material material = this.getItemStack().getType();
+        return (
+                material == Material.CHAINMAIL_HELMET ||
+                        material == Material.CHAINMAIL_CHESTPLATE ||
+                        material == Material.CHAINMAIL_LEGGINGS ||
+                        material == Material.CHAINMAIL_BOOTS
+        );
+    }
+
+    public boolean isDiamondArmor() {
+        Material material = this.getItemStack().getType();
+        return (
+                material == Material.DIAMOND_HELMET ||
+                        material == Material.DIAMOND_CHESTPLATE ||
+                        material == Material.DIAMOND_LEGGINGS ||
+                        material == Material.DIAMOND_BOOTS
+        );
+    }
+
+    public boolean isNetheriteArmor() {
+        Material material = this.getItemStack().getType();
+        return (
+                material == Material.NETHERITE_HELMET ||
+                        material == Material.NETHERITE_CHESTPLATE ||
+                        material == Material.NETHERITE_LEGGINGS ||
+                        material == Material.NETHERITE_BOOTS
+        );
+    }
+
+    public CustomItem armorColor(Color color) {
+        if (this.getItemMeta() instanceof LeatherArmorMeta leatherArmorMeta) {
+            leatherArmorMeta.setColor(color);
+        }
+        return this;
+    }
+
+    public CustomItem resetArmorColor() {
+        if (this.getItemMeta() instanceof LeatherArmorMeta leatherArmorMeta) {
+            leatherArmorMeta.setColor(
+                    this.getItemFactory().getDefaultLeatherColor()
+            );
+        }
+        return this;
+    }
+
+    public CustomItem fireworkPower(int power) {
+        if (this.getItemMeta() instanceof FireworkMeta fireworkMeta) {
+            fireworkMeta.setPower(power);
+        }
+        return this;
+    }
+
+    public CustomItem removeFireworkEffect(int index) {
+        if (this.getItemMeta() instanceof FireworkMeta fireworkMeta) {
+            fireworkMeta.removeEffect(index);
+        }
+        return this;
+    }
+
+    public CustomItem addFireworkEffects(FireworkEffect... effect) {
+        if (this.getItemMeta() instanceof FireworkMeta fireworkMeta) {
+            fireworkMeta.addEffects(effect);
+        }
+        return this;
+    }
+
+    public CustomItem chargeEffect(FireworkEffect effect) {
+        if (this.getItemMeta() instanceof FireworkEffectMeta fireworkEffectMeta) {
+            fireworkEffectMeta.setEffect(effect);
+        }
+        return this;
+    }
+
+    public CustomItem setBannerPattern(int i, Pattern pattern) {
+        if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
+            bannerMeta.setPattern(i, pattern);
+        }
+        return this;
+    }
+
+    public CustomItem setBannerPatterns(List<Pattern> patterns) {
+        if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
+            bannerMeta.setPatterns(patterns);
+        }
+        return this;
+    }
+
+    public CustomItem removeBannerPattern(int i) {
+        if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
+            bannerMeta.removePattern(i);
+        }
+        return this;
+    }
+
+    public CustomItem addBannerPattern(Pattern pattern) {
+        if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
+            bannerMeta.addPattern(pattern);
+        }
+        return this;
+    }
+
+    public CustomItem addBannerPatterns(Pattern... patterns) {
+        if (this.getItemMeta() instanceof BannerMeta bannerMeta) {
+            for (Pattern pattern : patterns) {
+                bannerMeta.addPattern(pattern);
+            }
+        }
+        return this;
+    }
+
+    public CustomItem addBookPage(String... pages) {
+        if (this.getItemMeta() instanceof WritableBookMeta writableBookMeta) {
+            writableBookMeta.addPage(pages);
+        }
+        return this;
+    }
+
+    public CustomItem bookAuthor(String author) {
+        if (this.getItemMeta() instanceof BookMeta bookMeta) {
+            bookMeta.setAuthor(author);
+        }
+        return this;
+    }
+
+    public CustomItem setBookPage(int page, String data) {
+        if (this.getItemMeta() instanceof WritableBookMeta writableBookMeta) {
+            writableBookMeta.setPage(page, data);
+        }
+        return this;
+    }
+
+    public CustomItem bookTitle(String title) {
+        if (this.getItemMeta() instanceof BookMeta bookMeta) {
+            bookMeta.setTitle(title);
+        }
+        return this;
+    }
+
+    public CustomItem setBookPages(String... pages) {
+        if (this.getItemMeta() instanceof WritableBookMeta writableBookMeta) {
+            writableBookMeta.setPages(pages);
         }
         return this;
     }

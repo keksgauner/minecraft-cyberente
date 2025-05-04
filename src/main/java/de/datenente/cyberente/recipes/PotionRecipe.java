@@ -27,6 +27,8 @@ import de.datenente.cyberente.utils.CustomItem;
 import de.datenente.cyberente.utils.CustomShapedRecipe;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 public class PotionRecipe {
@@ -51,6 +53,7 @@ public class PotionRecipe {
         customItem.displayName("<gold>" + name);
         customItem.itemModel(itemModel);
         customItem.customModelData(customModelData);
+        customItem.addCustomPotionEffect( new PotionEffect(PotionEffectType.SPEED, 10, 0), false);
         return customItem.asItemStack();
     }
 }
