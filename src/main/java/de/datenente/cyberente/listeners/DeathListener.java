@@ -43,6 +43,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -175,5 +176,17 @@ public class DeathListener implements Listener {
         if (!(state instanceof Skull skull)) return;
         if (!skull.hasMetadata("death")) return;
         blockBreakEvent.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onSkullExplode(EntityExplodeEvent blockExplodeEvent) {
+        List<Block> blockList = blockExplodeEvent.blockList();
+        for (Block block : blockList) {
+            if (block.getType() != Material.PLAYER_HEAD) continue;
+            BlockState state = block.getState();
+            if (!(state instanceof Skull skull)) continue;
+            if (!skull.hasMetadata("death")) continue;
+            blockList.remove(block);
+        }
     }
 }

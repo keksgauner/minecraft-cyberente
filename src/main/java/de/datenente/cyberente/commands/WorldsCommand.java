@@ -67,6 +67,8 @@ public class WorldsCommand extends Command {
                 return true;
             }
             if (type.equals("generate")) {
+                if (!sender.isOp()) return true;
+
                 if (world.equals("moon")) {
                     sender.sendMessage(Message.text("Generating Moon World..."));
                     CustomWorldCreator.createMoonWorld();

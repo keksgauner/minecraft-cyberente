@@ -80,7 +80,7 @@ public final class CyberEnte extends JavaPlugin {
         getServer().resetRecipes();
 
         StairSittingListener.clean();
-        AutoVehicleListener.clean();
+        VehicleListener.clean();
     }
 
     void registerConfigs() {
@@ -99,7 +99,7 @@ public final class CyberEnte extends JavaPlugin {
         pluginManager.registerEvents(new JoinLeaveListener(), this);
         pluginManager.registerEvents(new ReplantListener(), this);
         pluginManager.registerEvents(new StairSittingListener(), this);
-        pluginManager.registerEvents(new AutoVehicleListener(), this);
+        pluginManager.registerEvents(new VehicleListener(), this);
     }
 
     void registerCommands() {
@@ -110,5 +110,6 @@ public final class CyberEnte extends JavaPlugin {
         commandMap.register("cyberente", new ChatImageCommand());
         commandMap.register("cyberente", new VehicleCommand());
         commandMap.register("cyberente", new WorldsCommand());
+        commandMap.register("cyberente", new TrashCommand());
     }
 }

@@ -16,6 +16,7 @@
 - [ ] **/afk** – Setzt den Spieler in den AFK Modus
 - [ ] **/vehicle** - Spawnt ein Auto
 - [ ] **/worlds** - Teleportiert/Generiert andere Welten
+- [X] **/trash** - Öffnet einen Mülleimer
 
 ---
 

@@ -23,36 +23,35 @@
  */
 package de.datenente.cyberente.commands;
 
-import de.datenente.cyberente.listeners.VehicleListener;
 import de.datenente.cyberente.utils.Message;
 import java.util.List;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class VehicleCommand extends Command {
+public class TrashCommand extends Command {
 
-    public VehicleCommand() {
-        super("vehicle", "Fahre mit dem Auto", "/vehicle", List.of("av"));
+    public TrashCommand() {
+        super("trash", "Öffnet ein Mülleimer", "/", List.of());
     }
 
     @Override
     public boolean execute(
             @NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
-
-        if (!(sender instanceof Player player)) {
-            Message.send(sender, "<red>Dieser Befehl kann nur von einem Spieler ausgeführt werden.");
+        if (sender instanceof Player player) {
+            Inventory inventory = Bukkit.createInventory(null, 9 * 6, Message.text("<dark_gray>Mülleimer</dark_gray>"));
+            player.openInventory(inventory);
+            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
             return true;
         }
+        sender.sendMessage(Component.text("Dieser Befehl kann nur von einem Spieler ausgeführt werden."));
 
-        if (args.length == 0) {
-            VehicleListener.spawnCar(player);
-            return true;
-        }
-
-        Message.send(sender, "<red>Benutze /vehicle");
-        return false;
+        return true;
     }
 
     @Override

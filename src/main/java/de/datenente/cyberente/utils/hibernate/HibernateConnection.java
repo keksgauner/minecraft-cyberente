@@ -126,6 +126,7 @@ public class HibernateConnection {
         try (final Session session = this.openSession()) {
             session.beginTransaction();
             if (session.getTransaction().isActive()) {
+                this.getLogger().info("MySQL connection working!");
                 return true;
             }
             this.getLogger().warning("MySQL connection not working!");

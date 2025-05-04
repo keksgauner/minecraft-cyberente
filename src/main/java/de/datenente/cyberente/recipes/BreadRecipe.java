@@ -48,28 +48,28 @@ public class BreadRecipe {
                 .register();
 
         CustomShapedRecipe.of()
-                .key("rett")
+                .key("rett_bread")
                 .shape("   ", " Q ", "   ")
                 .ingredient('Q', quarterBread)
-                .result(createItem("rett", "cyberente:rett", 3))
+                .result(createItem("rett bread", "cyberente:rett_bread", 3))
                 .register();
 
-        ItemStack drill = createItem("drill", "cyberente:drill", 4);
+        ItemStack drillBread = createItem("drill", "cyberente:drill_bread", 4);
         CustomShapedRecipe.of()
-                .key("drill")
+                .key("drill_bread")
                 .shape(" S ", " B ", "   ")
                 .ingredient('S', Material.SUGAR)
                 .ingredient('B', Material.BREAD)
-                .result(drill)
+                .result(drillBread)
                 .register();
 
-        ItemStack bire = createItem("bire", "cyberente:bire", 5);
+        ItemStack bireBread = createItem("bire bread", "cyberente:bire_bread", 5);
         CustomShapedRecipe.of()
-                .key("bire")
+                .key("bire_bread")
                 .shape(" A ", " B ", "   ")
                 .ingredient('A', Material.APPLE)
                 .ingredient('B', Material.BREAD)
-                .result(bire)
+                .result(bireBread)
                 .register();
     }
 

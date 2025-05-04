@@ -34,9 +34,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.Vector;
 
-public class AutoVehicleListener implements Listener {
+public class VehicleListener implements Listener {
 
     static final FixedMetadataValue CAR_VALUE = new FixedMetadataValue(CyberEnte.getInstance(), Boolean.TRUE);
 
@@ -61,29 +63,47 @@ public class AutoVehicleListener implements Listener {
     }
 
     @EventHandler
-    public void onDismount(EntityDismountEvent entityDismountEvent) {
+    public void onEntityDismount(EntityDismountEvent entityDismountEvent) {
         if (!(entityDismountEvent.getDismounted() instanceof OakBoat boat)) return;
         if (!boat.hasMetadata("car")) return;
         boat.remove();
     }
 
     @EventHandler
-    public void onEntityMove(PlayerMoveEvent playerMoveEvent) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        Entity vehicle = player.getVehicle();
+
+        if (!(vehicle instanceof OakBoat boat)) return;
+        if (!boat.hasMetadata("car")) return;
+        boat.remove();
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent playerMoveEvent) {
         Player player = playerMoveEvent.getPlayer();
         Location locationFrom = playerMoveEvent.getFrom();
         Location locationTo = playerMoveEvent.getTo();
-
-        // Wenn der Spieler sich nicht bewegt hat, return
-        if (locationFrom.getBlockX() == locationTo.getBlockX()
-                && locationFrom.getBlockY() == locationTo.getBlockY()
-                && locationFrom.getBlockZ() == locationTo.getBlockZ()) {
-            return;
-        }
 
         if (player.getVehicle() == null) return;
         if (!(player.getVehicle() instanceof OakBoat boat)) return;
         if (!boat.hasMetadata("car")) return;
 
-        boat.setVelocity(boat.getVelocity().multiply(1.5));
+        // TODO: I know this is not the best way to do this
+        Vector playerDirection = player.getLocation().getDirection().normalize();
+        Vector moveVector =
+                locationTo.toVector().subtract(locationFrom.toVector()).normalize();
+
+       double dot = playerDirection.dot(moveVector);
+        Vector currentVelocity = boat.getVelocity();
+
+        if (dot > 0.7) {
+            boat.setVelocity(currentVelocity.add(playerDirection.multiply(0.3)));
+        }
+
+        double maxSpeed = 1.5;
+        if (boat.getVelocity().length() > maxSpeed) {
+            boat.setVelocity(boat.getVelocity().normalize().multiply(maxSpeed));
+        }
     }
 }

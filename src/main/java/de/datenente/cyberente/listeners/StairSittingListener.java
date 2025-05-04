@@ -114,8 +114,9 @@ public class StairSittingListener implements Listener {
 
     @EventHandler
     public void onEntityDismount(EntityDismountEvent entityDismountEvent) {
-        if (!entityDismountEvent.getDismounted().hasMetadata("stair")) return;
-        entityDismountEvent.getDismounted().remove();
+        if (!(entityDismountEvent.getDismounted() instanceof Pig pig)) return;
+        if (!pig.hasMetadata("stair")) return;
+        pig.remove();
     }
 
     @EventHandler
@@ -123,8 +124,8 @@ public class StairSittingListener implements Listener {
         Player player = event.getPlayer();
         Entity vehicle = player.getVehicle();
 
-        if (vehicle instanceof Pig pig && pig.hasMetadata("stair")) {
-            pig.remove();
-        }
+        if (!(vehicle instanceof Pig pig)) return;
+        if (!pig.hasMetadata("stair")) return;
+        pig.remove();
     }
 }
