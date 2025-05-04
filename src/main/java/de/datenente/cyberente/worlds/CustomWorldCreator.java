@@ -64,22 +64,13 @@ public class CustomWorldCreator {
         return world;
     }
 
-    public static void deleteWorld(String worldName) {
+    public static void unloadWorld(String worldName) {
         World world = Bukkit.getWorld(worldName);
         if (world == null) return;
 
         world.getPlayers()
                 .forEach(player ->
-                        player.teleport(org.bukkit.Bukkit.getWorlds().getFirst().getSpawnLocation()));
-        boolean unloaded = Bukkit.unloadWorld(world, true);
-        if (unloaded) {
-            File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
-            boolean deleted = worldFolder.delete();
-            if (deleted) {
-                CyberEnte.getInstance().getLogger().info("World " + worldName + " deleted successfully.");
-            } else {
-                CyberEnte.getInstance().getLogger().severe("Failed to delete world folder for " + worldName);
-            }
-        }
+                        player.teleport(Bukkit.getWorlds().getFirst().getSpawnLocation()));
+        Bukkit.unloadWorld(world, true);
     }
 }

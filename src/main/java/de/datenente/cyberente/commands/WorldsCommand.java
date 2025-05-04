@@ -67,6 +67,7 @@ public class WorldsCommand extends Command {
                     player.teleport(location);
                     return true;
                 }
+
                 case "generate" -> {
                     if (!sender.isOp()) {
                         sender.sendMessage(Message.text("You do not have permission to use this command!"));
@@ -86,25 +87,26 @@ public class WorldsCommand extends Command {
                         return true;
                     }
 
-                    sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
+                    sender.sendMessage(Message.text("Invalid world type! Available: world_moon, world_mars"));
                     return true;
                 }
-                case "delete" -> {
+
+                case "unload" -> {
                     if (!sender.isOp()) {
                         sender.sendMessage(Message.text("You do not have permission to use this command!"));
                         return true;
                     }
 
                     if (world.equals("world_moon")) {
-                        sender.sendMessage(Message.text("Deleting Moon World..."));
-                        CustomWorldCreator.deleteWorld("world_moon");
-                        sender.sendMessage(Message.text("Moon World deleted!"));
+                        sender.sendMessage(Message.text("Unload Moon World..."));
+                        CustomWorldCreator.unloadWorld("world_moon");
+                        sender.sendMessage(Message.text("Moon World unloaded!"));
                         return true;
                     }
                     if (world.equals("world_mars")) {
-                        sender.sendMessage(Message.text("Deleting Mars World..."));
-                        CustomWorldCreator.deleteWorld("world_mars");
-                        sender.sendMessage(Message.text("Mars World deleted!"));
+                        sender.sendMessage(Message.text("Unload Mars World..."));
+                        CustomWorldCreator.unloadWorld("world_mars");
+                        sender.sendMessage(Message.text("Mars World unloaded!"));
                         return true;
                     }
 
@@ -117,7 +119,7 @@ public class WorldsCommand extends Command {
             return true;
         }
 
-        sender.sendMessage(Message.text("Usage: /world <tp/generate/delete> <world_moon/world_mars/world>"));
+        sender.sendMessage(Message.text("Usage: /world <tp/generate/unload> <world_moon/world_mars/world>"));
         return true;
     }
 
@@ -127,7 +129,7 @@ public class WorldsCommand extends Command {
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return List.of("tp", "generate", "delete");
+            return List.of("tp", "generate", "unload");
         }
 
         if (args.length == 2) {
