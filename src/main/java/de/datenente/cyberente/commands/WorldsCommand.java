@@ -73,13 +73,13 @@ public class WorldsCommand extends Command {
                         return true;
                     }
 
-                    if (world.equals("moon")) {
+                    if (world.equals("world_moon")) {
                         sender.sendMessage(Message.text("Generating Moon World..."));
                         CustomWorldCreator.createMoonWorld();
                         sender.sendMessage(Message.text("Moon World generated!"));
                         return true;
                     }
-                    if (world.equals("mars")) {
+                    if (world.equals("world_mars")) {
                         sender.sendMessage(Message.text("Generating Mars World..."));
                         CustomWorldCreator.createMarsWorld();
                         sender.sendMessage(Message.text("Mars World generated!"));
@@ -89,35 +89,35 @@ public class WorldsCommand extends Command {
                     sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
                     return true;
                 }
-                case "unload" -> {
+                case "delete" -> {
                     if (!sender.isOp()) {
                         sender.sendMessage(Message.text("You do not have permission to use this command!"));
                         return true;
                     }
 
-                    if (world.equals("moon")) {
+                    if (world.equals("world_moon")) {
                         sender.sendMessage(Message.text("Deleting Moon World..."));
-                        CustomWorldCreator.unloadWorld("world_moon");
+                        CustomWorldCreator.deleteWorld("world_moon");
                         sender.sendMessage(Message.text("Moon World deleted!"));
                         return true;
                     }
-                    if (world.equals("mars")) {
+                    if (world.equals("world_mars")) {
                         sender.sendMessage(Message.text("Deleting Mars World..."));
-                        CustomWorldCreator.unloadWorld("world_mars");
+                        CustomWorldCreator.deleteWorld("world_mars");
                         sender.sendMessage(Message.text("Mars World deleted!"));
                         return true;
                     }
 
-                    sender.sendMessage(Message.text("Invalid world type! Available: moon, mars"));
+                    sender.sendMessage(Message.text("Invalid world type! Available: world_moon, world_mars"));
                     return true;
                 }
             }
 
-            sender.sendMessage(Message.text("Invalid command! Available: tp, generate"));
+            sender.sendMessage(Message.text("Invalid command! Available: tp, generate, delete"));
             return true;
         }
 
-        sender.sendMessage(Message.text("Usage: /world <tp/generate/unload> <moon/mars/world>"));
+        sender.sendMessage(Message.text("Usage: /world <tp/generate/delete> <world_moon/world_mars/world>"));
         return true;
     }
 
@@ -127,16 +127,16 @@ public class WorldsCommand extends Command {
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return List.of("tp", "generate", "unload");
+            return List.of("tp", "generate", "delete");
         }
 
         if (args.length == 2) {
             // Wenn es sich um den ersten Parameter "tp" handelt, gebe die Welten zurück
             String type = args[0].toLowerCase();
             if (type.equals("tp")) {
-                return List.of("moon", "mars", "world");
+                return List.of("world_moon", "world_mars", "world");
             }
-            return List.of("moon", "mars");
+            return List.of("world_moon", "world_mars");
         }
 
         return List.of();

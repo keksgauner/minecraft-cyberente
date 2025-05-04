@@ -23,7 +23,10 @@
  */
 package de.datenente.cyberente.worlds;
 
+import de.datenente.cyberente.CyberEnte;
+import java.io.File;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 
@@ -34,7 +37,15 @@ public class CustomWorldCreator {
         creator.environment(World.Environment.THE_END);
         creator.generator(new MoonGenerator());
 
-        return creator.createWorld();
+        creator.generateStructures(false);
+        World world = creator.createWorld();
+        if (world == null) {
+            CyberEnte.getInstance().getLogger().severe("Failed to create world: world_moon");
+            return null;
+        }
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+
+        return world;
     }
 
     public static World createMarsWorld() {
@@ -43,16 +54,32 @@ public class CustomWorldCreator {
         creator.environment(World.Environment.NETHER);
         creator.generator(new MarsGenerator());
 
-        return creator.createWorld();
+        creator.generateStructures(false);
+        World world = creator.createWorld();
+        if (world == null) {
+            CyberEnte.getInstance().getLogger().severe("Failed to create world: world_mars");
+            return null;
+        }
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        return world;
     }
 
-    public static void unloadWorld(String worldName) {
+    public static void deleteWorld(String worldName) {
         World world = Bukkit.getWorld(worldName);
         if (world == null) return;
 
         world.getPlayers()
                 .forEach(player ->
                         player.teleport(org.bukkit.Bukkit.getWorlds().getFirst().getSpawnLocation()));
-        Bukkit.unloadWorld(world, true);
+        boolean unloaded = Bukkit.unloadWorld(world, true);
+        if (unloaded) {
+            File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
+            boolean deleted = worldFolder.delete();
+            if (deleted) {
+                CyberEnte.getInstance().getLogger().info("World " + worldName + " deleted successfully.");
+            } else {
+                CyberEnte.getInstance().getLogger().severe("Failed to delete world folder for " + worldName);
+            }
+        }
     }
 }
