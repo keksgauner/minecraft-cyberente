@@ -37,7 +37,11 @@ public class StorageObject {
     HashMap<String, Long> playTime = new HashMap<>(); // UUID, Time in minutes
     HashMap<String, Long> lastSeen = new HashMap<>(); // UUID, Current system time
 
-    HashMap<String, DeathSkull> deathSkulls = new HashMap<>(); // Location, Skull storage
+    HashMap<String, PlayerInventory> deathSkulls = new HashMap<>(); // Location, Skull storage
+
+    // HashMap für Inventar für jede Welt:
+    // Hashmap<"SuperCommander:world_moon", "64xCOOKED_CHICKEN">
+    HashMap<String, PlayerInventory> playerInventory = new HashMap<>();
 
     @Getter
     @Setter
@@ -68,7 +72,7 @@ public class StorageObject {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class DeathSkull {
+    public static class PlayerInventory {
         final String base64; // Base64 encoded inventory
         final Integer xp; // XP
     }

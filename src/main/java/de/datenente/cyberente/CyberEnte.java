@@ -100,6 +100,7 @@ public final class CyberEnte extends JavaPlugin {
         pluginManager.registerEvents(new ReplantListener(), this);
         pluginManager.registerEvents(new StairSittingListener(), this);
         pluginManager.registerEvents(new VehicleListener(), this);
+        pluginManager.registerEvents(new WorldChangeListener(), this);
     }
 
     void registerCommands() {

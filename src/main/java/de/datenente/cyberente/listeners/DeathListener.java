@@ -121,7 +121,7 @@ public class DeathListener implements Listener {
         interactEvent.setCancelled(true);
 
         StorageConfig storageConfig = StorageConfig.getInstance();
-        StorageObject.DeathSkull deathSkull = storageConfig.getDeathSkull(clickedBlock.getLocation());
+        StorageObject.PlayerInventory deathSkull = storageConfig.getDeathSkull(clickedBlock.getLocation());
         if (deathSkull == null) {
             Message.send(player, "<red>Es ist kein Inventar vorhanden!");
             return;
