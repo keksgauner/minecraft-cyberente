@@ -112,5 +112,6 @@ public final class CyberEnte extends JavaPlugin {
         commandMap.register("cyberente", new VehicleCommand());
         commandMap.register("cyberente", new WorldsCommand());
         commandMap.register("cyberente", new TrashCommand());
+        commandMap.register("cyberente", new LuckyBlockCommand());
     }
 }
