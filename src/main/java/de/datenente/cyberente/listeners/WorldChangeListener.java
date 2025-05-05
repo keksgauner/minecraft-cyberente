@@ -29,7 +29,6 @@ import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.ItemStack2Base64;
 import de.datenente.cyberente.utils.Message;
 import org.bukkit.GameMode;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,16 +41,17 @@ import org.bukkit.potion.PotionEffectType;
 public class WorldChangeListener implements Listener {
 
     @EventHandler
-    public void worldChangeEvent(PlayerChangedWorldEvent changedWorldEvent) {
+    public void onPerWorldInventory(PlayerChangedWorldEvent changedWorldEvent) {
         Player player = changedWorldEvent.getPlayer();
+        StorageConfig storageConfig = StorageConfig.getInstance();
+
         String world = player.getWorld().getName();
         String fromWorld = changedWorldEvent.getFrom().getName();
-        StorageConfig storageConfig = StorageConfig.getInstance();
+
         Inventory inventory = player.getInventory();
 
         // Inventory speichern
-        String base64 =
-                ItemStack2Base64.itemStackArrayToBase64(inventory.getContents());
+        String base64 = ItemStack2Base64.itemStackArrayToBase64(inventory.getContents());
         storageConfig.setPlayerInventory(player.getUniqueId(), fromWorld, base64, player.getLevel(), player.getExp());
 
         // Inventory leeren
@@ -61,22 +61,30 @@ public class WorldChangeListener implements Listener {
 
         // Inventory laden
         StorageObject.PlayerInventory inventoryNew = storageConfig.getPlayerInventory(player.getUniqueId(), world);
-        if (inventoryNew != null) {
-            ItemStack[] contents =
-                    ItemStack2Base64.itemStackArrayFromBase64(inventoryNew.getBase64());
-            inventory.setContents(contents);
-            player.setLevel(inventoryNew.getLevel());
-            player.setExp(inventoryNew.getXp());
-        } else {
-            CyberEnte.getInstance().getLogger().warning("No inventory found for player " + player.getName() + " in world " + world);
+        if (inventoryNew == null) {
+            CyberEnte.getInstance()
+                    .getLogger()
+                    .warning("No inventory found for player " + player.getName() + " in world " + world);
+            return;
         }
+
+        ItemStack[] contents = ItemStack2Base64.itemStackArrayFromBase64(inventoryNew.getBase64());
+        inventory.setContents(contents);
+        player.setLevel(inventoryNew.getLevel());
+        player.setExp(inventoryNew.getXp());
+    }
+
+    @EventHandler
+    public void onPerWorldMode(PlayerChangedWorldEvent changedWorldEvent) {
+        Player player = changedWorldEvent.getPlayer();
+        String world = player.getWorld().getName();
 
         if (world.equals("world")) {
             player.removePotionEffect(PotionEffectType.SLOW_FALLING);
             player.removePotionEffect(PotionEffectType.JUMP_BOOST);
             player.setGameMode(GameMode.SURVIVAL);
 
-            player.sendMessage(Message.text("Erfolgreich in <rainbow> world </rainbow> teleportiert!"));
+            Message.send(player, "Erfolgreich in <rainbow> world </rainbow> teleportiert!");
         }
 
         if (world.equals("world_moon")) {
@@ -84,7 +92,7 @@ public class WorldChangeListener implements Listener {
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION, 2));
             player.setGameMode(GameMode.CREATIVE);
 
-            player.sendMessage(Message.text("Erfolgreich in <rainbow> moon </rainbow> teleportiert!"));
+            Message.send(player, "Erfolgreich in <rainbow> moon </rainbow> teleportiert!");
         }
 
         if (world.equals("world_mars")) {
@@ -92,7 +100,7 @@ public class WorldChangeListener implements Listener {
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION, 2));
             player.setGameMode(GameMode.CREATIVE);
 
-            player.sendMessage(Message.text("Erfolgreich in <rainbow> moon </rainbow> teleportiert!"));
+            Message.send(player, "Erfolgreich in <rainbow> moon </rainbow> teleportiert!");
         }
     }
 }

@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 public class WorldsCommand extends Command {
 
     public WorldsCommand() {
-        super("worlds");
+        super("worlds", "Manage worlds", "/worlds", List.of());
     }
 
     @Override
@@ -74,20 +74,9 @@ public class WorldsCommand extends Command {
                         return true;
                     }
 
-                    if (world.equals("world_moon")) {
-                        sender.sendMessage(Message.text("Generating Moon World..."));
-                        CustomWorldCreator.createMoonWorld();
-                        sender.sendMessage(Message.text("Moon World generated!"));
-                        return true;
-                    }
-                    if (world.equals("world_mars")) {
-                        sender.sendMessage(Message.text("Generating Mars World..."));
-                        CustomWorldCreator.createMarsWorld();
-                        sender.sendMessage(Message.text("Mars World generated!"));
-                        return true;
-                    }
-
-                    sender.sendMessage(Message.text("Invalid world type! Available: world_moon, world_mars"));
+                    sender.sendMessage(Message.text("Generating " + world + " World..."));
+                    CustomWorldCreator.createWorld(world);
+                    sender.sendMessage(Message.text(world + " World generated!"));
                     return true;
                 }
 
@@ -97,20 +86,9 @@ public class WorldsCommand extends Command {
                         return true;
                     }
 
-                    if (world.equals("world_moon")) {
-                        sender.sendMessage(Message.text("Delete Moon World..."));
-                        CustomWorldCreator.deleteWorld("world_moon");
-                        sender.sendMessage(Message.text("Moon World deleted!"));
-                        return true;
-                    }
-                    if (world.equals("world_mars")) {
-                        sender.sendMessage(Message.text("Delete Mars World..."));
-                        CustomWorldCreator.deleteWorld("world_mars");
-                        sender.sendMessage(Message.text("Mars World deleted!"));
-                        return true;
-                    }
-
-                    sender.sendMessage(Message.text("Invalid world type! Available: world_moon, world_mars"));
+                    sender.sendMessage(Message.text("Delete " + world + " World..."));
+                    CustomWorldCreator.deleteWorld(world);
+                    sender.sendMessage(Message.text(world + " World deleted!"));
                     return true;
                 }
             }

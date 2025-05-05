@@ -142,7 +142,7 @@ public class DeathListener implements Listener {
         }
 
         player.giveExpLevels(level);
-        player.giveExp((int)xp);
+        player.giveExp((int) xp);
 
         player.openInventory(deathInventory);
 

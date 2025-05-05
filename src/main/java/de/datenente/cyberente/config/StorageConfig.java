@@ -31,7 +31,6 @@ import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 @Getter
 public class StorageConfig extends JsonDocument<StorageObject> {
@@ -119,7 +118,6 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         deathSkulls.remove(serializeLocation(location));
         this.save();
     }
-
 
     public void setPlayerInventory(UUID uuid, String world, String base64Inventory, Integer level, Float xp) {
         HashMap<String, StorageObject.PlayerInventory> playerInventory =
