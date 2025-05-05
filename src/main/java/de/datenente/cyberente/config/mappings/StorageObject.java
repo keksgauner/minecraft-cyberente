@@ -24,6 +24,8 @@
 package de.datenente.cyberente.config.mappings;
 
 import java.util.HashMap;
+
+import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,13 +36,13 @@ import org.bukkit.World;
 @Getter
 @Setter
 public class StorageObject {
-    HashMap<String, PlayerInventory> deathSkulls = new HashMap<>(); // Location, Skull storage
+    HashMap<String, PlayerInventory> deathSkulls = new HashMap<>(); // Location
 
-    HashMap<String, WorldSettings> worlds = new HashMap<>(); // World
+    HashMap<String, Worlds> worlds = new HashMap<>(); // World Name
 
     // HashMap für Inventar für jede Welt:
     // Hashmap<"SuperCommander:world_moon", "64xCOOKED_CHICKEN">
-    HashMap<String, PlayerInventory> playerInventory = new HashMap<>();
+    HashMap<String, PlayerInventory> playerInventory = new HashMap<>(); // Player Name:world
 
     @Getter
     @Setter
@@ -80,7 +82,8 @@ public class StorageObject {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class WorldSettings {
-        String generator;
+    public static class Worlds {
+        CustomGenerator generator;
+        World.Environment environment;
     }
 }

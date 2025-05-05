@@ -29,6 +29,32 @@ Eine vollständige Übersicht findest du in der Datei: [📄 Funktionen](TODO.md
 3. Installiere das [Extended-Plugin](https://github.com/keksgauner/minecraft-cyberente-extended) der Abhängigkeiten für das Paper-Plugin **CyberEnte** enthält.
 4. Starte den Server neu.
 
+---
+
+## ⚙️ Konfiguration
+Die Konfiguration befindet sich in der Datei `plugins/CyberEnte/config.yml`.
+Die Standardwerte sind:
+
+```json
+{
+}
+```
+
+---
+
+Wenn eine eigene (Custom) Welt verwendet wird, muss die `bukkit.yml` entsprechend angepasst werden.
+Füge am Ende der Datei folgenden Abschnitt hinzu:
+
+```yaml
+worlds:
+  <name>:
+    generator: CyberEnte:moon
+```
+
+Ersetze `<name>` durch den Namen der Welt und `moon` durch den gewünschten Generator.
+
+---
+
 ## 🧪 Kompilieren aus dem Quellcode
 
 **Voraussetzungen:**

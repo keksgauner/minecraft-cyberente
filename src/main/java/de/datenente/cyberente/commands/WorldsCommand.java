@@ -51,13 +51,13 @@ public class WorldsCommand extends Command {
             switch (type) {
                 case "tp" -> {
                     if (!(sender instanceof Player player)) {
-                        sender.sendMessage(Message.text("You must be a player to use this command!"));
+                        Message.send(sender, "You must be a player to use this command!");
                         return true;
                     }
 
                     World realWorld = Bukkit.getWorld(world);
                     if (realWorld == null) {
-                        sender.sendMessage(Message.text("World not found!"));
+                        Message.send(sender, "World not found!");
                         return true;
                     }
 
@@ -69,36 +69,39 @@ public class WorldsCommand extends Command {
                     return true;
                 }
 
-                case "generate" -> {
-                    if (!sender.isOp()) {
-                        sender.sendMessage(Message.text("You do not have permission to use this command!"));
-                        return true;
-                    }
-
-                    sender.sendMessage(Message.text("Generating " + world + " World..."));
-                    CustomWorldCreator.createWorld(world, World.Environment.NORMAL, CustomGenerator.MOON);
-                    sender.sendMessage(Message.text(world + " World generated!"));
-                    return true;
-                }
-
                 case "delete" -> {
                     if (!sender.isOp()) {
-                        sender.sendMessage(Message.text("You do not have permission to use this command!"));
+                        Message.send(sender, "You do not have permission to use this command!");
                         return true;
                     }
 
-                    sender.sendMessage(Message.text("Delete " + world + " World..."));
+                    Message.send(sender, "Delete " + world + " World...");
                     CustomWorldCreator.deleteWorld(world);
-                    sender.sendMessage(Message.text(world + " World deleted!"));
+                    Message.send(sender, world + " World deleted!");
                     return true;
                 }
             }
-
-            sender.sendMessage(Message.text("Invalid command! Available: tp, generate, delete"));
-            return true;
         }
 
-        sender.sendMessage(Message.text("Usage: /world <tp/generate/delete> <world_moon/world_mars/world>"));
+        if (args.length == 4) {
+            String type = args[0].toLowerCase();
+            String world = args[1].toLowerCase();
+            String environment = args[2].toLowerCase();
+            String generator = args[3].toLowerCase();
+            if (type.equals("generate")) {
+                if (!sender.isOp()) {
+                    Message.send(sender, "You do not have permission to use this command!");
+                    return true;
+                }
+
+                Message.send(sender, "Generating " + world + " World...");
+                CustomWorldCreator.createWorld(world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
+                Message.send(sender, world + " World generated!");
+                return true;
+            }
+        }
+
+        Message.send(sender, "Usage: /world <tp/delete> <world_moon/world_mars/world>");
         return true;
     }
 

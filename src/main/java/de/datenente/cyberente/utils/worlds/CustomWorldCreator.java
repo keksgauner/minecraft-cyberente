@@ -68,7 +68,7 @@ public class CustomWorldCreator {
         try {
             FileUtils.deleteDirectory(worldFolder);
         } catch (IOException ex) {
-            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "Failed to delete world folder: ", ex);
+            throw new IllegalStateException("Failed to delete world folder: ", ex);
         }
     }
 }
