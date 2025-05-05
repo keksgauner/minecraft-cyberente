@@ -23,6 +23,7 @@
  */
 package de.datenente.cyberente.listeners;
 
+import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.ItemStack2Base64;
@@ -33,6 +34,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -41,27 +44,32 @@ public class WorldChangeListener implements Listener {
     @EventHandler
     public void worldChangeEvent(PlayerChangedWorldEvent changedWorldEvent) {
         Player player = changedWorldEvent.getPlayer();
-        String world = changedWorldEvent.getPlayer().getWorld().getName();
+        String world = player.getWorld().getName();
+        String fromWorld = changedWorldEvent.getFrom().getName();
+        StorageConfig storageConfig = StorageConfig.getInstance();
+        Inventory inventory = player.getInventory();
 
-        StorageConfig config = StorageConfig.getInstance();
+        // Inventory speichern
+        String base64 =
+                ItemStack2Base64.itemStackArrayToBase64(inventory.getContents());
+        storageConfig.setPlayerInventory(player.getUniqueId(), fromWorld, base64, player.getLevel(), player.getExp());
 
-        World oldWorld = changedWorldEvent.getFrom();
-        String inv =
-                ItemStack2Base64.itemStackArrayToBase64(player.getInventory().getContents());
-        config.getStorage()
-                .getPlayerInventory()
-                .put(
-                        player.getUniqueId().toString() + ":" + oldWorld.getName(),
-                        new StorageObject.PlayerInventory(inv, player.getLevel()));
-
-        player.getInventory().clear();
+        // Inventory leeren
+        inventory.clear();
         player.setLevel(0);
+        player.setExp(0);
 
-        StorageObject.PlayerInventory invNew = config.getStorage()
-                .getPlayerInventory()
-                .getOrDefault(player.getUniqueId().toString() + ":" + world, new StorageObject.PlayerInventory("", 0));
-        player.getInventory().setContents(ItemStack2Base64.itemStackArrayFromBase64(invNew.getBase64()));
-        player.setLevel(invNew.getXp());
+        // Inventory laden
+        StorageObject.PlayerInventory inventoryNew = storageConfig.getPlayerInventory(player.getUniqueId(), world);
+        if (inventoryNew != null) {
+            ItemStack[] contents =
+                    ItemStack2Base64.itemStackArrayFromBase64(inventoryNew.getBase64());
+            inventory.setContents(contents);
+            player.setLevel(inventoryNew.getLevel());
+            player.setExp(inventoryNew.getXp());
+        } else {
+            CyberEnte.getInstance().getLogger().warning("No inventory found for player " + player.getName() + " in world " + world);
+        }
 
         if (world.equals("world")) {
             player.removePotionEffect(PotionEffectType.SLOW_FALLING);

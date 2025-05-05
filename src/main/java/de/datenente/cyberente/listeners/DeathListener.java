@@ -79,10 +79,12 @@ public class DeathListener implements Listener {
         List<ItemStack> drops = deathEvent.getDrops();
         ItemStack[] contents = drops.toArray(new ItemStack[0]);
         String base64 = ItemStack2Base64.itemStackArrayToBase64(contents);
-        int droppedExp = deathEvent.getDroppedExp();
+        int newLevel = deathEvent.getNewLevel();
+        int newExp = deathEvent.getNewExp();
 
         drops.clear();
-        deathEvent.setDroppedExp(0);
+        deathEvent.setNewLevel(0);
+        deathEvent.setNewExp(0);
 
         while (deathBlock.getType() != Material.AIR) {
             deathLocation = deathLocation.add(0, 1, 0);
@@ -98,7 +100,7 @@ public class DeathListener implements Listener {
         skull.update();
 
         StorageConfig storageConfig = StorageConfig.getInstance();
-        storageConfig.setDeathSkull(deathLocation, base64, droppedExp);
+        storageConfig.setDeathSkull(deathLocation, base64, newLevel, (float) newExp);
     }
 
     @EventHandler
@@ -128,7 +130,8 @@ public class DeathListener implements Listener {
         }
         ItemStack[] contents = ItemStack2Base64.itemStackArrayFromBase64(deathSkull.getBase64());
         if (contents == null) return;
-        int xp = deathSkull.getXp();
+        int level = deathSkull.getLevel();
+        float xp = deathSkull.getXp();
 
         storageConfig.removeDeathSkull(clickedBlock.getLocation());
 
@@ -138,7 +141,8 @@ public class DeathListener implements Listener {
             deathInventory.addItem(item);
         }
 
-        player.giveExp(xp);
+        player.giveExpLevels(level);
+        player.giveExp((int)xp);
 
         player.openInventory(deathInventory);
 
