@@ -99,21 +99,41 @@ public class WorldsCommand extends Command {
         if (args.length == 4) {
             String type = args[0].toLowerCase();
             String world = args[1].toLowerCase();
-            String environment = args[2].toLowerCase();
-            String generator = args[3].toLowerCase();
+            String environment = args[2].toUpperCase();
+            String generator = args[3].toUpperCase();
             if (type.equals("generate")) {
                 if (!sender.isOp()) {
                     Message.send(sender, "You do not have permission to use this command!");
                     return true;
                 }
 
+                World.Environment realEnvironment;
+                try {
+                    realEnvironment = World.Environment.valueOf(environment.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    Message.send(sender, "<red>Environment not found!</red>");
+                    return true;
+                }
+
+                CustomGenerator realGenerator;
+                try {
+                    realGenerator = CustomGenerator.valueOf(generator.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    Message.send(sender, "<red>Generator not found!</red>");
+                    return true;
+                }
+                /*
+                if (Bukkit.getWorld(world) != null) {
+                    Message.send(sender, "<red>World already exists!</red>");
+                    return true;
+                }
+                 */
+
                 Message.send(sender, "Generating " + world + " World...");
-                CustomWorldCreator.createWorld(
-                        world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
+                CustomWorldCreator.createWorld(world, realEnvironment, realGenerator);
 
                 StorageConfig storageConfig = StorageConfig.getInstance();
-                storageConfig.setWorld(
-                        world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
+                storageConfig.setWorld(world, realEnvironment, realGenerator);
                 Message.send(sender, world + " World generated!");
                 return true;
             }
@@ -130,7 +150,7 @@ public class WorldsCommand extends Command {
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return List.of("tp", "generate", "delete");
+            return List.of("tp", "generate", "remove", "delete");
         }
 
         if (args.length == 2) {

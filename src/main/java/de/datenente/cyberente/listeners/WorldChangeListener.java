@@ -96,7 +96,7 @@ public class WorldChangeListener implements Listener {
         }
 
         if (world.endsWith("_mars")) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, PotionEffect.INFINITE_DURATION, 0));
+            // player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, PotionEffect.INFINITE_DURATION, 0));
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION, 1));
             player.setGameMode(GameMode.CREATIVE);
 

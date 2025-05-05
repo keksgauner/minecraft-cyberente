@@ -4,7 +4,7 @@ version: '1.3-SNAPSHOT'
 main: de.datenente.cyberente.CyberEnte
 api-version: '1.21'
 
-load: startup
+load: STARTUP
 
 depend: [CyberEnte-Extended]
 

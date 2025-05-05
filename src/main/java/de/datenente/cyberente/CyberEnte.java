@@ -37,6 +37,7 @@ import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -80,7 +81,8 @@ public final class CyberEnte extends JavaPlugin {
         BreadRecipe.register();
         PotionRecipe.register();
         PlayTime.startTimer();
-        WorldLoader.load();
+
+        Bukkit.getScheduler().runTask(this, WorldLoader::load);
     }
 
     @Override
