@@ -24,7 +24,9 @@
 package de.datenente.cyberente.special;
 
 import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.hibernate.Databases;
+import de.datenente.cyberente.hibernate.database.PlayerDatabase;
+import de.datenente.cyberente.hibernate.mappings.SQLPlayer;
 import java.util.concurrent.TimeUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -37,9 +39,14 @@ public class PlayTime {
                         new Runnable() {
                             @Override
                             public void run() {
-                                StorageConfig storageConfig = StorageConfig.getInstance();
+                                PlayerDatabase playerDatabase =
+                                        Databases.getInstance().getPlayerDatabase();
                                 for (Player player : Bukkit.getOnlinePlayers()) {
-                                    storageConfig.addPlayTime(player.getUniqueId(), 1L);
+                                    SQLPlayer sqlPlayer = playerDatabase.getPlayer(player.getUniqueId());
+                                    if (sqlPlayer != null) {
+                                        sqlPlayer.setPlaytime(sqlPlayer.getPlaytime() + 1);
+                                        playerDatabase.savePlayer(sqlPlayer);
+                                    }
                                 }
                             }
                         },

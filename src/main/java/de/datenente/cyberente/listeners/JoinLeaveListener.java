@@ -23,9 +23,11 @@
  */
 package de.datenente.cyberente.listeners;
 
-import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.hibernate.Databases;
+import de.datenente.cyberente.hibernate.database.PlayerDatabase;
+import de.datenente.cyberente.hibernate.mappings.SQLPlayer;
 import de.datenente.cyberente.utils.Message;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import net.kyori.adventure.text.Component;
@@ -38,7 +40,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class JoinLeaveListener implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent joinEvent) {
+    public void onPlayerJoin(PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
         String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -48,11 +50,14 @@ public class JoinLeaveListener implements Listener {
 
         joinEvent.joinMessage(finalMessage);
 
-        Databases.getInstance().getPlayerDatabase().createOrUpdate(player.getUniqueId(), player.getName());
+        PlayerDatabase playerDatabase = Databases.getInstance().getPlayerDatabase();
+        SQLPlayer sqlPlayer = playerDatabase.createOrUpdate(player.getUniqueId(), player.getName());
+        sqlPlayer.setLastJoin(Instant.now());
+        playerDatabase.savePlayer(sqlPlayer);
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent quitEvent) {
+    public void onPlayerQuit(PlayerQuitEvent quitEvent) {
         Player player = quitEvent.getPlayer();
         String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -62,6 +67,9 @@ public class JoinLeaveListener implements Listener {
 
         quitEvent.quitMessage(finalMessage);
 
-        StorageConfig.getInstance().updateLastSeen(player.getUniqueId());
+        PlayerDatabase playerDatabase = Databases.getInstance().getPlayerDatabase();
+        SQLPlayer sqlPlayer = playerDatabase.getPlayer(player.getUniqueId());
+        sqlPlayer.setLastLeave(Instant.now());
+        playerDatabase.savePlayer(sqlPlayer);
     }
 }

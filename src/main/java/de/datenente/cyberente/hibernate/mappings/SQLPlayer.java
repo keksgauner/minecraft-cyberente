@@ -27,7 +27,7 @@ import de.datenente.cyberente.utils.hibernate.TimestampEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.metamodel.StaticMetamodel;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -67,10 +67,10 @@ public class SQLPlayer extends TimestampEntity implements Serializable {
     String name = "NO_VALUE";
 
     @Column(nullable = false)
-    LocalDateTime firstJoin = LocalDateTime.now();
+    Instant firstJoin = Instant.now();
 
-    LocalDateTime lastJoin;
-    LocalDateTime lastLeave;
+    Instant lastJoin;
+    Instant lastLeave;
 
     @Column(nullable = false)
     Long playtime = 0L;

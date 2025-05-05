@@ -31,10 +31,11 @@ import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
 import de.datenente.cyberente.recipes.PotionRecipe;
 import de.datenente.cyberente.special.PlayTime;
-
 import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import de.datenente.cyberente.special.Worlds;
 import lombok.Getter;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.PluginManager;
@@ -72,6 +73,7 @@ public final class CyberEnte extends JavaPlugin {
         BreadRecipe.register();
         PotionRecipe.register();
         PlayTime.startTimer();
+        Worlds.load();
     }
 
     @Override

@@ -34,10 +34,9 @@ import org.bukkit.World;
 @Getter
 @Setter
 public class StorageObject {
-    HashMap<String, Long> playTime = new HashMap<>(); // UUID, Time in minutes
-    HashMap<String, Long> lastSeen = new HashMap<>(); // UUID, Current system time
-
     HashMap<String, PlayerInventory> deathSkulls = new HashMap<>(); // Location, Skull storage
+
+    HashMap<String, WorldSettings> worlds = new HashMap<>(); // World
 
     // HashMap für Inventar für jede Welt:
     // Hashmap<"SuperCommander:world_moon", "64xCOOKED_CHICKEN">
@@ -47,12 +46,12 @@ public class StorageObject {
     @Setter
     @AllArgsConstructor
     public static class LocationObject {
-        final String world;
-        final double x;
-        final double y;
-        final double z;
-        final float yaw;
-        final float pitch;
+         String world;
+         double x;
+         double y;
+         double z;
+         float yaw;
+         float pitch;
 
         public LocationObject(Location location) {
             this.world = location.getWorld().getName();
@@ -73,8 +72,15 @@ public class StorageObject {
     @Setter
     @AllArgsConstructor
     public static class PlayerInventory {
-        final String base64; // Base64 encoded inventory
-        final Integer level;
-        final Float xp;
+         String base64; // Base64 encoded inventory
+         Integer level;
+         Float xp;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class WorldSettings {
+         String generator;
     }
 }

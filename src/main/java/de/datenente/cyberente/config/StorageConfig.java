@@ -51,46 +51,7 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         this.reload();
     }
 
-    public void addPlayTime(UUID uuid, long time) {
-        String uuidString = uuid.toString();
-        HashMap<String, Long> playTime = this.getStorage().getPlayTime();
-
-        if (playTime.containsKey(uuidString)) {
-            time += playTime.get(uuidString);
-        }
-        playTime.put(uuidString, time);
-        this.save();
-    }
-
-    public Long getPlayTime(UUID uuid) {
-        String uuidString = uuid.toString();
-        HashMap<String, Long> playTime = this.getStorage().getPlayTime();
-
-        if (playTime.containsKey(uuidString)) {
-            return playTime.get(uuidString);
-        }
-        return 0L;
-    }
-
-    public void updateLastSeen(UUID uuid) {
-        String uuidString = uuid.toString();
-        HashMap<String, Long> lastSeen = this.getStorage().getLastSeen();
-
-        lastSeen.put(uuidString, System.currentTimeMillis());
-        this.save();
-    }
-
-    public Long getLastSeen(UUID uuid) {
-        String uuidString = uuid.toString();
-        HashMap<String, Long> lastSeen = this.getStorage().getLastSeen();
-
-        if (lastSeen.containsKey(uuidString)) {
-            return lastSeen.get(uuidString);
-        }
-        return null;
-    }
-
-    private String serializeLocation(Location location) {
+    String serializeLocation(Location location) {
         return location.getWorld().getName() + ":" + location.getBlockX()
                 + ":" + location.getBlockY()
                 + ":" + location.getBlockZ();

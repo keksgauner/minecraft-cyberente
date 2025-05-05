@@ -50,8 +50,8 @@ public class MoonGenerator extends ChunkGenerator {
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
-        for (int x = minY; x < 16; x++) {
-            for (int z = minY; z < 16; z++) {
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
 
                 double noise = generator.noise(worldX + x, worldZ + z, 1, 1, true);
                 int height = (int) (noise * 40);
@@ -59,7 +59,7 @@ public class MoonGenerator extends ChunkGenerator {
                 if (height > chunkData.getMaxHeight()) {
                     height = chunkData.getMaxHeight();
                 }
-                for (int y = 0; y < height; y++) {
+                for (int y = minY; y < height; y++) {
                     chunkData.setBlock(x, y, z, Material.END_STONE);
                 }
             }
