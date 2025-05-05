@@ -30,7 +30,6 @@ import de.datenente.cyberente.utils.worlds.CustomWorldCreator;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -139,7 +138,7 @@ public class WorldsCommand extends Command {
         }
 
         if (args.length == 3) {
-            if(args[0].toLowerCase().equals("generate")) {
+            if (args[0].toLowerCase().equals("generate")) {
 
                 return Arrays.stream(World.Environment.values())
                         .map(World.Environment::name)
@@ -148,13 +147,12 @@ public class WorldsCommand extends Command {
         }
 
         if (args.length == 4) {
-            if(args[0].toLowerCase().equals("generate")) {
+            if (args[0].toLowerCase().equals("generate")) {
 
                 return Arrays.stream(CustomGenerator.values())
                         .map(CustomGenerator::name)
                         .toList();
             }
-
         }
 
         return List.of();
