@@ -23,9 +23,7 @@
  */
 package de.datenente.cyberente.utils;
 
-import de.datenente.cyberente.CyberEnte;
 import java.io.*;
-import java.util.logging.Level;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -43,9 +41,8 @@ public class ItemStack2Base64 {
             dataInput.close();
             return items;
         } catch (IOException | ClassNotFoundException ex) {
-            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
+            throw new IllegalStateException("Failed to deserialize item stack array from Base64 string.", ex);
         }
-        return null;
     }
 
     public static String itemStackArrayToBase64(ItemStack[] items) {
@@ -59,9 +56,8 @@ public class ItemStack2Base64 {
             dataOutput.close();
             return Base64Coder.encodeLines(outputStream.toByteArray());
         } catch (IOException ex) {
-            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
+            throw new IllegalStateException("Failed to serialize item stack array to Base64 string.", ex);
         }
-        return null;
     }
 
     /* TODO: Not working for some reason

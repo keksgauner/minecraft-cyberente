@@ -23,7 +23,6 @@
  */
 package de.datenente.cyberente.utils;
 
-import de.datenente.cyberente.CyberEnte;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
@@ -33,7 +32,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -206,8 +204,7 @@ public class Image2Chat {
         try {
             grabber.grabPixels();
         } catch (InterruptedException ex) {
-            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
-            return null;
+            throw new IllegalStateException("Failed to grab pixel data from the image.", ex);
         }
         int c = pixels[x * width + y];
         int red = (c & 0xFF0000) >> 16;

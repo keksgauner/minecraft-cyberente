@@ -23,7 +23,6 @@
  */
 package de.datenente.cyberente.utils;
 
-import de.datenente.cyberente.CyberEnte;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -104,8 +103,7 @@ public class CustomItem {
             this.getItemMeta().setItemModel(new NamespacedKey(splitKey[0], splitKey[1]));
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Invalid item model key: " + key);
-        return this;
+        throw new IllegalStateException("Invalid item model key: " + key);
     }
 
     public CustomItem itemModel(NamespacedKey namespacedKey) {
@@ -150,8 +148,7 @@ public class CustomItem {
             skullMeta.setOwningPlayer(player);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a player head");
-        return this;
+        throw new IllegalStateException("Item is not a player head");
     }
 
     public CustomItem amount(int size) {
@@ -164,8 +161,7 @@ public class CustomItem {
             damageable.setDamage((short) durability);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not damageable");
-        return this;
+        throw new IllegalStateException("Item is not damageable");
     }
 
     public CustomItem damage(int damage) {
@@ -173,8 +169,7 @@ public class CustomItem {
             damageable.setDamage(damage);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not damageable");
-        return this;
+        throw new IllegalStateException("Item is not damageable");
     }
 
     public CustomItem addDamage(int damage) {
@@ -182,8 +177,7 @@ public class CustomItem {
             damageable.setDamage(damageable.getDamage() + damage);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not damageable");
-        return this;
+        throw new IllegalStateException("Item is not damageable");
     }
 
     public CustomItem removeDamage(int damage) {
@@ -191,8 +185,7 @@ public class CustomItem {
             damageable.setDamage(damageable.getDamage() - damage);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not damageable");
-        return this;
+        throw new IllegalStateException("Item is not damageable");
     }
 
     public CustomItem potionType(PotionType potionType) {
@@ -200,8 +193,7 @@ public class CustomItem {
             potionMeta.setBasePotionType(potionType);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a potion");
-        return this;
+        throw new IllegalStateException("Item is not a potion");
     }
 
     public CustomItem addCustomPotionEffect(PotionEffect potionEffect, boolean overwrite) {
@@ -209,8 +201,7 @@ public class CustomItem {
             potionMeta.addCustomEffect(potionEffect, overwrite);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a potion");
-        return this;
+        throw new IllegalStateException("Item is not a potion");
     }
 
     public CustomItem removeCustomPotionEffect(PotionEffectType potionEffectType) {
@@ -218,8 +209,7 @@ public class CustomItem {
             potionMeta.removeCustomEffect(potionEffectType);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a potion");
-        return this;
+        throw new IllegalStateException("Item is not a potion");
     }
 
     public CustomItem clearCustomPotionEffects() {
@@ -227,8 +217,7 @@ public class CustomItem {
             potionMeta.clearCustomEffects();
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a potion");
-        return this;
+        throw new IllegalStateException("Item is not a potion");
     }
 
     public CustomItem addItemFlags(ItemFlag... itemFlags) {
@@ -294,8 +283,7 @@ public class CustomItem {
             leatherArmorMeta.setColor(color);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not leather armor");
-        return this;
+        throw new IllegalStateException("Item is not leather armor");
     }
 
     public CustomItem resetArmorColor() {
@@ -303,8 +291,7 @@ public class CustomItem {
             leatherArmorMeta.setColor(this.getItemFactory().getDefaultLeatherColor());
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not leather armor");
-        return this;
+        throw new IllegalStateException("Item is not leather armor");
     }
 
     public CustomItem fireworkPower(int power) {
@@ -312,8 +299,7 @@ public class CustomItem {
             fireworkMeta.setPower(power);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a firework");
-        return this;
+        throw new IllegalStateException("Item is not a firework");
     }
 
     public CustomItem removeFireworkEffect(int index) {
@@ -321,8 +307,7 @@ public class CustomItem {
             fireworkMeta.removeEffect(index);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a firework");
-        return this;
+        throw new IllegalStateException("Item is not a firework");
     }
 
     public CustomItem addFireworkEffects(FireworkEffect... effect) {
@@ -330,8 +315,7 @@ public class CustomItem {
             fireworkMeta.addEffects(effect);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a firework");
-        return this;
+        throw new IllegalStateException("Item is not a firework");
     }
 
     public CustomItem chargeEffect(FireworkEffect effect) {
@@ -339,8 +323,7 @@ public class CustomItem {
             fireworkEffectMeta.setEffect(effect);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a firework effect");
-        return this;
+        throw new IllegalStateException("Item is not a firework effect");
     }
 
     public CustomItem setBannerPattern(int i, Pattern pattern) {
@@ -348,8 +331,7 @@ public class CustomItem {
             bannerMeta.setPattern(i, pattern);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
-        return this;
+        throw new IllegalStateException("Item is not a banner");
     }
 
     public CustomItem setBannerPatterns(List<Pattern> patterns) {
@@ -357,8 +339,7 @@ public class CustomItem {
             bannerMeta.setPatterns(patterns);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
-        return this;
+        throw new IllegalStateException("Item is not a banner");
     }
 
     public CustomItem removeBannerPattern(int i) {
@@ -366,8 +347,7 @@ public class CustomItem {
             bannerMeta.removePattern(i);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
-        return this;
+        throw new IllegalStateException("Item is not a banner");
     }
 
     public CustomItem addBannerPattern(Pattern pattern) {
@@ -375,8 +355,7 @@ public class CustomItem {
             bannerMeta.addPattern(pattern);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
-        return this;
+        throw new IllegalStateException("Item is not a banner");
     }
 
     public CustomItem addBannerPatterns(Pattern... patterns) {
@@ -386,8 +365,7 @@ public class CustomItem {
             }
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a banner");
-        return this;
+        throw new IllegalStateException("Item is not a banner");
     }
 
     public CustomItem addBookPage(String... pages) {
@@ -395,8 +373,7 @@ public class CustomItem {
             writableBookMeta.addPage(pages);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a book");
-        return this;
+        throw new IllegalStateException("Item is not a book");
     }
 
     public CustomItem bookAuthor(String author) {
@@ -404,8 +381,7 @@ public class CustomItem {
             bookMeta.setAuthor(author);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a book");
-        return this;
+        throw new IllegalStateException("Item is not a book");
     }
 
     public CustomItem setBookPage(int page, String data) {
@@ -413,8 +389,7 @@ public class CustomItem {
             writableBookMeta.setPage(page, data);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a book");
-        return this;
+        throw new IllegalStateException("Item is not a book");
     }
 
     public CustomItem bookTitle(String title) {
@@ -422,8 +397,7 @@ public class CustomItem {
             bookMeta.setTitle(title);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a book");
-        return this;
+        throw new IllegalStateException("Item is not a book");
     }
 
     public CustomItem setBookPages(String... pages) {
@@ -431,7 +405,6 @@ public class CustomItem {
             writableBookMeta.setPages(pages);
             return this;
         }
-        CyberEnte.getInstance().getLogger().warning("Item is not a book");
-        return this;
+        throw new IllegalStateException("Item is not a book");
     }
 }

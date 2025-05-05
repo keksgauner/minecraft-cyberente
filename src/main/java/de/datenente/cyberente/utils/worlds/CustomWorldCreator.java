@@ -21,60 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.worlds;
+package de.datenente.cyberente.utils.worlds;
 
 import de.datenente.cyberente.CyberEnte;
+import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
+import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
-
-import de.datenente.cyberente.worlds.generators.MarsGenerator;
-import de.datenente.cyberente.worlds.generators.MoonGenerator;
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.codehaus.plexus.util.FileUtils;
 
 public class CustomWorldCreator {
-    public static World createWorld(String worldName) {
+    public static World createWorld(String worldName, World.Environment environment, CustomGenerator generator) {
         WorldCreator creator = new WorldCreator(worldName);
 
-        creator.environment(World.Environment.NORMAL);
-        if (worldName.equals("world_moon")) {
+        creator.environment(environment);
+        if (generator.equals(CustomGenerator.MOON)) {
             creator.generator(new MoonGenerator());
         }
-        if (worldName.equals("world_mars")) {
+        if (generator.equals(CustomGenerator.MARS)) {
             creator.generator(new MarsGenerator());
         }
 
-        creator.generateStructures(false);
         World world = creator.createWorld();
         if (world == null) {
-            CyberEnte.getInstance().getLogger().severe("Failed to create world: " + worldName);
-            return null;
+            throw new IllegalStateException("Failed to create world: " + worldName);
         }
-        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-
         return world;
     }
 
-    public static boolean unloadWorld(String worldName) {
+    public static boolean unloadWorld(String worldName, boolean save) {
         World world = Bukkit.getWorld(worldName);
         if (world == null) return false;
 
         world.getPlayers()
                 .forEach(player -> player.teleport(Bukkit.getWorlds().getFirst().getSpawnLocation()));
-        return Bukkit.unloadWorld(world, true);
+        return Bukkit.unloadWorld(world, save);
     }
 
     public static void deleteWorld(String worldName) {
-        unloadWorld(worldName);
+        unloadWorld(worldName, false);
         File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
         try {
             FileUtils.deleteDirectory(worldFolder);
         } catch (IOException ex) {
-            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "Failed to delete world folder", ex);
+            CyberEnte.getInstance().getLogger().log(Level.SEVERE, "Failed to delete world folder: ", ex);
         }
     }
 }

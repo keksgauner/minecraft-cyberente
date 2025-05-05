@@ -46,12 +46,12 @@ public class StorageObject {
     @Setter
     @AllArgsConstructor
     public static class LocationObject {
-         String world;
-         double x;
-         double y;
-         double z;
-         float yaw;
-         float pitch;
+        String world;
+        double x;
+        double y;
+        double z;
+        float yaw;
+        float pitch;
 
         public LocationObject(Location location) {
             this.world = location.getWorld().getName();
@@ -72,15 +72,15 @@ public class StorageObject {
     @Setter
     @AllArgsConstructor
     public static class PlayerInventory {
-         String base64; // Base64 encoded inventory
-         Integer level;
-         Float xp;
+        String base64; // Base64 encoded inventory
+        Integer level;
+        Float xp;
     }
 
     @Getter
     @Setter
     @AllArgsConstructor
     public static class WorldSettings {
-         String generator;
+        String generator;
     }
 }

@@ -24,7 +24,8 @@
 package de.datenente.cyberente.commands;
 
 import de.datenente.cyberente.utils.Message;
-import de.datenente.cyberente.worlds.CustomWorldCreator;
+import de.datenente.cyberente.utils.worlds.CustomGenerator;
+import de.datenente.cyberente.utils.worlds.CustomWorldCreator;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -75,7 +76,7 @@ public class WorldsCommand extends Command {
                     }
 
                     sender.sendMessage(Message.text("Generating " + world + " World..."));
-                    CustomWorldCreator.createWorld(world);
+                    CustomWorldCreator.createWorld(world, World.Environment.NORMAL, CustomGenerator.MOON);
                     sender.sendMessage(Message.text(world + " World generated!"));
                     return true;
                 }

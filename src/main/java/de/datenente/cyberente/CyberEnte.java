@@ -31,15 +31,16 @@ import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
 import de.datenente.cyberente.recipes.PotionRecipe;
 import de.datenente.cyberente.special.PlayTime;
+import de.datenente.cyberente.special.WorldLoader;
 import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import de.datenente.cyberente.special.Worlds;
 import lombok.Getter;
 import org.bukkit.command.CommandMap;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.Nullable;
 
 @Getter
 public final class CyberEnte extends JavaPlugin {
@@ -49,6 +50,11 @@ public final class CyberEnte extends JavaPlugin {
 
     Instant startTime;
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(250);
+
+    @Override
+    public void onLoad() {
+        getLogger().info("Plugin CyberEnte wird geladen!");
+    }
 
     @Override
     public void onEnable() {
@@ -73,7 +79,7 @@ public final class CyberEnte extends JavaPlugin {
         BreadRecipe.register();
         PotionRecipe.register();
         PlayTime.startTimer();
-        Worlds.load();
+        WorldLoader.load();
     }
 
     @Override
@@ -86,6 +92,12 @@ public final class CyberEnte extends JavaPlugin {
 
         StairSittingListener.clean();
         VehicleListener.clean();
+    }
+
+    @Override
+    public @Nullable ChunkGenerator getDefaultWorldGenerator(String worldName, @Nullable String id) {
+        getLogger().info(worldName + " " + id);
+        return super.getDefaultWorldGenerator(worldName, id);
     }
 
     void registerConfigs() {
