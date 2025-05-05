@@ -24,11 +24,9 @@
 package de.datenente.cyberente.commands;
 
 import de.datenente.cyberente.config.StorageConfig;
-import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import de.datenente.cyberente.utils.worlds.CustomWorldCreator;
-
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Bukkit;
@@ -115,10 +113,12 @@ public class WorldsCommand extends Command {
                 }
 
                 Message.send(sender, "Generating " + world + " World...");
-                CustomWorldCreator.createWorld(world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
+                CustomWorldCreator.createWorld(
+                        world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
 
                 StorageConfig storageConfig = StorageConfig.getInstance();
-                storageConfig.setWorld(world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
+                storageConfig.setWorld(
+                        world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
                 Message.send(sender, world + " World generated!");
                 return true;
             }
@@ -139,12 +139,10 @@ public class WorldsCommand extends Command {
         }
 
         if (args.length == 2) {
-            return Bukkit.getWorlds().stream()
-                    .map(World::getName)
-                    .toList();
+            return Bukkit.getWorlds().stream().map(World::getName).toList();
         }
 
-        if(args.length == 3) {
+        if (args.length == 3) {
             return Arrays.stream(World.Environment.values())
                     .map(World.Environment::name)
                     .toList();

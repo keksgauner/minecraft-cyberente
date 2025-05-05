@@ -35,6 +35,7 @@ public enum CustomGenerator {
     MARS(new MarsGenerator());
 
     final ChunkGenerator chunkGenerator;
+
     CustomGenerator(ChunkGenerator chunkGenerator) {
         this.chunkGenerator = chunkGenerator;
     }

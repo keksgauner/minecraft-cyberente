@@ -32,13 +32,10 @@ import de.datenente.cyberente.recipes.BreadRecipe;
 import de.datenente.cyberente.recipes.PotionRecipe;
 import de.datenente.cyberente.special.PlayTime;
 import de.datenente.cyberente.special.WorldLoader;
+import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import de.datenente.cyberente.utils.worlds.CustomGenerator;
-import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
-import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
 import lombok.Getter;
 import org.bukkit.command.CommandMap;
 import org.bukkit.generator.ChunkGenerator;
@@ -100,7 +97,7 @@ public final class CyberEnte extends JavaPlugin {
 
     @Override
     public @Nullable ChunkGenerator getDefaultWorldGenerator(String worldName, @Nullable String id) {
-        if(id == null) return null;
+        if (id == null) return null;
         CustomGenerator generator = CustomGenerator.valueOf(id);
         return generator.getChunkGenerator();
     }

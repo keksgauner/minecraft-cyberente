@@ -23,12 +23,8 @@
  */
 package de.datenente.cyberente.utils.worlds;
 
-import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
-import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;

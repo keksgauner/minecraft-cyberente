@@ -23,9 +23,8 @@
  */
 package de.datenente.cyberente.config.mappings;
 
-import java.util.HashMap;
-
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
+import java.util.HashMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -25,12 +25,11 @@ package de.datenente.cyberente.config;
 
 import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.config.JsonDocument;
+import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
-
-import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -99,30 +98,26 @@ public class StorageConfig extends JsonDocument<StorageObject> {
     }
 
     public void setWorld(String world, World.Environment environment, CustomGenerator generator) {
-        HashMap<String, StorageObject.Worlds> worldsMap =
-                this.getStorage().getWorlds();
+        HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
 
         worldsMap.put(world, new StorageObject.Worlds(generator, environment));
         this.save();
     }
 
     public StorageObject.Worlds getWorld(String world) {
-        HashMap<String, StorageObject.Worlds> worldsMap =
-                this.getStorage().getWorlds();
+        HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
 
         return worldsMap.getOrDefault(world, null);
     }
 
     public HashMap<String, StorageObject.Worlds> getWorlds() {
-        HashMap<String, StorageObject.Worlds> worldsMap =
-                this.getStorage().getWorlds();
+        HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
 
         return worldsMap;
     }
 
     public void removeWorld(String world) {
-        HashMap<String, StorageObject.Worlds> worldsMap =
-                this.getStorage().getWorlds();
+        HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
 
         worldsMap.remove(world);
         this.save();
