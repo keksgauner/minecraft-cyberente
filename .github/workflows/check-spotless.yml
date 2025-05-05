@@ -1,10 +1,10 @@
-name: Java CI build with Gradle
+name: Java CI spotless check with Gradle
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "**" ]
 
 jobs:
   build:
@@ -29,5 +29,5 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build
+    - name: Spotless Check
+      run: ./gradlew spotlessCheck
