@@ -21,20 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.worlds;
+package de.datenente.cyberente.worlds.generators;
 
 import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 
-public class MoonGenerator extends ChunkGenerator {
-
-    // Moon generator
-    // Using: https://www.spigotmc.org/threads/1-17-1-world-generator-api.521870/
-    // Outdated: https://bukkit.fandom.com/wiki/Developing_a_World_Generator_Plugin
+public class MarsGenerator extends ChunkGenerator {
 
     @Override
     public void generateNoise(
@@ -43,27 +38,7 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
-        generator.setScale(0.008);
-
-        int minY = chunkData.getMinHeight();
-        int worldX = chunkX * 16;
-        int worldZ = chunkZ * 16;
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-
-                double noise = generator.noise(worldX + x, worldZ + z, 1, 1, true);
-                int height = (int) (noise * 40);
-                height += 84;
-                if (height > chunkData.getMaxHeight()) {
-                    height = chunkData.getMaxHeight();
-                }
-                for (int y = minY; y < height; y++) {
-                    chunkData.setBlock(x, y, z, Material.END_STONE);
-                }
-            }
-        }
+        super.generateNoise(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 
     @Override
@@ -73,7 +48,31 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        super.generateSurface(worldInfo, random, chunkX, chunkZ, chunkData);
+        int baseHeight = 64;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                // Geringe Höhenunterschiede
+                int height = baseHeight + random.nextInt(3) - 1;
+
+                // Krater selten hinzufügen
+                if (random.nextDouble() < 0.02) {
+                    height -= 3 + random.nextInt(2); // kleine Dellen
+                }
+
+                // Oberfläche
+                chunkData.setBlock(x, height, z, Material.RED_SAND);
+
+                // Darunter rot-gelbe Steinschichten
+                for (int y = height - 1; y > 0; y--) {
+                    if (y > height - 3) {
+                        chunkData.setBlock(x, y, z, Material.TERRACOTTA); // rötlich
+                    } else {
+                        chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -83,23 +82,7 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        if (chunkData.getMinHeight() == worldInfo.getMinHeight()) {
-            int minY = chunkData.getMinHeight();
-            int maxY = 5;
-
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    int depth = 1 + random.nextInt(4);
-
-                    for (int y = 0; y < depth; y++) {
-                        int yPos = minY + y;
-                        if (yPos < maxY) {
-                            chunkData.setBlock(x, yPos, z, Material.BEDROCK);
-                        }
-                    }
-                }
-            }
-        }
+        super.generateBedrock(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 
     @Override

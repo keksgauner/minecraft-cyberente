@@ -27,6 +27,9 @@ import de.datenente.cyberente.CyberEnte;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+
+import de.datenente.cyberente.worlds.generators.MarsGenerator;
+import de.datenente.cyberente.worlds.generators.MoonGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
