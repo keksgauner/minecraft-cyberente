@@ -37,11 +37,7 @@ public class CustomWorldCreator {
         creator.environment(environment);
         creator.generator(generator.getChunkGenerator());
 
-        World world = creator.createWorld();
-        if (world == null) {
-            throw new IllegalStateException("Failed to create world: " + worldName);
-        }
-        return world;
+        return creator.createWorld();
     }
 
     public static boolean unloadWorld(String worldName, boolean save) {

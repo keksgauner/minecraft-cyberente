@@ -59,15 +59,11 @@ public class WorldsCommand extends Command {
 
                     World realWorld = Bukkit.getWorld(world);
                     if (realWorld == null) {
-                        Message.send(sender, "World not found!");
+                        Message.send(sender, "<red>World not found!</red>");
                         return true;
                     }
 
-                    Location spawnLocation = realWorld.getSpawnLocation();
-                    Location location =
-                            new Location(realWorld, spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ());
-
-                    player.teleport(location);
+                    player.teleport(realWorld.getSpawnLocation());
                     return true;
                 }
                 case "remove" -> {
@@ -143,15 +139,22 @@ public class WorldsCommand extends Command {
         }
 
         if (args.length == 3) {
-            return Arrays.stream(World.Environment.values())
-                    .map(World.Environment::name)
-                    .toList();
+            if(args[0].toLowerCase().equals("generate")) {
+
+                return Arrays.stream(World.Environment.values())
+                        .map(World.Environment::name)
+                        .toList();
+            }
         }
 
         if (args.length == 4) {
-            return Arrays.stream(CustomGenerator.values())
-                    .map(CustomGenerator::name)
-                    .toList();
+            if(args[0].toLowerCase().equals("generate")) {
+
+                return Arrays.stream(CustomGenerator.values())
+                        .map(CustomGenerator::name)
+                        .toList();
+            }
+
         }
 
         return List.of();

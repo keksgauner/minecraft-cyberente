@@ -79,7 +79,7 @@ public class WorldChangeListener implements Listener {
         Player player = changedWorldEvent.getPlayer();
         String world = player.getWorld().getName();
 
-        if (world.equals("world")) {
+        if (world.endsWith("world")) {
             player.removePotionEffect(PotionEffectType.SLOW_FALLING);
             player.removePotionEffect(PotionEffectType.JUMP_BOOST);
             player.setGameMode(GameMode.SURVIVAL);
@@ -87,7 +87,7 @@ public class WorldChangeListener implements Listener {
             Message.send(player, "Erfolgreich in <rainbow> world </rainbow> teleportiert!");
         }
 
-        if (world.equals("world_moon")) {
+        if (world.endsWith("_moon")) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, PotionEffect.INFINITE_DURATION, 2));
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION, 2));
             player.setGameMode(GameMode.CREATIVE);
@@ -95,7 +95,7 @@ public class WorldChangeListener implements Listener {
             Message.send(player, "Erfolgreich in <rainbow> moon </rainbow> teleportiert!");
         }
 
-        if (world.equals("world_mars")) {
+        if (world.endsWith("_mars")) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, PotionEffect.INFINITE_DURATION, 2));
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION, 2));
             player.setGameMode(GameMode.CREATIVE);
