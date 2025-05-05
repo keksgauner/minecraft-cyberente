@@ -23,6 +23,16 @@
  */
 package de.datenente.cyberente.special;
 
+import de.datenente.cyberente.CyberEnte;
+import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.utils.worlds.CustomWorldCreator;
+
 public class WorldLoader {
-    public static void load() {}
+    public static void load() {
+        StorageConfig storageConfig = StorageConfig.getInstance();
+        storageConfig.getWorlds().forEach((worldName, worldData) -> {
+            CyberEnte.getInstance().getLogger().info("Loading world " + worldName + " with generator " + worldData.getGenerator());
+            CustomWorldCreator.createWorld(worldName, worldData.getEnvironment(), worldData.getGenerator());
+        });
+    }
 }

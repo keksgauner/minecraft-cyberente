@@ -28,6 +28,8 @@ import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import de.datenente.cyberente.utils.worlds.CustomWorldCreator;
+
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -76,9 +78,12 @@ public class WorldsCommand extends Command {
                         return true;
                     }
 
-                    Message.send(sender, "Delete " + world + " World...");
+                    Message.send(sender, "Remove " + world + " World...");
                     CustomWorldCreator.unloadWorld(world, true);
-                    Message.send(sender, world + " World deleted!");
+
+                    StorageConfig storageConfig = StorageConfig.getInstance();
+                    storageConfig.removeWorld(world);
+                    Message.send(sender, world + " World removed!");
                     return true;
                 }
                 case "delete" -> {
@@ -91,7 +96,7 @@ public class WorldsCommand extends Command {
                     CustomWorldCreator.deleteWorld(world);
 
                     StorageConfig storageConfig = StorageConfig.getInstance();
-                    storageConfig.getStorage().getWorlds().remove(world);
+                    storageConfig.removeWorld(world);
                     Message.send(sender, world + " World deleted!");
                     return true;
                 }
@@ -113,7 +118,7 @@ public class WorldsCommand extends Command {
                 CustomWorldCreator.createWorld(world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
 
                 StorageConfig storageConfig = StorageConfig.getInstance();
-                storageConfig.getStorage().getWorlds().put(world, new StorageObject.Worlds(CustomGenerator.valueOf(generator), World.Environment.valueOf(environment)));
+                storageConfig.setWorld(world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
                 Message.send(sender, world + " World generated!");
                 return true;
             }
@@ -140,11 +145,15 @@ public class WorldsCommand extends Command {
         }
 
         if(args.length == 3) {
-            return List.of("normal", "nether", "the_end");
+            return Arrays.stream(World.Environment.values())
+                    .map(World.Environment::name)
+                    .toList();
         }
 
         if (args.length == 4) {
-            return List.of("none","mars", "moon");
+            return Arrays.stream(CustomGenerator.values())
+                    .map(CustomGenerator::name)
+                    .toList();
         }
 
         return List.of();
