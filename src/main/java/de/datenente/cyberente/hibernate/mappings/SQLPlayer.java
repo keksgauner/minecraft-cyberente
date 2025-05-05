@@ -36,7 +36,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "core_players")
+@Table(name = "players")
 @NamedQuery(name = SQLPlayer.HQL_GET_SEARCH_BY_UUID, query = "FROM SQLPlayer sqlPlayer WHERE sqlPlayer.uuid = :uuid")
 @NamedQuery(
         name = SQLPlayer.HQL_GET_SEARCH_BY_NAME,

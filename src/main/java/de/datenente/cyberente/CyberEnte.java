@@ -31,6 +31,8 @@ import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
 import de.datenente.cyberente.recipes.PotionRecipe;
 import de.datenente.cyberente.special.PlayTime;
+
+import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
@@ -44,12 +46,13 @@ public final class CyberEnte extends JavaPlugin {
     @Getter
     static CyberEnte instance;
 
+    Instant startTime;
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(250);
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         getLogger().info("Plugin CyberEnte wird geladen!");
+        this.startTime = Instant.now();
 
         synchronized (this) {
             instance = this;

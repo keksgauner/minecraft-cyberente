@@ -74,6 +74,7 @@ public class StorageObject {
     @AllArgsConstructor
     public static class PlayerInventory {
         final String base64; // Base64 encoded inventory
-        final Integer xp; // XP
+        final Integer level;
+        final Float xp;
     }
 }

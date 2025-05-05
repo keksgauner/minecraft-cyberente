@@ -34,36 +34,25 @@ import org.bukkit.WorldCreator;
 import org.codehaus.plexus.util.FileUtils;
 
 public class CustomWorldCreator {
-    public static World createMoonWorld() {
-        WorldCreator creator = new WorldCreator("world_moon");
+    public static World createWorld(String worldName) {
+        WorldCreator creator = new WorldCreator(worldName);
 
         creator.environment(World.Environment.NORMAL);
-        creator.generator(new MoonGenerator());
+        if (worldName.equals("world_moon")) {
+            creator.generator(new MoonGenerator());
+        }
+        if (worldName.equals("world_mars")) {
+            creator.generator(new MarsGenerator());
+        }
 
         creator.generateStructures(false);
         World world = creator.createWorld();
         if (world == null) {
-            CyberEnte.getInstance().getLogger().severe("Failed to create world: world_moon");
+            CyberEnte.getInstance().getLogger().severe("Failed to create world: " + worldName);
             return null;
         }
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
 
-        return world;
-    }
-
-    public static World createMarsWorld() {
-        WorldCreator creator = new WorldCreator("world_mars");
-
-        creator.environment(World.Environment.NORMAL);
-        creator.generator(new MarsGenerator());
-
-        creator.generateStructures(false);
-        World world = creator.createWorld();
-        if (world == null) {
-            CyberEnte.getInstance().getLogger().severe("Failed to create world: world_mars");
-            return null;
-        }
-        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         return world;
     }
 

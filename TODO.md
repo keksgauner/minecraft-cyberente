@@ -18,6 +18,10 @@
 - [ ] **/vehicle** - Spawnt ein Auto
 - [ ] **/worlds** - Teleportiert/Generiert andere Welten
 - [X] **/trash** - Öffnet einen Mülleimer
+- [ ] **/seen** - Zeigt den letzten Online-Zeitpunkt eines Spielers an
+- [ ] **/playtime** - Zeigt die Spielzeit eines Spielers an
+- [ ] **/death** - Zeigt die Tode eines Spielers an
+- [ ] **/info** - Zeigt Infos über den Server/Spieler an
 
 ---
 

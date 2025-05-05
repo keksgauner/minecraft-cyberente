@@ -51,7 +51,7 @@ public class WorldChangeListener implements Listener {
         config.getStorage()
                 .getPlayerInventory()
                 .put(
-                        player.getUniqueId() + ":" + oldWorld.getName(),
+                        player.getUniqueId().toString() + ":" + oldWorld.getName(),
                         new StorageObject.PlayerInventory(inv, player.getLevel()));
 
         player.getInventory().clear();
@@ -59,7 +59,7 @@ public class WorldChangeListener implements Listener {
 
         StorageObject.PlayerInventory invNew = config.getStorage()
                 .getPlayerInventory()
-                .getOrDefault(player.getUniqueId() + ":" + world, new StorageObject.PlayerInventory("", 0));
+                .getOrDefault(player.getUniqueId().toString() + ":" + world, new StorageObject.PlayerInventory("", 0));
         player.getInventory().setContents(ItemStack2Base64.itemStackArrayFromBase64(invNew.getBase64()));
         player.setLevel(invNew.getXp());
 
