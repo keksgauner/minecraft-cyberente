@@ -102,14 +102,7 @@ public final class CyberEnte extends JavaPlugin {
     public @Nullable ChunkGenerator getDefaultWorldGenerator(String worldName, @Nullable String id) {
         if(id == null) return null;
         CustomGenerator generator = CustomGenerator.valueOf(id);
-
-        if (generator == CustomGenerator.MOON) {
-            return new MoonGenerator();
-        }
-        if (generator == CustomGenerator.MARS) {
-            return new MarsGenerator();
-        }
-        return null;
+        return generator.getChunkGenerator();
     }
 
     void registerConfigs() {

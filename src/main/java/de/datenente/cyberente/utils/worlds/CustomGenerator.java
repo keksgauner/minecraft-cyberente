@@ -23,8 +23,19 @@
  */
 package de.datenente.cyberente.utils.worlds;
 
+import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
+import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
+import lombok.Getter;
+import org.bukkit.generator.ChunkGenerator;
+
+@Getter
 public enum CustomGenerator {
-    NONE,
-    MOON,
-    MARS
+    NONE(null),
+    MOON(new MoonGenerator()),
+    MARS(new MarsGenerator());
+
+    final ChunkGenerator chunkGenerator;
+    CustomGenerator(ChunkGenerator chunkGenerator) {
+        this.chunkGenerator = chunkGenerator;
+    }
 }

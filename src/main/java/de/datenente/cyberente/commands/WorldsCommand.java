@@ -23,6 +23,8 @@
  */
 package de.datenente.cyberente.commands;
 
+import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import de.datenente.cyberente.utils.worlds.CustomWorldCreator;
@@ -68,7 +70,17 @@ public class WorldsCommand extends Command {
                     player.teleport(location);
                     return true;
                 }
+                case "remove" -> {
+                    if (!sender.isOp()) {
+                        Message.send(sender, "You do not have permission to use this command!");
+                        return true;
+                    }
 
+                    Message.send(sender, "Delete " + world + " World...");
+                    CustomWorldCreator.unloadWorld(world, true);
+                    Message.send(sender, world + " World deleted!");
+                    return true;
+                }
                 case "delete" -> {
                     if (!sender.isOp()) {
                         Message.send(sender, "You do not have permission to use this command!");
@@ -77,6 +89,9 @@ public class WorldsCommand extends Command {
 
                     Message.send(sender, "Delete " + world + " World...");
                     CustomWorldCreator.deleteWorld(world);
+
+                    StorageConfig storageConfig = StorageConfig.getInstance();
+                    storageConfig.getStorage().getWorlds().remove(world);
                     Message.send(sender, world + " World deleted!");
                     return true;
                 }
@@ -96,12 +111,16 @@ public class WorldsCommand extends Command {
 
                 Message.send(sender, "Generating " + world + " World...");
                 CustomWorldCreator.createWorld(world, World.Environment.valueOf(environment), CustomGenerator.valueOf(generator));
+
+                StorageConfig storageConfig = StorageConfig.getInstance();
+                storageConfig.getStorage().getWorlds().put(world, new StorageObject.Worlds(CustomGenerator.valueOf(generator), World.Environment.valueOf(environment)));
                 Message.send(sender, world + " World generated!");
                 return true;
             }
         }
 
-        Message.send(sender, "Usage: /world <tp/delete> <world_moon/world_mars/world>");
+        Message.send(sender, "Usage: /world <tp/remove/delete> <world>");
+        Message.send(sender, "Usage: /world <generate> <world> <environment> <generator>");
         return true;
     }
 
@@ -115,12 +134,17 @@ public class WorldsCommand extends Command {
         }
 
         if (args.length == 2) {
-            // Wenn es sich um den ersten Parameter "tp" handelt, gebe die Welten zurück
-            String type = args[0].toLowerCase();
-            if (type.equals("tp")) {
-                return List.of("world_moon", "world_mars", "world");
-            }
-            return List.of("world_moon", "world_mars");
+            return Bukkit.getWorlds().stream()
+                    .map(World::getName)
+                    .toList();
+        }
+
+        if(args.length == 3) {
+            return List.of("normal", "nether", "the_end");
+        }
+
+        if (args.length == 4) {
+            return List.of("none","mars", "moon");
         }
 
         return List.of();

@@ -39,12 +39,7 @@ public class CustomWorldCreator {
         WorldCreator creator = new WorldCreator(worldName);
 
         creator.environment(environment);
-        if (generator.equals(CustomGenerator.MOON)) {
-            creator.generator(new MoonGenerator());
-        }
-        if (generator.equals(CustomGenerator.MARS)) {
-            creator.generator(new MarsGenerator());
-        }
+        creator.generator(generator.getChunkGenerator());
 
         World world = creator.createWorld();
         if (world == null) {
