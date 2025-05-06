@@ -23,7 +23,6 @@
  */
 package de.datenente.cyberente.commands;
 
-import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
@@ -35,7 +34,6 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldsCommand extends Command {

@@ -33,8 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class MoonGenerator extends ChunkGenerator {
 
     // Moon generator
-    // Using: https://www.spigotmc.org/threads/1-17-1-world-generator-api.521870/
-    // Outdated: https://bukkit.fandom.com/wiki/Developing_a_World_Generator_Plugin
+    // Using: https://www.spigotmc.org/threads/1-17-1-world-generator-api.521870
 
     @Override
     public void generateNoise(
@@ -43,7 +42,7 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(random, 6);
+        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
         generator.setScale(0.008);
 
         int minY = chunkData.getMinHeight();

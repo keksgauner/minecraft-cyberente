@@ -27,9 +27,12 @@ import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 
 public class MarsGenerator extends ChunkGenerator {
+
+    // RED_SAND TERRACOTTA RED_SANDSTONE
 
     @Override
     public void generateNoise(
@@ -38,7 +41,24 @@ public class MarsGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        super.generateNoise(worldInfo, random, chunkX, chunkZ, chunkData);
+        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
+        generator.setScale(0.01);
+
+        int maxHeight = chunkData.getMaxHeight();
+        int minHeight = chunkData.getMinHeight();
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                double noise = generator.noise(worldX + x, worldZ + z, 1, 1, true);
+                int height = (int) (noise * 40) + 84;
+
+                for (int y = minHeight; y < height; y++) {
+                    chunkData.setBlock(x, y, z, Material.RED_SAND);
+                }
+            }
+        }
     }
 
     @Override
@@ -47,33 +67,7 @@ public class MarsGenerator extends ChunkGenerator {
             @NotNull Random random,
             int chunkX,
             int chunkZ,
-            @NotNull ChunkData chunkData) {
-        int baseHeight = 64;
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                // Geringe Höhenunterschiede
-                int height = baseHeight + random.nextInt(3) - 1;
-
-                // Krater selten hinzufügen
-                if (random.nextDouble() < 0.02) {
-                    height -= 3 + random.nextInt(2); // kleine Dellen
-                }
-
-                // Oberfläche
-                chunkData.setBlock(x, height, z, Material.RED_SAND);
-
-                // Darunter rot-gelbe Steinschichten
-                for (int y = height - 1; y > 0; y--) {
-                    if (y > height - 3) {
-                        chunkData.setBlock(x, y, z, Material.TERRACOTTA); // rötlich
-                    } else {
-                        chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
-                    }
-                }
-            }
-        }
-    }
+            @NotNull ChunkData chunkData) {}
 
     @Override
     public void generateBedrock(
@@ -82,7 +76,21 @@ public class MarsGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        super.generateBedrock(worldInfo, random, chunkX, chunkZ, chunkData);
+        int minHeight = chunkData.getMinHeight();
+        int maxHeight = 5;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int depth = 1 + random.nextInt(3);
+
+                for (int y = 0; y < depth; y++) {
+                    int yPos = minHeight + y;
+                    if (yPos < maxHeight) {
+                        chunkData.setBlock(x, yPos, z, Material.BEDROCK);
+                    }
+                }
+            }
+        }
     }
 
     @Override
