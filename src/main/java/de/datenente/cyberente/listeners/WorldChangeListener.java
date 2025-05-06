@@ -28,7 +28,10 @@ import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.ItemStack2Base64;
 import de.datenente.cyberente.utils.Message;
+import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
+import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -77,30 +80,33 @@ public class WorldChangeListener implements Listener {
     @EventHandler
     public void onPerWorldMode(PlayerChangedWorldEvent changedWorldEvent) {
         Player player = changedWorldEvent.getPlayer();
-        String world = player.getWorld().getName();
+        World world = player.getWorld();
 
-        if (world.endsWith("world")) {
+        if (world.getGenerator() == null) {
             player.removePotionEffect(PotionEffectType.SLOW_FALLING);
             player.removePotionEffect(PotionEffectType.JUMP_BOOST);
             player.setGameMode(GameMode.SURVIVAL);
 
             Message.send(player, "Erfolgreich in <rainbow> world </rainbow> teleportiert!");
+            return;
         }
 
-        if (world.endsWith("_moon")) {
+        if (world.getGenerator() instanceof MoonGenerator) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, PotionEffect.INFINITE_DURATION, 2));
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION, 2));
             player.setGameMode(GameMode.CREATIVE);
 
             Message.send(player, "Erfolgreich in <rainbow> moon </rainbow> teleportiert!");
+            return;
         }
 
-        if (world.endsWith("_mars")) {
+        if (world.getGenerator() instanceof MarsGenerator) {
             // player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, PotionEffect.INFINITE_DURATION, 0));
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PotionEffect.INFINITE_DURATION, 1));
             player.setGameMode(GameMode.CREATIVE);
 
             Message.send(player, "Erfolgreich in <rainbow> moon </rainbow> teleportiert!");
+            return;
         }
     }
 }

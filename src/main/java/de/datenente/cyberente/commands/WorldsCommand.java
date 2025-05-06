@@ -23,6 +23,7 @@
  */
 package de.datenente.cyberente.commands;
 
+import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
@@ -34,6 +35,7 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldsCommand extends Command {
@@ -45,6 +47,19 @@ public class WorldsCommand extends Command {
     @Override
     public boolean execute(
             @NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
+
+        if (args.length == 1) {
+            String type = args[0].toLowerCase();
+
+            if (type.equals("list")) {
+                StringBuilder worlds = new StringBuilder();
+                for (World world : Bukkit.getWorlds()) {
+                    worlds.append(world.getName()).append(", ");
+                }
+                Message.send(sender, "Worlds: {0}", worlds.toString());
+                return true;
+            }
+        }
 
         if (args.length == 2) {
             String type = args[0].toLowerCase();
@@ -71,12 +86,12 @@ public class WorldsCommand extends Command {
                         return true;
                     }
 
-                    Message.send(sender, "Remove " + world + " World...");
+                    Message.send(sender, "Remove {0} World...", world);
                     CustomWorldCreator.unloadWorld(world, true);
 
                     StorageConfig storageConfig = StorageConfig.getInstance();
                     storageConfig.removeWorld(world);
-                    Message.send(sender, world + " World removed!");
+                    Message.send(sender, "{0} World removed!", world);
                     return true;
                 }
                 case "delete" -> {
@@ -85,12 +100,12 @@ public class WorldsCommand extends Command {
                         return true;
                     }
 
-                    Message.send(sender, "Delete " + world + " World...");
+                    Message.send(sender, "Delete {0} World...", world);
                     CustomWorldCreator.deleteWorld(world);
 
                     StorageConfig storageConfig = StorageConfig.getInstance();
                     storageConfig.removeWorld(world);
-                    Message.send(sender, world + " World deleted!");
+                    Message.send(sender, "{0} World deleted!", world);
                     return true;
                 }
             }
@@ -122,43 +137,47 @@ public class WorldsCommand extends Command {
                     Message.send(sender, "<red>Generator not found!</red>");
                     return true;
                 }
-                /*
+                /* Generate is also used for importing worlds
                 if (Bukkit.getWorld(world) != null) {
                     Message.send(sender, "<red>World already exists!</red>");
                     return true;
                 }
                  */
 
-                Message.send(sender, "Generating " + world + " World...");
+                Message.send(sender, "Generating {0} World...", world);
                 CustomWorldCreator.createWorld(world, realEnvironment, realGenerator);
 
                 StorageConfig storageConfig = StorageConfig.getInstance();
                 storageConfig.setWorld(world, realEnvironment, realGenerator);
-                Message.send(sender, world + " World generated!");
+                Message.send(sender, "{0} World generated!", world);
                 return true;
             }
         }
 
+        Message.send(sender, "Usage: /world <list>");
         Message.send(sender, "Usage: /world <tp/remove/delete> <world>");
         Message.send(sender, "Usage: /world <generate> <world> <environment> <generator>");
         return true;
     }
 
+    // TODO: filter einbauen
     @Override
     public @NotNull List<String> tabComplete(
             @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return List.of("tp", "generate", "remove", "delete");
+            return List.of("tp", "generate", "remove", "delete", "list");
         }
 
         if (args.length == 2) {
+            String type = args[0].toLowerCase();
             return Bukkit.getWorlds().stream().map(World::getName).toList();
         }
 
         if (args.length == 3) {
-            if (args[0].toLowerCase().equals("generate")) {
+            String type = args[0].toLowerCase();
+            if (type.equals("generate")) {
 
                 return Arrays.stream(World.Environment.values())
                         .map(World.Environment::name)
@@ -167,8 +186,8 @@ public class WorldsCommand extends Command {
         }
 
         if (args.length == 4) {
-            if (args[0].toLowerCase().equals("generate")) {
-
+            String type = args[0].toLowerCase();
+            if (type.equals("generate")) {
                 return Arrays.stream(CustomGenerator.values())
                         .map(CustomGenerator::name)
                         .toList();

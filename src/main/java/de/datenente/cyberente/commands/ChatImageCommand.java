@@ -64,7 +64,7 @@ public class ChatImageCommand extends Command {
                 }
             } catch (IOException ex) {
                 Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
-                CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
+                CyberEnte.getInstance().getLogger().log(Level.SEVERE, "Image cannot be loaded.", ex);
             }
 
             return true;
@@ -91,7 +91,7 @@ public class ChatImageCommand extends Command {
                 Message.send(sender, "<red>Die Breite und Höhe müssen Zahlen sein!</red>");
             } catch (IOException ex) {
                 Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
-                CyberEnte.getInstance().getLogger().log(Level.SEVERE, "A error: ", ex);
+                CyberEnte.getInstance().getLogger().log(Level.SEVERE, "Image cannot be loaded.", ex);
             }
 
             return true;

@@ -36,7 +36,7 @@ public enum CustomGenerator {
 
     final ChunkGenerator chunkGenerator;
 
-    CustomGenerator(ChunkGenerator chunkGenerator) {
+    CustomGenerator(final ChunkGenerator chunkGenerator) {
         this.chunkGenerator = chunkGenerator;
     }
 }
