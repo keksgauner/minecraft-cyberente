@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MoonGenerator extends ChunkGenerator {
 
-    // Moon generator
+    // END_STONE DEEP_SLATE_STONE
     // Using: https://www.spigotmc.org/threads/1-17-1-world-generator-api.521870
 
     @Override
@@ -82,19 +82,14 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        if (chunkData.getMinHeight() == worldInfo.getMinHeight()) {
-            int minY = chunkData.getMinHeight();
-            int maxY = 5;
+            int minHeight = chunkData.getMinHeight();
 
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     int depth = 1 + random.nextInt(4);
 
-                    for (int y = 0; y < depth; y++) {
-                        int yPos = minY + y;
-                        if (yPos < maxY) {
-                            chunkData.setBlock(x, yPos, z, Material.BEDROCK);
-                        }
+                    for (int y = minHeight; y < depth; y++) {
+                            chunkData.setBlock(x, y, z, Material.BEDROCK);
                     }
                 }
             }

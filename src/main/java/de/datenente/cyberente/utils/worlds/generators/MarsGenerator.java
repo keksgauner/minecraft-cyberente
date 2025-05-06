@@ -34,6 +34,27 @@ public class MarsGenerator extends ChunkGenerator {
 
     // RED_SAND TERRACOTTA RED_SANDSTONE
 
+    // The octaves parameter sets the number of functions used.
+    // More octaves result in a more detailed surface.
+    int octaves = 6;
+    // The scale parameter determines at what distance to view the surface.
+    // Zoom out/zoom in.
+    double scale = 0.01;
+    // The frequency parameter sets how much detail each octave adds to the surface.
+    // A frequency of 1 results in each octave having the same impact on the resulting surface.
+    // A frequency of smaller than 1 results in later octaves generating a smoother surface (usually you don't want this).
+    double frequency = 1;
+    // The amplitude parameter sets how much each octave contributes to the overall surface.
+    // An amplitude of 1 results in each octave having the same impact on the resulting surface.
+    // An amplitude of smaller than 1 results in later octaves adding smaller changes to the surface.
+    // Also known as Persistence
+    double amplitude = 1;
+    // The height parameter sets the height difference.
+    // With 15 you get a difference 15 and -15.
+    double heightDifference = 15;
+    // The height parameter sets the height of the surface.
+    int height = 84;
+
     @Override
     public void generateNoise(
             @NotNull WorldInfo worldInfo,
@@ -41,21 +62,21 @@ public class MarsGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
-        generator.setScale(0.01);
+        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(random, octaves);
+        generator.setScale(scale);
 
-        int maxHeight = chunkData.getMaxHeight();
         int minHeight = chunkData.getMinHeight();
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                double noise = generator.noise(worldX + x, worldZ + z, 1, 1, true);
-                int height = (int) (noise * 40) + 84;
+                double noise = generator.noise(worldX + x, worldZ + z, frequency, amplitude, true);
+                int blockHeight = (int) (noise * heightDifference);
+                blockHeight += height;
 
-                for (int y = minHeight; y < height; y++) {
-                    chunkData.setBlock(x, y, z, Material.RED_SAND);
+                for (int y = minHeight; y < blockHeight; y++) {
+                    chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
                 }
             }
         }
@@ -67,7 +88,22 @@ public class MarsGenerator extends ChunkGenerator {
             @NotNull Random random,
             int chunkX,
             int chunkZ,
-            @NotNull ChunkData chunkData) {}
+            @NotNull ChunkData chunkData) {
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int y = chunkData.getHighestBlockYAt(x, z);
+
+                chunkData.setBlock(x, y, z, Material.RED_SAND);
+
+                for (int depth = 1; depth <= 3; depth++) {
+                    chunkData.setBlock(x, y - depth, z, Material.TERRACOTTA);
+
+                }
+
+                }
+            }
+
+    }
 
     @Override
     public void generateBedrock(
