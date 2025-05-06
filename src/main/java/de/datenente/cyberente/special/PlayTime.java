@@ -36,17 +36,14 @@ public class PlayTime {
         CyberEnte.getInstance()
                 .getScheduledExecutorService()
                 .schedule(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                PlayerDatabase playerDatabase =
-                                        Databases.getInstance().getPlayerDatabase();
-                                for (Player player : Bukkit.getOnlinePlayers()) {
-                                    SQLPlayer sqlPlayer = playerDatabase.getPlayer(player.getUniqueId());
-                                    if (sqlPlayer != null) {
-                                        sqlPlayer.setPlaytime(sqlPlayer.getPlaytime() + 1);
-                                        playerDatabase.savePlayer(sqlPlayer);
-                                    }
+                        () -> {
+                            PlayerDatabase playerDatabase =
+                                    Databases.getInstance().getPlayerDatabase();
+                            for (Player player : Bukkit.getOnlinePlayers()) {
+                                SQLPlayer sqlPlayer = playerDatabase.getPlayer(player.getUniqueId());
+                                if (sqlPlayer != null) {
+                                    sqlPlayer.setPlaytime(sqlPlayer.getPlaytime() + 1);
+                                    playerDatabase.savePlayer(sqlPlayer);
                                 }
                             }
                         },

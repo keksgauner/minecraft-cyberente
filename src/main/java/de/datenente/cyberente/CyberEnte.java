@@ -56,18 +56,17 @@ public final class CyberEnte extends JavaPlugin {
     @Override
     public void onLoad() {
         getLogger().info("Plugin CyberEnte wird geladen!");
+        synchronized (this) {
+            instance = this;
+        }
+
+        registerConfigs();
     }
 
     @Override
     public void onEnable() {
         getLogger().info("Plugin CyberEnte wird geladen!");
         this.startTime = Instant.now();
-
-        synchronized (this) {
-            instance = this;
-        }
-
-        registerConfigs();
 
         // Hibernate
         new Databases(getLogger());

@@ -32,8 +32,31 @@ import org.jetbrains.annotations.NotNull;
 
 public class MoonGenerator extends ChunkGenerator {
 
-    // END_STONE DEEP_SLATE_STONE
-    // Using: https://www.spigotmc.org/threads/1-17-1-world-generator-api.521870
+    // END_STONE -> DEEP_SLATE_STONE
+
+    // The octaves parameter sets the number of functions used.
+    // More octaves result in a more detailed surface.
+    int octaves = 6;
+    // The scale parameter determines at what distance to view the surface.
+    // Zoom out/zoom in.
+    double scale = 0.008;
+    // The frequency parameter sets how much detail each octave adds to the surface.
+    // A frequency of 1 results in each octave having the same impact on the resulting surface.
+    // A frequency of smaller than 1 results in later octaves generating a smoother surface (usually you don't want
+    // this).
+    double frequency = 1;
+    // The amplitude parameter sets how much each octave contributes to the overall surface.
+    // An amplitude of 1 results in each octave having the same impact on the resulting surface.
+    // An amplitude of smaller than 1 results in later octaves adding smaller changes to the surface.
+    // Also known as Persistence
+    double amplitude = 1;
+    // The height parameter sets the height difference.
+    // With 15 you get a difference 15 and -15.
+    double heightDifference = 40;
+    // The height parameter sets the height of the surface.
+    int height = 84;
+
+    SimplexOctaveGenerator generator;
 
     @Override
     public void generateNoise(
@@ -42,27 +65,8 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
-        generator.setScale(0.008);
-
-        int minY = chunkData.getMinHeight();
-        int worldX = chunkX * 16;
-        int worldZ = chunkZ * 16;
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-
-                double noise = generator.noise(worldX + x, worldZ + z, 1, 1, true);
-                int height = (int) (noise * 40);
-                height += 84;
-                if (height > chunkData.getMaxHeight()) {
-                    height = chunkData.getMaxHeight();
-                }
-                for (int y = minY; y < height; y++) {
-                    chunkData.setBlock(x, y, z, Material.END_STONE);
-                }
-            }
-        }
+        this.generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), this.octaves);
+        this.generator.setScale(this.scale);
     }
 
     @Override
@@ -72,7 +76,25 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        super.generateSurface(worldInfo, random, chunkX, chunkZ, chunkData);
+
+        int minHeight = chunkData.getMinHeight();
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                double noise = this.generator.noise(worldX + x, worldZ + z, this.frequency, this.amplitude, true);
+                int blockHeight = (int) Math.round(noise * this.heightDifference);
+                blockHeight += this.height;
+
+                if (blockHeight > chunkData.getMaxHeight()) {
+                    blockHeight = chunkData.getMaxHeight();
+                }
+                for (int y = minHeight; y < blockHeight; y++) {
+                    chunkData.setBlock(x, y, z, Material.END_STONE);
+                }
+            }
+        }
     }
 
     @Override
@@ -82,27 +104,20 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-            int minHeight = chunkData.getMinHeight();
+        if (chunkData.getMinHeight() != worldInfo.getMinHeight()) {
+            return;
+        }
+        int minHeight = chunkData.getMinHeight();
 
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    int depth = 1 + random.nextInt(4);
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int depth = 1 + random.nextInt(3);
 
-                    for (int y = minHeight; y < depth; y++) {
-                            chunkData.setBlock(x, y, z, Material.BEDROCK);
-                    }
+                for (int i = 0; i < depth; i++) {
+                    int y = minHeight + i;
+                    chunkData.setBlock(x, y, z, Material.BEDROCK);
                 }
             }
         }
-    }
-
-    @Override
-    public void generateCaves(
-            @NotNull WorldInfo worldInfo,
-            @NotNull Random random,
-            int chunkX,
-            int chunkZ,
-            @NotNull ChunkData chunkData) {
-        super.generateCaves(worldInfo, random, chunkX, chunkZ, chunkData);
     }
 }
