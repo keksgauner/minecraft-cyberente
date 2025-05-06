@@ -116,6 +116,7 @@ public class WorldsCommand extends Command {
             String world = args[1].toLowerCase();
             String environment = args[2].toUpperCase();
             String generator = args[3].toUpperCase();
+
             if (type.equals("generate")) {
                 if (!sender.isOp()) {
                     Message.send(sender, "You do not have permission to use this command!");

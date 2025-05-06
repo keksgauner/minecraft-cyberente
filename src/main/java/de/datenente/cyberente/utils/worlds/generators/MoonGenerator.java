@@ -43,7 +43,7 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
+        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(random, 6);
         generator.setScale(0.008);
 
         int minY = chunkData.getMinHeight();
