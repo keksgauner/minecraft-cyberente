@@ -24,9 +24,11 @@
 package de.datenente.cyberente.utils.worlds.generators;
 
 import de.datenente.cyberente.utils.worlds.biome.SimpleBiomeProvider;
-import de.datenente.cyberente.utils.worlds.populator.SimpleBlockPopulator;
+import de.datenente.cyberente.utils.worlds.populator.CraterPopulator;
+import de.datenente.cyberente.utils.worlds.populator.OreVeinPopulator;
 import java.util.List;
 import java.util.Random;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BiomeProvider;
@@ -37,6 +39,7 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Getter
 public class MoonGenerator extends ChunkGenerator {
 
     // END_STONE -> DEEP_SLATE_STONE
@@ -63,7 +66,7 @@ public class MoonGenerator extends ChunkGenerator {
     // The height parameter sets the height of the surface.
     int height = 84;
 
-    SimplexOctaveGenerator generator;
+    SimplexOctaveGenerator noiseGenerator;
 
     @Override
     public void generateNoise(
@@ -72,8 +75,8 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        this.generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), this.octaves);
-        this.generator.setScale(this.scale);
+        this.noiseGenerator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), this.octaves);
+        this.getNoiseGenerator().setScale(this.getScale());
     }
 
     @Override
@@ -84,18 +87,20 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkZ,
             @NotNull ChunkData chunkData) {
 
+        int maxHeight = chunkData.getMaxHeight();
         int minHeight = chunkData.getMinHeight();
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                double noise = this.generator.noise(worldX + x, worldZ + z, this.frequency, this.amplitude, true);
-                int blockHeight = (int) Math.round(noise * this.heightDifference);
-                blockHeight += this.height;
+                double terrainNoise = this.getNoiseGenerator()
+                        .noise(worldX + x, worldZ + z, this.getFrequency(), this.getAmplitude(), true);
+                int blockHeight = (int) Math.round(terrainNoise * this.getHeightDifference());
+                blockHeight += this.getHeight();
 
-                if (blockHeight > chunkData.getMaxHeight()) {
-                    blockHeight = chunkData.getMaxHeight();
+                if (blockHeight > maxHeight) {
+                    blockHeight = maxHeight;
                 }
                 for (int y = minHeight; y < blockHeight; y++) {
                     chunkData.setBlock(x, y, z, Material.END_STONE);
@@ -135,6 +140,6 @@ public class MoonGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
-        return List.of(new SimpleBlockPopulator());
+        return List.of(new OreVeinPopulator(), new CraterPopulator());
     }
 }

@@ -24,28 +24,25 @@
 package de.datenente.cyberente.utils.worlds.populator;
 
 import java.util.Random;
-import org.bukkit.Location;
+import lombok.Getter;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 
-public class SimpleBlockPopulator extends BlockPopulator {
-
-    private static final BlockFace[] OFFSETS = new BlockFace[] {
-        BlockFace.NORTH,
-        BlockFace.EAST,
-        BlockFace.SOUTH,
-        BlockFace.WEST,
-        BlockFace.UP,
-        BlockFace.DOWN,
-        BlockFace.NORTH_EAST,
-        BlockFace.NORTH_WEST,
-        BlockFace.SOUTH_EAST,
-        BlockFace.SOUTH_WEST,
+@Getter
+public class OreVeinPopulator extends BlockPopulator {
+    Material[] ores = {
+        Material.COAL_ORE,
+        Material.IRON_ORE,
+        Material.GOLD_ORE,
+        Material.DIAMOND_ORE,
+        Material.REDSTONE_ORE,
+        Material.LAPIS_ORE
     };
+    int[] maxHeights = {128, 64, 32, 16, 16, 32};
+    int[] clusterSizes = {17, 9, 9, 8, 8, 7};
 
     @Override
     public void populate(
@@ -54,28 +51,44 @@ public class SimpleBlockPopulator extends BlockPopulator {
             int chunkX,
             int chunkZ,
             @NotNull LimitedRegion limitedRegion) {
-        int startX = random.nextInt(16) + (chunkX * 16);
-        int startY = random.nextInt(30) + worldInfo.getMinHeight();
-        int startZ = random.nextInt(16) + (chunkZ * 16);
-        Location location = new Location(null, startX, startY, startZ);
 
-        if (!limitedRegion.isInRegion(location)) {
-            return;
-        }
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
 
-        Material startMaterial = limitedRegion.getType(location);
+        for (int i = 0; i < this.getOres().length; i++) {
+            Material ore = this.getOres()[i];
+            int maxHeight = this.getMaxHeights()[i];
+            int clusterSize = this.getClusterSizes()[i];
 
-        if (startMaterial != Material.STONE && startMaterial != Material.DEEPSLATE) {
-            return;
-        }
+            int clusterCount = random.nextInt(10) + 1;
 
-        for (int seize = random.nextInt(15); seize > 0; seize--) {
-            if (limitedRegion.isInRegion(location)) {
-                limitedRegion.setType(location, Material.ANCIENT_DEBRIS);
+            for (int j = 0; j < clusterCount; j++) {
+                int x = worldX + random.nextInt(16);
+                int y = random.nextInt(maxHeight);
+                int z = worldZ + random.nextInt(16);
+
+                generateOreCluster(limitedRegion, random, x, y, z, clusterSize, ore);
             }
+        }
+    }
 
-            BlockFace blockFace = OFFSETS[random.nextInt(OFFSETS.length)];
-            location.add(blockFace.getModX(), blockFace.getModY(), blockFace.getModZ());
+    void generateOreCluster(
+            @NotNull LimitedRegion limitedRegion,
+            @NotNull Random random,
+            int x,
+            int y,
+            int z,
+            int clusterSize,
+            @NotNull Material ore) {
+
+        for (int i = 0; i < clusterSize; i++) {
+            int offsetX = x + random.nextInt(3) - 1;
+            int offsetY = y + random.nextInt(3) - 1;
+            int offsetZ = z + random.nextInt(3) - 1;
+
+            if (!limitedRegion.getType(offsetX, offsetY, offsetZ).isAir()) {
+                limitedRegion.setType(offsetX, offsetY, offsetZ, ore);
+            }
         }
     }
 }

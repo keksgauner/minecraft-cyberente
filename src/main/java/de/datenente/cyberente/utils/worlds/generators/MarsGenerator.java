@@ -24,9 +24,11 @@
 package de.datenente.cyberente.utils.worlds.generators;
 
 import de.datenente.cyberente.utils.worlds.biome.SimpleBiomeProvider;
-import de.datenente.cyberente.utils.worlds.populator.SimpleBlockPopulator;
+import de.datenente.cyberente.utils.worlds.populator.CraterPopulator;
+import de.datenente.cyberente.utils.worlds.populator.OreVeinPopulator;
 import java.util.List;
 import java.util.Random;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BiomeProvider;
@@ -37,6 +39,7 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Getter
 public class MarsGenerator extends ChunkGenerator {
 
     // RED_SAND -> TERRACOTTA -> RED_SANDSTONE
@@ -46,7 +49,7 @@ public class MarsGenerator extends ChunkGenerator {
     int octaves = 2;
     // The scale parameter determines at what distance to view the surface.
     // Zoom out/zoom in.
-    double scale = 0.008;
+    double scale = 0.0056;
     // The frequency parameter sets how much detail each octave adds to the surface.
     // A frequency of 1 results in each octave having the same impact on the resulting surface.
     // A frequency of smaller than 1 results in later octaves generating a smoother surface (usually you don't want
@@ -63,7 +66,7 @@ public class MarsGenerator extends ChunkGenerator {
     // The height parameter sets the height of the surface.
     int height = 84;
 
-    SimplexOctaveGenerator generator;
+    SimplexOctaveGenerator noiseGenerator;
 
     @Override
     public void generateNoise(
@@ -72,8 +75,8 @@ public class MarsGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        this.generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), this.octaves);
-        this.generator.setScale(this.scale);
+        this.noiseGenerator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), this.octaves);
+        this.getNoiseGenerator().setScale(this.scale);
     }
 
     @Override
@@ -83,22 +86,34 @@ public class MarsGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
+
+        int maxHeight = chunkData.getMaxHeight();
         int minHeight = chunkData.getMinHeight();
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                double noise = this.generator.noise(worldX + x, worldZ + z, this.frequency, this.amplitude, true);
-                int blockHeight = (int) Math.round(noise * this.heightDifference);
-                blockHeight += this.height;
+                double terrainNoise = this.getNoiseGenerator()
+                        .noise(worldX + x, worldZ + z, this.getFrequency(), this.getAmplitude(), true);
+                int blockHeight = (int) Math.round(terrainNoise * this.getHeightDifference());
+                blockHeight += this.getHeight();
 
-                if (height > chunkData.getMaxHeight()) {
-                    height = chunkData.getMaxHeight();
+                if (blockHeight > maxHeight) {
+                    blockHeight = maxHeight;
                 }
 
+                int redSandDepth = random.nextInt(5) + 1;
+                int terracottaDepth = random.nextInt(blockHeight - minHeight - redSandDepth + 1);
+
                 for (int y = minHeight; y < blockHeight; y++) {
-                    chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
+                    if (y < minHeight + terracottaDepth) {
+                        chunkData.setBlock(x, y, z, Material.TERRACOTTA);
+                    } else if (y < minHeight + terracottaDepth + redSandDepth) {
+                        chunkData.setBlock(x, y, z, Material.RED_SAND);
+                    } else {
+                        chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
+                    }
                 }
             }
         }
@@ -135,7 +150,7 @@ public class MarsGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
-        return List.of(new SimpleBlockPopulator());
+        return List.of(new OreVeinPopulator(), new CraterPopulator());
     }
 
     /*

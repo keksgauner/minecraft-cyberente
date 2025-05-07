@@ -1,0 +1,79 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 KeksGauner, CyberEnte
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package de.datenente.cyberente.utils.worlds.populator;
+
+import java.util.Random;
+import lombok.Getter;
+import org.bukkit.Material;
+import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.LimitedRegion;
+import org.bukkit.generator.WorldInfo;
+import org.bukkit.util.noise.SimplexNoiseGenerator;
+import org.jetbrains.annotations.NotNull;
+
+@Getter
+public class CraterPopulator extends BlockPopulator {
+    int maxCraterCount = 3;
+    int minRadius = 3;
+    int maxRadius = 6;
+    int minDepth = 2;
+    int maxDepth = 4;
+
+    @Override
+    public void populate(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull LimitedRegion limitedRegion) {
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
+
+        SimplexNoiseGenerator noiseGenerator = new SimplexNoiseGenerator(new Random(worldInfo.getSeed()));
+        int craterCount = random.nextInt(this.getMaxCraterCount()) + 1;
+
+        for (int i = 0; i < craterCount; i++) {
+            int centerX = worldX + random.nextInt(16);
+            int centerZ = worldZ + random.nextInt(16);
+            int centerY = limitedRegion.getHighestBlockYAt(centerX, centerZ);
+
+            int radius = random.nextInt(this.getMaxRadius() - this.getMinRadius() + 1) + this.getMinRadius();
+            int depth = random.nextInt(this.getMaxDepth() - this.getMinDepth() + 1) + this.getMinDepth();
+
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    double distanceSquared = x * x + z * z;
+                    if (distanceSquared <= radius * radius) {
+                        double noise = noiseGenerator.noise(centerX + x * 0.1, centerZ + z * 0.1) * 2;
+                        int craterDepth = (int) (depth - Math.sqrt(distanceSquared) + noise);
+                        craterDepth = Math.max(0, craterDepth); // Negative Werte vermeiden
+                        for (int y = 0; y < craterDepth; y++) {
+                            limitedRegion.setType(centerX + x, centerY - y, centerZ + z, Material.AIR);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
