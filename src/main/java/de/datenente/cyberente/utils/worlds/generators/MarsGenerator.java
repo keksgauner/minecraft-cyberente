@@ -71,32 +71,32 @@ public class MarsGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-               int maxHeight = chunkData.getMaxHeight();
-               int minHeight = chunkData.getMinHeight();
-               int worldX = chunkX * 16;
-               int worldZ = chunkZ * 16;
+        int maxHeight = chunkData.getMaxHeight();
+        int minHeight = chunkData.getMinHeight();
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
 
-               for (int x = 0; x < 16; x++) {
-                   for (int z = 0; z < 16; z++) {
-                       int realX = worldX + x;
-                       int realZ = worldZ + z;
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int realX = worldX + x;
+                int realZ = worldZ + z;
 
-                       double elevationTerrainNoise = this.elevationNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
-                       double detailTerrainNoise = this.detailNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
-                       double roughTerrainNoise = this.roughNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double elevationTerrainNoise = this.elevationNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double detailTerrainNoise = this.detailNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double roughTerrainNoise = this.roughNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
 
-                       int blockHeight = (int) Math.round(
-                               (elevationTerrainNoise + detailTerrainNoise * roughTerrainNoise) * this.heightDifference);
+                int blockHeight = (int) Math.round(
+                        (elevationTerrainNoise + detailTerrainNoise * roughTerrainNoise) * this.heightDifference);
 
-                       if (blockHeight > maxHeight) {
-                           blockHeight = maxHeight;
-                       }
+                if (blockHeight > maxHeight) {
+                    blockHeight = maxHeight;
+                }
 
-                       for (int y = minHeight; y < blockHeight; y++) {
-                           chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
-                       }
-                   }
-               }
+                for (int y = minHeight; y < blockHeight; y++) {
+                    chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
+                }
+            }
+        }
     }
 
     @Override

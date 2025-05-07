@@ -24,8 +24,6 @@
 package de.datenente.cyberente.utils.worlds.populator;
 
 import java.util.Random;
-
-import org.bukkit.Material;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
@@ -47,9 +45,7 @@ public class CraterPopulator extends BlockPopulator {
             for (int z = 0; z < 16; z++) {
                 int realX = worldX + x;
                 int realZ = worldZ + z;
-
-
-                }
+            }
         }
     }
 }
