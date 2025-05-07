@@ -24,34 +24,22 @@
 package de.datenente.cyberente.utils.worlds.biome;
 
 import java.util.List;
-import java.util.Random;
 import lombok.Getter;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public class SimpleBiomeProvider extends BiomeProvider {
-    double scale = 0.01;
-    double frequency = 1;
-    double amplitude = 1;
+public class DesertProvider extends BiomeProvider {
 
     @NotNull @Override
     public Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
-        SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
-        generator.setScale(this.getScale());
-
-        if (generator.noise(x, z, this.getFrequency(), this.getAmplitude(), true) < 0) {
-            return Biome.OCEAN;
-        } else {
-            return Biome.DESERT;
-        }
+        return Biome.DESERT;
     }
 
     @NotNull @Override
     public List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
-        return List.of(Biome.OCEAN, Biome.DESERT);
+        return List.of(Biome.DESERT);
     }
 }
