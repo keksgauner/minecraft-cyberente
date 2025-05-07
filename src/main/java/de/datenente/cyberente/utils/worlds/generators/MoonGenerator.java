@@ -24,7 +24,9 @@
 package de.datenente.cyberente.utils.worlds.generators;
 
 import de.datenente.cyberente.utils.worlds.biome.SimpleBiomeProvider;
-import de.datenente.cyberente.utils.worlds.populator.SimpleBlockPopulator;
+import de.datenente.cyberente.utils.worlds.populator.CraterPopulator;
+import de.datenente.cyberente.utils.worlds.populator.FloraPopulator;
+import de.datenente.cyberente.utils.worlds.populator.OreVeinPopulator;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.Material;
@@ -135,6 +137,6 @@ public class MoonGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
-        return List.of(new SimpleBlockPopulator());
+        return List.of(new OreVeinPopulator(), new CraterPopulator(), new FloraPopulator());
     }
 }

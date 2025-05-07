@@ -24,7 +24,9 @@
 package de.datenente.cyberente.utils.worlds.generators;
 
 import de.datenente.cyberente.utils.worlds.biome.SimpleBiomeProvider;
-import de.datenente.cyberente.utils.worlds.populator.SimpleBlockPopulator;
+import de.datenente.cyberente.utils.worlds.populator.CraterPopulator;
+import de.datenente.cyberente.utils.worlds.populator.FloraPopulator;
+import de.datenente.cyberente.utils.worlds.populator.OreVeinPopulator;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.Material;
@@ -41,27 +43,9 @@ public class MarsGenerator extends ChunkGenerator {
 
     // RED_SAND -> TERRACOTTA -> RED_SANDSTONE
 
-    // The octaves parameter sets the number of functions used.
-    // More octaves result in a more detailed surface.
-    int octaves = 2;
-    // The scale parameter determines at what distance to view the surface.
-    // Zoom out/zoom in.
-    double scale = 0.008;
-    // The frequency parameter sets how much detail each octave adds to the surface.
-    // A frequency of 1 results in each octave having the same impact on the resulting surface.
-    // A frequency of smaller than 1 results in later octaves generating a smoother surface (usually you don't want
-    // this).
-    double frequency = 1;
-    // The amplitude parameter sets how much each octave contributes to the overall surface.
-    // An amplitude of 1 results in each octave having the same impact on the resulting surface.
-    // An amplitude of smaller than 1 results in later octaves adding smaller changes to the surface.
-    // Also known as Persistence
-    double amplitude = 1;
-    // The height parameter sets the height difference.
-    // With 15 you get a difference 15 and -15.
-    double heightDifference = 40;
-    // The height parameter sets the height of the surface.
-    int height = 84;
+    public float lerp(float min, float max, float norm){
+        return (max - min) * norm + min;
+    }
 
     SimplexOctaveGenerator generator;
 
@@ -83,23 +67,55 @@ public class MarsGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        int minHeight = chunkData.getMinHeight();
-        int worldX = chunkX * 16;
-        int worldZ = chunkZ * 16;
+        int currentHeight;
 
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                double noise = this.generator.noise(worldX + x, worldZ + z, this.frequency, this.amplitude, true);
-                int blockHeight = (int) Math.round(noise * this.heightDifference);
-                blockHeight += this.height;
+        ChunkGenerator.ChunkData chunk = createChunkData(world);
 
-                if (height > chunkData.getMaxHeight()) {
-                    height = chunkData.getMaxHeight();
+        SimplexOctaveGenerator terrainGen = new SimplexOctaveGenerator(new Random(world.getSeed()), 2);
+
+        terrainGen.setScale(0.0056D);
+
+        for (int X = 0; X < 16; X++) {
+            for (int Z = 0; Z < 16; Z++) {
+
+                float terrainNoise = (float) (terrainGen.noise(chunkX * 16 + X, chunkZ * 16 + Z, 0.05D, 0.8D, true));
+
+                currentHeight = (int) ( lerp(0f, 1f, terrainNoise) * 15D + 60D);
+
+                if (currentHeight > 100) currentHeight = 100;
+                if(currentHeight < 16) currentHeight = 16;
+
+
+                chunk.setBlock(X, currentHeight, Z, Material.DEAD_BRAIN_CORAL_BLOCK);
+                if (random.nextInt(100) < 90) {
+                    chunk.setBlock(X, currentHeight - 1, Z, Material.DEAD_BUBBLE_CORAL_BLOCK);
+                } else {
+                    chunk.setBlock(X, currentHeight - 1, Z, Material.DEAD_HORN_CORAL_BLOCK);
                 }
+                chunk.setBlock(X, currentHeight - 2, Z, Material.DEAD_BUBBLE_CORAL_BLOCK);
+                chunk.setBlock(X, currentHeight - 3, Z, Material.DEAD_BUBBLE_CORAL_BLOCK);
 
-                for (int y = minHeight; y < blockHeight; y++) {
-                    chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
+                for (int i = 0; i < currentHeight - 3; i++) {
+                    if (i > currentHeight * 0.8) {
+                        chunk.setBlock(X, i, Z, Material.DEAD_FIRE_CORAL_BLOCK);
+                    } else if (i > currentHeight * 0.6) {
+                        chunk.setBlock(X, i, Z, Material.DEAD_TUBE_CORAL_BLOCK);
+                    } else if (i > currentHeight * 0.4) {
+                        chunk.setBlock(X, i, Z, Material.COBBLESTONE);
+                    } else if (i > currentHeight * 0.1) {
+                        chunk.setBlock(X, i, Z, Material.PACKED_ICE);
+                    } else {
+                        chunk.setBlock(X, i, Z, Material.BLUE_ICE);
+                    }
+                    if (i <= 2){
+                        if(random.nextBoolean() && random.nextBoolean() && random.nextBoolean())
+                            chunk.setBlock(X, i, Z, Material.BEDROCK);
+                    }
+
                 }
+                chunk.setBlock(X, 0, Z, Material.BEDROCK);
+
+                biome.setBiome(X, Z, Biome.DESERT);
             }
         }
     }
@@ -135,7 +151,7 @@ public class MarsGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
-        return List.of(new SimpleBlockPopulator());
+        return List.of(new OreVeinPopulator(), new CraterPopulator(), new FloraPopulator());
     }
 
     /*

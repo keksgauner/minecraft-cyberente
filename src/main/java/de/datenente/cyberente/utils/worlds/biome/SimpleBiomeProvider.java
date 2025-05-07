@@ -25,20 +25,26 @@ package de.datenente.cyberente.utils.worlds.biome;
 
 import java.util.List;
 import java.util.Random;
+
+import lombok.Getter;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public class SimpleBiomeProvider extends BiomeProvider {
+    double scale = 0.01;
+    double frequency = 1;
+    double amplitude = 1;
 
     @NotNull @Override
     public Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
         SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), 6);
-        generator.setScale(0.01);
+        generator.setScale(this.getScale());
 
-        if (generator.noise(x, z, 1, 1, true) < 0) {
+        if (generator.noise(x, z, this.getFrequency(), this.getAmplitude(), true) < 0) {
             return Biome.OCEAN;
         } else {
             return Biome.COLD_OCEAN;
