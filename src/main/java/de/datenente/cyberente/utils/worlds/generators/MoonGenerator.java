@@ -23,12 +23,20 @@
  */
 package de.datenente.cyberente.utils.worlds.generators;
 
+import java.util.List;
 import java.util.Random;
+
+import de.datenente.cyberente.utils.worlds.biome.SimpleBiomeProvider;
+import de.datenente.cyberente.utils.worlds.populator.SimpleBlockPopulator;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MoonGenerator extends ChunkGenerator {
 
@@ -119,5 +127,15 @@ public class MoonGenerator extends ChunkGenerator {
                 }
             }
         }
+    }
+
+    @Override
+    public @Nullable BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
+        return new SimpleBiomeProvider();
+    }
+
+    @Override
+    public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
+        return List.of(new SimpleBlockPopulator());
     }
 }
