@@ -26,7 +26,7 @@ Eine vollständige Übersicht findest du in der Datei: [📄 Funktionen](TODO.md
 
 1. Lade die neueste Version von der [**Releases-Seite**](https://github.com/keksgauner/minecraft-cyberente/releases) herunter.
 2. Kopiere die `CyberEnte-paper.jar` in den `plugins`-Ordner deines Paper-Servers.
-3. Installiere das [Extended-Plugin](https://github.com/keksgauner/minecraft-cyberente-extended) der Abhängigkeiten für das Paper-Plugin **CyberEnte** enthält.
+3. Installiere das  [Extended-Plugin](https://github.com/keksgauner/minecraft-cyberente-extended) der Abhängigkeiten für das Paper-Plugin **CyberEnte** enthält.
 4. Starte den Server neu.
 
 ---
@@ -48,10 +48,10 @@ Füge am Ende der Datei folgenden Abschnitt hinzu:
 ```yaml
 worlds:
   <name>:
-    generator: CyberEnte:moon
+    generator: CyberEnte:MOON
 ```
 
-Ersetze `<name>` durch den Namen der Welt und `moon` durch den gewünschten Generator.
+Ersetze `<name>` durch den Namen der Welt und `MOON` durch den gewünschten Generator.
 
 ---
 
