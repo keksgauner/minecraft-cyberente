@@ -24,11 +24,8 @@
 package de.datenente.cyberente.utils.worlds.populator;
 
 import java.util.Random;
-
 import lombok.Getter;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
@@ -36,7 +33,14 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class OreVeinPopulator extends BlockPopulator {
-    Material[] ores = {Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.REDSTONE_ORE, Material.LAPIS_ORE};
+    Material[] ores = {
+        Material.COAL_ORE,
+        Material.IRON_ORE,
+        Material.GOLD_ORE,
+        Material.DIAMOND_ORE,
+        Material.REDSTONE_ORE,
+        Material.LAPIS_ORE
+    };
     int[] maxHeights = {128, 64, 32, 16, 16, 32};
     int[] clusterSizes = {17, 9, 9, 8, 8, 7};
 
@@ -65,9 +69,10 @@ public class OreVeinPopulator extends BlockPopulator {
 
                 generateOreCluster(limitedRegion, random, x, y, z, clusterSize, ore);
             }
-        }}
+        }
+    }
 
-     void generateOreCluster(
+    void generateOreCluster(
             @NotNull LimitedRegion limitedRegion,
             @NotNull Random random,
             int x,
@@ -84,5 +89,6 @@ public class OreVeinPopulator extends BlockPopulator {
             if (limitedRegion.getType(offsetX, offsetY, offsetZ).isAir()) {
                 limitedRegion.setType(offsetX, offsetY, offsetZ, ore);
             }
-        }}
+        }
+    }
 }

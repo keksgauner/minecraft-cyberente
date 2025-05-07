@@ -28,7 +28,6 @@ import de.datenente.cyberente.utils.worlds.populator.CraterPopulator;
 import de.datenente.cyberente.utils.worlds.populator.OreVeinPopulator;
 import java.util.List;
 import java.util.Random;
-
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -95,7 +94,8 @@ public class MarsGenerator extends ChunkGenerator {
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                double terrainNoise = this.getGenerator().noise(worldX + x, worldZ + z, this.getFrequency(), this.getAmplitude(), true);
+                double terrainNoise = this.getGenerator()
+                        .noise(worldX + x, worldZ + z, this.getFrequency(), this.getAmplitude(), true);
                 int blockHeight = (int) Math.round(terrainNoise * this.getHeightDifference());
                 blockHeight += this.getHeight();
 
