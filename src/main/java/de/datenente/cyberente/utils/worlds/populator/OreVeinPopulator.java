@@ -24,6 +24,8 @@
 package de.datenente.cyberente.utils.worlds.populator;
 
 import java.util.Random;
+
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -32,17 +34,11 @@ import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public class OreVeinPopulator extends BlockPopulator {
-
-    private int randomIntBetween(int min, int max) {
-        if (min >= max) {
-            Random r = new Random();
-            return r.nextInt((min - max) + 1) + max;
-        } else {
-            Random r = new Random();
-            return r.nextInt((max - min) + 1) + min;
-        }
-    }
+    Material[] ores = {Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.REDSTONE_ORE, Material.LAPIS_ORE};
+    int[] maxHeights = {128, 64, 32, 16, 16, 32};
+    int[] clusterSizes = {17, 9, 9, 8, 8, 7};
 
     @Override
     public void populate(
@@ -51,78 +47,42 @@ public class OreVeinPopulator extends BlockPopulator {
             int chunkX,
             int chunkZ,
             @NotNull LimitedRegion limitedRegion) {
-        int amount = randomIntBetween(20, 60);
-        for (int i = 1; i < amount; i++) {
-            int maxY = 60;
-            int X = random.nextInt(15);
-            int Z = random.nextInt(15);
 
-            for (int j = world.getMaxHeight() - 1; chunk.getBlock(X, j, Z).getType() == Material.AIR; j--) maxY = j;
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
 
-            int maxVeinY = maxY - 4;
-            int Y;
-            Material ore;
-            int propagation;
-            int orePicker = random.nextInt(99) + 1;
-            if (orePicker > 90) {
-                ore = Material.DIAMOND_ORE;
-                propagation = randomIntBetween(0, 3);
-                Y = randomIntBetween(1, 30);
-            } else if (orePicker > 65) {
-                ore = Material.GOLD_ORE;
-                propagation = randomIntBetween(1, 4);
-                Y = randomIntBetween(3, (int) (maxVeinY * 0.6));
-            } else if (orePicker > 50) {
-                ore = Material.REDSTONE_ORE;
-                propagation = randomIntBetween(2, 5);
-                Y = randomIntBetween(1, (int) (maxVeinY * 0.4));
-            } else if (orePicker > 35) {
-                ore = Material.IRON_ORE;
-                propagation = randomIntBetween(5, 10);
-                Y = randomIntBetween(3, (int) (maxVeinY * 0.9));
-            } else if (orePicker > 25) {
-                ore = Material.LAPIS_ORE;
-                propagation = randomIntBetween(5, 10);
-                Y = randomIntBetween(3, (int) (maxVeinY * 0.5));
-            } else {
-                ore = Material.COAL_ORE;
-                propagation = randomIntBetween(5, 10);
-                Y = randomIntBetween(1, maxVeinY);
+        for (int i = 0; i < this.getOres().length; i++) {
+            Material ore = this.getOres()[i];
+            int maxHeight = this.getMaxHeights()[i];
+            int clusterSize = this.getClusterSizes()[i];
+
+            int clusterCount = random.nextInt(10) + 1;
+
+            for (int j = 0; j < clusterCount; j++) {
+                int x = worldX + random.nextInt(16);
+                int y = random.nextInt(maxHeight);
+                int z = worldZ + random.nextInt(16);
+
+                generateOreCluster(limitedRegion, random, x, y, z, clusterSize, ore);
             }
+        }}
 
-            if (orePicker == 6) {
-                ore = Material.EMERALD_ORE;
-                propagation = 1;
-                Y = randomIntBetween(1, (int) (maxVeinY * 0.2));
+     void generateOreCluster(
+            @NotNull LimitedRegion limitedRegion,
+            @NotNull Random random,
+            int x,
+            int y,
+            int z,
+            int clusterSize,
+            @NotNull Material ore) {
+
+        for (int i = 0; i < clusterSize; i++) {
+            int offsetX = x + random.nextInt(3) - 1;
+            int offsetY = y + random.nextInt(3) - 1;
+            int offsetZ = z + random.nextInt(3) - 1;
+
+            if (limitedRegion.getType(offsetX, offsetY, offsetZ).isAir()) {
+                limitedRegion.setType(offsetX, offsetY, offsetZ, ore);
             }
-
-            Block b = world.getBlockAt((chunk.getX() << 4) + X, Y, (chunk.getZ() << 4) + Z);
-
-            if (b.getType().equals(Material.BEDROCK) && !b.getType().equals(Material.AIR))
-                b.setType(ore, false);
-
-            int propX = (chunk.getX() << 4) + X;
-            int propZ = (chunk.getZ() << 4) + Z;
-            for (int prop = 0; prop < propagation + 1; prop++) {
-                try {
-                    b = world.getBlockAt(propX, Y, propZ);
-
-                    if (!b.getType().equals(Material.BEDROCK) && !b.getType().equals(Material.AIR))
-                        b.setType(ore, false);
-
-                    orePicker = random.nextInt(2);
-                    if (orePicker == 0) {
-                        propX = randomIntBetween(propX - 1, propX + 1);
-                    } else if (orePicker == 1) {
-                        Y = randomIntBetween(Y - 1, Y + 1);
-                        if (Y < 1) Y = 1;
-                    } else if (orePicker == 2) {
-                        propZ = randomIntBetween(propZ - 1, propZ + 1);
-                    }
-                } catch (Exception e) {
-                }
-
-            }
-        }
-    }
+        }}
 }

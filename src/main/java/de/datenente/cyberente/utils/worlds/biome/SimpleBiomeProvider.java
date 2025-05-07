@@ -47,12 +47,12 @@ public class SimpleBiomeProvider extends BiomeProvider {
         if (generator.noise(x, z, this.getFrequency(), this.getAmplitude(), true) < 0) {
             return Biome.OCEAN;
         } else {
-            return Biome.COLD_OCEAN;
+            return Biome.DESERT;
         }
     }
 
     @NotNull @Override
     public List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
-        return List.of(Biome.OCEAN, Biome.COLD_OCEAN);
+        return List.of(Biome.OCEAN, Biome.DESERT);
     }
 }
