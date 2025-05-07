@@ -29,15 +29,16 @@ import org.bukkit.Material;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.util.noise.SimplexNoiseGenerator;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class CraterPopulator extends BlockPopulator {
-    int maxCraterCount = 5;
+    int maxCraterCount = 3;
     int minRadius = 3;
-    int maxRadius = 10;
-    int minDepth = 1;
-    int maxDepth = 5;
+    int maxRadius = 6;
+    int minDepth = 2;
+    int maxDepth = 4;
 
     @Override
     public void populate(
@@ -49,6 +50,7 @@ public class CraterPopulator extends BlockPopulator {
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
+        SimplexNoiseGenerator noiseGenerator = new SimplexNoiseGenerator(new Random(worldInfo.getSeed()));
         int craterCount = random.nextInt(this.getMaxCraterCount()) + 1;
 
         for (int i = 0; i < craterCount; i++) {
@@ -61,9 +63,11 @@ public class CraterPopulator extends BlockPopulator {
 
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
-                    int distanceSquared = x * x + z * z;
+                    double distanceSquared = x * x + z * z;
                     if (distanceSquared <= radius * radius) {
-                        int craterDepth = depth - (int) Math.sqrt(distanceSquared);
+                        double noise = noiseGenerator.noise(centerX + x * 0.1, centerZ + z * 0.1) * 2;
+                        int craterDepth = (int) (depth - Math.sqrt(distanceSquared) + noise);
+                        craterDepth = Math.max(0, craterDepth); // Negative Werte vermeiden
                         for (int y = 0; y < craterDepth; y++) {
                             limitedRegion.setType(centerX + x, centerY - y, centerZ + z, Material.AIR);
                         }

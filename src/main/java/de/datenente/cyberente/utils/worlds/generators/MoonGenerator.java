@@ -66,7 +66,7 @@ public class MoonGenerator extends ChunkGenerator {
     // The height parameter sets the height of the surface.
     int height = 84;
 
-    SimplexOctaveGenerator generator;
+    SimplexOctaveGenerator noiseGenerator;
 
     @Override
     public void generateNoise(
@@ -75,8 +75,8 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        this.generator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), this.octaves);
-        this.getGenerator().setScale(this.getScale());
+        this.noiseGenerator = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), this.octaves);
+        this.getNoiseGenerator().setScale(this.getScale());
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MoonGenerator extends ChunkGenerator {
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                double terrainNoise = this.getGenerator()
+                double terrainNoise = this.getNoiseGenerator()
                         .noise(worldX + x, worldZ + z, this.getFrequency(), this.getAmplitude(), true);
                 int blockHeight = (int) Math.round(terrainNoise * this.getHeightDifference());
                 blockHeight += this.getHeight();

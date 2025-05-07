@@ -86,7 +86,7 @@ public class OreVeinPopulator extends BlockPopulator {
             int offsetY = y + random.nextInt(3) - 1;
             int offsetZ = z + random.nextInt(3) - 1;
 
-            if (limitedRegion.getType(offsetX, offsetY, offsetZ).isAir()) {
+            if (!limitedRegion.getType(offsetX, offsetY, offsetZ).isAir()) {
                 limitedRegion.setType(offsetX, offsetY, offsetZ, ore);
             }
         }
