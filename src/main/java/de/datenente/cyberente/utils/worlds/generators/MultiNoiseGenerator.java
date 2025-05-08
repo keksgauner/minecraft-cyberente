@@ -33,44 +33,17 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.util.noise.PerlinOctaveGenerator;
+import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 // TODO: Delete on release
 public class MultiNoiseGenerator extends ChunkGenerator {
 
-    int heightDifference = 40;
-
     PerlinOctaveGenerator regionNoiseGenerator;
     PerlinOctaveGenerator elevationNoiseGenerator;
     PerlinOctaveGenerator detailNoiseGenerator;
     PerlinOctaveGenerator roughNoiseGenerator;
-
-    PerlinOctaveGenerator bedrockNoiseGenerator;
-
-    @Override
-    public void generateNoise(
-            @NotNull WorldInfo worldInfo,
-            @NotNull Random random,
-            int chunkX,
-            int chunkZ,
-            @NotNull ChunkData chunkData) {
-
-        this.regionNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 2);
-        this.regionNoiseGenerator.setScale(1 / 500.0);
-
-        this.elevationNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 4);
-        this.elevationNoiseGenerator.setScale(1 / 200.0);
-
-        this.detailNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 4);
-        this.detailNoiseGenerator.setScale(1 / 30.0);
-
-        this.roughNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 1);
-        this.roughNoiseGenerator.setScale(1 / 100.0);
-
-        this.bedrockNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 1);
-        this.bedrockNoiseGenerator.setScale(1 / 100.0);
-    }
 
     @Override
     public void generateSurface(
@@ -79,40 +52,62 @@ public class MultiNoiseGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        int maxHeight = chunkData.getMaxHeight();
-        int minHeight = chunkData.getMinHeight();
-        int worldX = chunkX * 16;
-        int worldZ = chunkZ * 16;
+        long seed = worldInfo.getSeed();
+        int worldX, worldZ;
+
+        SimplexOctaveGenerator continentalness = new SimplexOctaveGenerator(seed, 2);
+        continentalness.setScale(0.002);
+
+        SimplexOctaveGenerator erosion = new SimplexOctaveGenerator(seed, 3);
+        erosion.setScale(0.004);
+
+        SimplexOctaveGenerator peaksValleys = new SimplexOctaveGenerator(seed, 4);
+        peaksValleys.setScale(0.003);
+
+        SimplexOctaveGenerator temperature = new SimplexOctaveGenerator(seed, 2);
+        temperature.setScale(0.01);
+
+        SimplexOctaveGenerator humidity = new SimplexOctaveGenerator(seed + 1000, 2);
+        humidity.setScale(0.01);
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                int realX = worldX + x;
-                int realZ = worldZ + z;
+                worldX = chunkX * 16 + x;
+                worldZ = chunkZ * 16 + z;
 
-                double regionTerrainNoise = this.regionNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
-                double elevationTerrainNoise = this.elevationNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
-                double detailTerrainNoise = this.detailNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
-                double roughTerrainNoise = this.roughNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double cont = continentalness.noise(worldX, worldZ, 0.6, 0.6);
+                double eros = erosion.noise(worldX, worldZ, 0.6, 0.6);
+                double peak = peaksValleys.noise(worldX, worldZ, 0.6, 0.6);
+                double temp = temperature.noise(worldX, worldZ, 0.6, 0.6);
+                double hum = humidity.noise(worldX, worldZ, 0.6, 0.6);
 
-                int blockHeight = (int) Math.round(
-                        (elevationTerrainNoise + detailTerrainNoise * roughTerrainNoise) * this.heightDifference);
+                // Höhenberechnung – Werte von ca. 20 bis 140
+                double terrainHeight = cont * 40 + peak * 35 - eros * 25 + 70;
+                int height = Math.max(10, Math.min((int) terrainHeight, 150));
 
-                // Berge (regionNoise > 0.6) und Klüfte (regionNoise < -0.6)
-                if (regionTerrainNoise > 0.6) {
-                    blockHeight += 20; // Berge erhöhen
-                } else if (regionTerrainNoise < -0.6) {
-                    blockHeight -= 20; // Klüfte absenken
+                // Untergrund
+                for (int y = 1; y < height - 4; y++) {
+                    chunkData.setBlock(x, y, z, Material.STONE);
                 }
 
-                if (blockHeight > maxHeight) {
-                    blockHeight = maxHeight;
-                } else if (blockHeight < minHeight) {
-                    blockHeight = minHeight;
+                // Übergangsschichten
+                chunkData.setBlock(x, height - 3, z, Material.DIRT);
+                chunkData.setBlock(x, height - 2, z, Material.DIRT);
+                chunkData.setBlock(x, height - 1, z, Material.DIRT);
+
+                // Oberfläche abhängig von Klima
+                Material top;
+                if (temp < -0.3) {
+                    top = Material.SNOW_BLOCK;
+                } else if (temp > 0.6 && hum < 0.2) {
+                    top = Material.SAND;
+                } else if (hum > 0.7) {
+                    top = Material.MYCELIUM;
+                } else {
+                    top = Material.GRASS_BLOCK;
                 }
 
-                for (int y = minHeight; y < blockHeight; y++) {
-                    chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
-                }
+                chunkData.setBlock(x, height, z, top);
             }
         }
     }
@@ -128,17 +123,19 @@ public class MultiNoiseGenerator extends ChunkGenerator {
             return;
         }
         int minHeight = chunkData.getMinHeight();
+        SimplexOctaveGenerator noise = new SimplexOctaveGenerator(worldInfo.getSeed(), 1);
+        noise.setScale(0.25);
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                int realX = chunkX * 16 + x;
-                int realZ = chunkZ * 16 + z;
-                double bedrockNoise = this.bedrockNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
-                int blockHeight = (int) Math.round(bedrockNoise * this.heightDifference);
-                if (blockHeight > chunkData.getMaxHeight()) {
-                    blockHeight = chunkData.getMaxHeight();
-                }
-                for (int y = minHeight; y < blockHeight; y++) {
+                int worldX = (chunkX << 4) + x;
+                int worldZ = (chunkZ << 4) + z;
+
+                double raw = noise.noise(worldX, worldZ, 0.6, 0.6);
+                int height = (int) ((raw + 1) * 2.5);
+                height = Math.max(0, Math.min(5, height));
+
+                for (int y = minHeight; y <= minHeight + height; y++) {
                     chunkData.setBlock(x, y, z, Material.BEDROCK);
                 }
             }
@@ -154,14 +151,4 @@ public class MultiNoiseGenerator extends ChunkGenerator {
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
         return List.of();
     }
-
-    /*
-    @Override
-    public Location getFixedSpawnLocation(World world, Random random) {
-       Location spawnLocation = new Location(world, 0.5D, 64, 0.5D);
-        Location blockLocation = spawnLocation.clone().subtract(0D, 1D, 0D);
-        blockLocation.getBlock().setType(Material.BEDROCK);
-        return spawnLocation;
-    }
-     */
 }

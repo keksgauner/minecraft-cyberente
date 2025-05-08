@@ -177,7 +177,6 @@ public class WorldsCommand extends Command {
         if (args.length == 3) {
             String type = args[0].toLowerCase();
             if (type.equals("generate")) {
-
                 return Arrays.stream(World.Environment.values())
                         .map(World.Environment::name)
                         .toList();

@@ -33,7 +33,7 @@ import org.bukkit.generator.ChunkGenerator;
 public enum CustomGenerator {
     MOON(new MoonGenerator()),
     MARS(new MarsGenerator()),
-    MULTI_NOISE(new MultiNoiseGenerator()),
+    TEST(new MultiNoiseGenerator()),
 
     NONE(null);
 
