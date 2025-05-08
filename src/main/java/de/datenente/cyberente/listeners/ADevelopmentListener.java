@@ -54,6 +54,11 @@ public class ADevelopmentListener implements Listener {
         double detailNoise = detailNoiseGenerator.noise(x, z, 0.5, 2.0);
         double roughNoise = roughNoiseGenerator.noise(x, z, 0.5, 2.0);
         double height = (elevationNoise + detailNoise + roughNoise) * 20;
-        player.sendActionBar(Message.text("H {0} E {1} D {2} R {3}", height, elevationNoise, detailNoise, roughNoise));
+        player.sendActionBar(Message.text(
+                "H {0} E {1} D {2} R {3}",
+                Math.round(height * 100.0) / 100.0,
+                Math.round(elevationNoise * 100.0) / 100.0,
+                Math.round(detailNoise * 100.0) / 100.0,
+                Math.round(roughNoise * 100.0) / 100.0));
     }
 }

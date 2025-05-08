@@ -24,7 +24,6 @@
 package de.datenente.cyberente.utils.worlds.generators;
 
 import de.datenente.cyberente.utils.worlds.biome.DesertProvider;
-import de.datenente.cyberente.utils.worlds.populator.CraterPopulator;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.Material;
@@ -33,37 +32,21 @@ import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.util.noise.SimplexOctaveGenerator;
+import org.bukkit.util.noise.PerlinOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MoonGenerator extends ChunkGenerator {
+// TODO: Delete on release
+public class MultiNoiseGenerator extends ChunkGenerator {
 
-    // END_STONE -> DEEP_SLATE_STONE
+    int heightDifference = 40;
 
-    // The octaves parameter sets the number of functions used.
-    // More octaves result in a more detailed surface.
-    int octaves = 6;
-    // The scale parameter determines at what distance to view the surface.
-    // Zoom out/zoom in.
-    double scale = 0.008;
-    // The frequency parameter sets how much detail each octave adds to the surface.
-    // A frequency of 1 results in each octave having the same impact on the resulting surface.
-    // A frequency of smaller than 1 results in later octaves generating a smoother surface (usually you don't want
-    // this).
-    double frequency = 1;
-    // The amplitude parameter sets how much each octave contributes to the overall surface.
-    // An amplitude of 1 results in each octave having the same impact on the resulting surface.
-    // An amplitude of smaller than 1 results in later octaves adding smaller changes to the surface.
-    // Also known as Persistence
-    double amplitude = 1;
-    // The height parameter sets the height difference.
-    // With 15 you get a difference 15 and -15.
-    double heightDifference = 40;
-    // The height parameter sets the height of the surface.
-    int height = 84;
+    PerlinOctaveGenerator regionNoiseGenerator;
+    PerlinOctaveGenerator elevationNoiseGenerator;
+    PerlinOctaveGenerator detailNoiseGenerator;
+    PerlinOctaveGenerator roughNoiseGenerator;
 
-    SimplexOctaveGenerator noiseGenerator;
+    PerlinOctaveGenerator bedrockNoiseGenerator;
 
     @Override
     public void generateNoise(
@@ -72,8 +55,21 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        this.noiseGenerator = new SimplexOctaveGenerator(worldInfo.getSeed(), this.octaves);
-        this.noiseGenerator.setScale(this.scale);
+
+        this.regionNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 2);
+        this.regionNoiseGenerator.setScale(1 / 500.0);
+
+        this.elevationNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 4);
+        this.elevationNoiseGenerator.setScale(1 / 200.0);
+
+        this.detailNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 4);
+        this.detailNoiseGenerator.setScale(1 / 30.0);
+
+        this.roughNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 1);
+        this.roughNoiseGenerator.setScale(1 / 100.0);
+
+        this.bedrockNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 1);
+        this.bedrockNoiseGenerator.setScale(1 / 100.0);
     }
 
     @Override
@@ -83,7 +79,6 @@ public class MoonGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-
         int maxHeight = chunkData.getMaxHeight();
         int minHeight = chunkData.getMinHeight();
         int worldX = chunkX * 16;
@@ -94,15 +89,29 @@ public class MoonGenerator extends ChunkGenerator {
                 int realX = worldX + x;
                 int realZ = worldZ + z;
 
-                double terrainNoise = this.noiseGenerator.noise(realX, realZ, frequency, amplitude, true);
-                int blockHeight = (int) Math.round(terrainNoise * heightDifference);
-                blockHeight += this.height;
+                double regionTerrainNoise = this.regionNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double elevationTerrainNoise = this.elevationNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double detailTerrainNoise = this.detailNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double roughTerrainNoise = this.roughNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+
+                int blockHeight = (int) Math.round(
+                        (elevationTerrainNoise + detailTerrainNoise * roughTerrainNoise) * this.heightDifference);
+
+                // Berge (regionNoise > 0.6) und Klüfte (regionNoise < -0.6)
+                if (regionTerrainNoise > 0.6) {
+                    blockHeight += 20; // Berge erhöhen
+                } else if (regionTerrainNoise < -0.6) {
+                    blockHeight -= 20; // Klüfte absenken
+                }
 
                 if (blockHeight > maxHeight) {
                     blockHeight = maxHeight;
+                } else if (blockHeight < minHeight) {
+                    blockHeight = minHeight;
                 }
+
                 for (int y = minHeight; y < blockHeight; y++) {
-                    chunkData.setBlock(x, y, z, Material.END_STONE);
+                    chunkData.setBlock(x, y, z, Material.RED_SANDSTONE);
                 }
             }
         }
@@ -122,7 +131,14 @@ public class MoonGenerator extends ChunkGenerator {
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = minHeight; y < minHeight + random.nextInt(4) + 1; y++) {
+                int realX = chunkX * 16 + x;
+                int realZ = chunkZ * 16 + z;
+                double bedrockNoise = this.bedrockNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                int blockHeight = (int) Math.round(bedrockNoise * this.heightDifference);
+                if (blockHeight > chunkData.getMaxHeight()) {
+                    blockHeight = chunkData.getMaxHeight();
+                }
+                for (int y = minHeight; y < blockHeight; y++) {
                     chunkData.setBlock(x, y, z, Material.BEDROCK);
                 }
             }
@@ -136,6 +152,16 @@ public class MoonGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
-        return List.of(new CraterPopulator());
+        return List.of();
     }
+
+    /*
+    @Override
+    public Location getFixedSpawnLocation(World world, Random random) {
+       Location spawnLocation = new Location(world, 0.5D, 64, 0.5D);
+        Location blockLocation = spawnLocation.clone().subtract(0D, 1D, 0D);
+        blockLocation.getBlock().setType(Material.BEDROCK);
+        return spawnLocation;
+    }
+     */
 }

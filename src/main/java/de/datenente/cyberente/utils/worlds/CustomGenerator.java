@@ -25,14 +25,17 @@ package de.datenente.cyberente.utils.worlds;
 
 import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
 import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
+import de.datenente.cyberente.utils.worlds.generators.MultiNoiseGenerator;
 import lombok.Getter;
 import org.bukkit.generator.ChunkGenerator;
 
 @Getter
 public enum CustomGenerator {
-    NONE(null),
     MOON(new MoonGenerator()),
-    MARS(new MarsGenerator());
+    MARS(new MarsGenerator()),
+    MULTI_NOISE(new MultiNoiseGenerator()),
+
+    NONE(null);
 
     final ChunkGenerator chunkGenerator;
 
