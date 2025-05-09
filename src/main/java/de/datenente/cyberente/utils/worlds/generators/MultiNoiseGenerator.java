@@ -40,6 +40,8 @@ import org.jetbrains.annotations.Nullable;
 // This is a Test Class for a MultiNoise
 // With continentals, erosion, peaks & valleys, temperature and humidity
 // See: https://minecraft.wiki/w/World_generation
+// https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Fminecraft-noise-maps-and-how-do-they-generate-v0-8ddpi96i5lkd1.png%3Fwidth%3D890%26format%3Dpng%26auto%3Dwebp%26s%3D82c44cb3871f2f529dae90e4930314063adb062c
+// https://auburn.github.io/FastNoiseLite/
 /**
  * MultiNoiseGenerator
  *
@@ -71,11 +73,11 @@ public class MultiNoiseGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        SimplexOctaveGenerator continentalness = new SimplexOctaveGenerator(worldInfo.getSeed(), 4);
+        SimplexOctaveGenerator continentals = new SimplexOctaveGenerator(worldInfo.getSeed(), 4);
         SimplexOctaveGenerator erosion = new SimplexOctaveGenerator(worldInfo.getSeed(), 4);
         SimplexOctaveGenerator peaksValleys = new SimplexOctaveGenerator(worldInfo.getSeed(), 4);
 
-        continentalness.setScale(0.0015); // größere Kontinente
+        continentals.setScale(0.0015); // größere Kontinente
         erosion.setScale(0.001); // tiefe Schluchten
         peaksValleys.setScale(0.02); // kleine Zacken
 
@@ -87,7 +89,7 @@ public class MultiNoiseGenerator extends ChunkGenerator {
                 int worldX = baseX + x;
                 int worldZ = baseZ + z;
 
-                double cont = continentalness.noise(worldX, worldZ, 0.5, 1.0); // -1 to 1
+                double cont = continentals.noise(worldX, worldZ, 0.5, 1.0); // -1 to 1
                 double eros = erosion.noise(worldX, worldZ, 0.5, 1.0); // -1 to 1
                 double peaks = peaksValleys.noise(worldX, worldZ, 0.5, 1.0); // -1 to 1
 
