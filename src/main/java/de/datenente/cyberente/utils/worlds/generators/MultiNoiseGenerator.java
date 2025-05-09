@@ -23,27 +23,80 @@
  */
 package de.datenente.cyberente.utils.worlds.generators;
 
-import de.datenente.cyberente.utils.worlds.biome.DesertProvider;
+import de.datenente.cyberente.utils.worlds.biome.TemperatureProvider;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.util.noise.PerlinOctaveGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-// TODO: Delete on release
+// This is a Test Class for a MultiNoise
+// With continentals, erosion, peaks & valleys, temperature and humidity
+// See: https://minecraft.wiki/w/World_generation
+/**
+ * MultiNoiseGenerator
+ *
+ * <p>Generates a world with a multi-noise generator.
+ *
+ * <p>Uses the following noise generators:
+ *
+ * <ul>
+ *   <li>Continentalness
+ *   <li>Erosion
+ *   <li>Peaks & Valleys
+ *   <li>Temperature
+ *   <li>Humidity
+ * </ul>
+ *
+ * <p>Continentalness: Steuert die Form der Kontinente (z.B. wie viele Berge)
+ * Erosion: Steuert die Glätte der Landschaft (z.B. wie viele Täler)
+ * Peaks & Valleys: Hebt/tieft extreme Landschaftsformen (z.B. Gebirge)
+ * Temperature: Steuert die Temperatur (z.B. Eis, Wüste)
+ * Humidity: Steuert die Feuchtigkeit (z.B. Regenwald, Wüste)
+ *
+ * @author KeksGauner
+ */
 public class MultiNoiseGenerator extends ChunkGenerator {
+    @Override
+    public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        SimplexOctaveGenerator continentalness = new SimplexOctaveGenerator(seed, 4);
+        SimplexOctaveGenerator erosion         = new SimplexOctaveGenerator(seed + 1, 4);
+        SimplexOctaveGenerator peaksValleys    = new SimplexOctaveGenerator(seed + 2, 4);
 
-    PerlinOctaveGenerator regionNoiseGenerator;
-    PerlinOctaveGenerator elevationNoiseGenerator;
-    PerlinOctaveGenerator detailNoiseGenerator;
-    PerlinOctaveGenerator roughNoiseGenerator;
+        continentalness.setScale(0.0015);  // größere Kontinente
+        erosion.setScale(0.001);           // tiefe Schluchten
+        peaksValleys.setScale(0.02); // kleine Zacken
+
+        int baseX = chunkX * 16;
+        int baseZ = chunkZ * 16;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int worldX = baseX + x;
+                int worldZ = baseZ + z;
+
+                double cont = continentalness.noise(worldX, worldZ, 0.5, 1.0);     // -1 to 1
+                double eros = erosion.noise(worldX, worldZ, 0.5, 1.0);             // -1 to 1
+                double peaks = peaksValleys.noise(worldX, worldZ, 0.5, 1.0);       // -1 to 1
+
+                double height = cont * 40 + peaks * 25 - eros * 30 + 64;
+                int maxY = Math.max(1, Math.min(255, (int) height));
+
+                for (int y = 0; y <= maxY; y++) {
+                    Material mat = Material.STONE;
+                    if (y == maxY) mat = Material.GRASS_BLOCK; // Oberfläche
+                    chunkData.setBlock(x, y, z, mat);
+                }
+            }
+        }
+    }
 
     @Override
     public void generateSurface(
@@ -52,62 +105,46 @@ public class MultiNoiseGenerator extends ChunkGenerator {
             int chunkX,
             int chunkZ,
             @NotNull ChunkData chunkData) {
-        long seed = worldInfo.getSeed();
-        int worldX, worldZ;
-
-        SimplexOctaveGenerator continentalness = new SimplexOctaveGenerator(seed, 2);
-        continentalness.setScale(0.002);
-
-        SimplexOctaveGenerator erosion = new SimplexOctaveGenerator(seed, 3);
-        erosion.setScale(0.004);
-
-        SimplexOctaveGenerator peaksValleys = new SimplexOctaveGenerator(seed, 4);
-        peaksValleys.setScale(0.003);
-
-        SimplexOctaveGenerator temperature = new SimplexOctaveGenerator(seed, 2);
-        temperature.setScale(0.01);
-
-        SimplexOctaveGenerator humidity = new SimplexOctaveGenerator(seed + 1000, 2);
-        humidity.setScale(0.01);
+        int baseX = chunkX * 16;
+        int baseZ = chunkZ * 16;
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                worldX = chunkX * 16 + x;
-                worldZ = chunkZ * 16 + z;
+                int worldX = baseX + x;
+                int worldZ = baseZ + z;
 
-                double cont = continentalness.noise(worldX, worldZ, 0.6, 0.6);
-                double eros = erosion.noise(worldX, worldZ, 0.6, 0.6);
-                double peak = peaksValleys.noise(worldX, worldZ, 0.6, 0.6);
-                double temp = temperature.noise(worldX, worldZ, 0.6, 0.6);
-                double hum = humidity.noise(worldX, worldZ, 0.6, 0.6);
+                // Finde die oberste Stein-Schicht
+                int surfaceY = getHighestBlockY(chunkData, x, z);
 
-                // Höhenberechnung – Werte von ca. 20 bis 140
-                double terrainHeight = cont * 40 + peak * 35 - eros * 25 + 70;
-                int height = Math.max(10, Math.min((int) terrainHeight, 150));
+                Biome biome = chunkData.getBiome(x, z);
 
-                // Untergrund
-                for (int y = 1; y < height - 4; y++) {
-                    chunkData.setBlock(x, y, z, Material.STONE);
+                Material topBlock;
+                Material underBlock = Material.DIRT;
+
+                // Biome-spezifische Oberfläche wählen
+                switch (biome) {
+                    case DESERT -> {
+                        topBlock = Material.SAND;
+                        underBlock = Material.SANDSTONE;
+                    }
+                    case SNOWY_TUNDRA, FROZEN_RIVER -> {
+                        topBlock = Material.SNOW_BLOCK;
+                    }
+                    case SWAMP -> {
+                        topBlock = Material.GRASS_BLOCK;
+                        underBlock = Material.DIRT;
+                    }
+                    default -> {
+                        topBlock = Material.GRASS_BLOCK;
+                    }
                 }
 
-                // Übergangsschichten
-                chunkData.setBlock(x, height - 3, z, Material.DIRT);
-                chunkData.setBlock(x, height - 2, z, Material.DIRT);
-                chunkData.setBlock(x, height - 1, z, Material.DIRT);
-
-                // Oberfläche abhängig von Klima
-                Material top;
-                if (temp < -0.3) {
-                    top = Material.SNOW_BLOCK;
-                } else if (temp > 0.6 && hum < 0.2) {
-                    top = Material.SAND;
-                } else if (hum > 0.7) {
-                    top = Material.MYCELIUM;
-                } else {
-                    top = Material.GRASS_BLOCK;
+                // Setze Oberflächenschichten
+                chunkData.setBlock(x, surfaceY, z, topBlock);
+                for (int y = surfaceY - 1; y > surfaceY - 4 && y >= 0; y--) {
+                    if (chunkData.getType(x, y, z) == Material.STONE)
+                        chunkData.setBlock(x, y, z, underBlock);
                 }
-
-                chunkData.setBlock(x, height, z, top);
             }
         }
     }
@@ -143,12 +180,24 @@ public class MultiNoiseGenerator extends ChunkGenerator {
     }
 
     @Override
+    public void generateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        super.generateCaves(worldInfo, random, chunkX, chunkZ, chunkData);
+    }
+
+    @Override
     public @Nullable BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
-        return new DesertProvider();
+        return new TemperatureProvider();
     }
 
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
         return List.of();
+    }
+
+    int getHighestBlockY(ChunkData chunkData, int x, int z) {
+        for (int y = 255; y >= 0; y--) {
+            if (chunkData.getType(x, y, z).isSolid()) return y;
+        }
+        return 0;
     }
 }

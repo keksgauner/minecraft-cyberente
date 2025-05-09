@@ -23,12 +23,12 @@
  */
 package de.datenente.cyberente.utils.worlds.generators;
 
-import de.datenente.cyberente.utils.worlds.biome.DesertProvider;
 import de.datenente.cyberente.utils.worlds.populator.CraterPopulator;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
@@ -37,6 +37,12 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A custom chunk generator for a moon-like world.
+ * <p>
+ * This generator creates a surface using Simplex noise and populates it with end stone.
+ * It also generates bedrock at the bottom of the world.
+ */
 public class MoonGenerator extends ChunkGenerator {
 
     // END_STONE -> DEEP_SLATE_STONE
@@ -63,19 +69,6 @@ public class MoonGenerator extends ChunkGenerator {
     // The height parameter sets the height of the surface.
     int height = 84;
 
-    SimplexOctaveGenerator noiseGenerator;
-
-    @Override
-    public void generateNoise(
-            @NotNull WorldInfo worldInfo,
-            @NotNull Random random,
-            int chunkX,
-            int chunkZ,
-            @NotNull ChunkData chunkData) {
-        this.noiseGenerator = new SimplexOctaveGenerator(worldInfo.getSeed(), this.octaves);
-        this.noiseGenerator.setScale(this.scale);
-    }
-
     @Override
     public void generateSurface(
             @NotNull WorldInfo worldInfo,
@@ -89,12 +82,15 @@ public class MoonGenerator extends ChunkGenerator {
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
+        SimplexOctaveGenerator noiseGenerator = new SimplexOctaveGenerator(worldInfo.getSeed(), this.octaves);
+        noiseGenerator.setScale(this.scale);
+
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 int realX = worldX + x;
                 int realZ = worldZ + z;
 
-                double terrainNoise = this.noiseGenerator.noise(realX, realZ, frequency, amplitude, true);
+                double terrainNoise = noiseGenerator.noise(realX, realZ, frequency, amplitude, true);
                 int blockHeight = (int) Math.round(terrainNoise * heightDifference);
                 blockHeight += this.height;
 
@@ -131,7 +127,7 @@ public class MoonGenerator extends ChunkGenerator {
 
     @Override
     public @Nullable BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
-        return new DesertProvider();
+        return Biome.DESERT;
     }
 
     @Override
