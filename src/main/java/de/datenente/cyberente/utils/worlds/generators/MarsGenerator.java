@@ -28,14 +28,12 @@ import java.util.List;
 import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.util.noise.PerlinOctaveGenerator;
+import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * MarsGenerator is a custom chunk generator for a Mars-like world.
@@ -102,19 +100,23 @@ public class MarsGenerator extends ChunkGenerator {
             return;
         }
         int minHeight = chunkData.getMinHeight();
+        SimplexOctaveGenerator noise = new SimplexOctaveGenerator(worldInfo.getSeed(), 1);
+        noise.setScale(0.25);
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = minHeight; y < minHeight + random.nextInt(4) + 1; y++) {
+                int worldX = (chunkX << 4) + x;
+                int worldZ = (chunkZ << 4) + z;
+
+                double raw = noise.noise(worldX, worldZ, 0.6, 0.6);
+                int height = (int) ((raw + 1) * 2.5);
+                height = Math.max(0, Math.min(5, height));
+
+                for (int y = minHeight; y <= minHeight + height; y++) {
                     chunkData.setBlock(x, y, z, Material.BEDROCK);
                 }
             }
         }
-    }
-
-    @Override
-    public @Nullable BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
-        return Biome.DESERT;
     }
 
     @Override

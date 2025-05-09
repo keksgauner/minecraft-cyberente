@@ -65,13 +65,18 @@ import org.jetbrains.annotations.Nullable;
  */
 public class MultiNoiseGenerator extends ChunkGenerator {
     @Override
-    public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
-        SimplexOctaveGenerator continentalness = new SimplexOctaveGenerator(seed, 4);
-        SimplexOctaveGenerator erosion         = new SimplexOctaveGenerator(seed + 1, 4);
-        SimplexOctaveGenerator peaksValleys    = new SimplexOctaveGenerator(seed + 2, 4);
+    public void generateNoise(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull ChunkData chunkData) {
+        SimplexOctaveGenerator continentalness = new SimplexOctaveGenerator(worldInfo.getSeed(), 4);
+        SimplexOctaveGenerator erosion = new SimplexOctaveGenerator(worldInfo.getSeed(), 4);
+        SimplexOctaveGenerator peaksValleys = new SimplexOctaveGenerator(worldInfo.getSeed(), 4);
 
-        continentalness.setScale(0.0015);  // größere Kontinente
-        erosion.setScale(0.001);           // tiefe Schluchten
+        continentalness.setScale(0.0015); // größere Kontinente
+        erosion.setScale(0.001); // tiefe Schluchten
         peaksValleys.setScale(0.02); // kleine Zacken
 
         int baseX = chunkX * 16;
@@ -82,9 +87,9 @@ public class MultiNoiseGenerator extends ChunkGenerator {
                 int worldX = baseX + x;
                 int worldZ = baseZ + z;
 
-                double cont = continentalness.noise(worldX, worldZ, 0.5, 1.0);     // -1 to 1
-                double eros = erosion.noise(worldX, worldZ, 0.5, 1.0);             // -1 to 1
-                double peaks = peaksValleys.noise(worldX, worldZ, 0.5, 1.0);       // -1 to 1
+                double cont = continentalness.noise(worldX, worldZ, 0.5, 1.0); // -1 to 1
+                double eros = erosion.noise(worldX, worldZ, 0.5, 1.0); // -1 to 1
+                double peaks = peaksValleys.noise(worldX, worldZ, 0.5, 1.0); // -1 to 1
 
                 double height = cont * 40 + peaks * 25 - eros * 30 + 64;
                 int maxY = Math.max(1, Math.min(255, (int) height));
@@ -116,34 +121,22 @@ public class MultiNoiseGenerator extends ChunkGenerator {
                 // Finde die oberste Stein-Schicht
                 int surfaceY = getHighestBlockY(chunkData, x, z);
 
-                Biome biome = chunkData.getBiome(x, z);
+                Biome biome = chunkData.getBiome(x, surfaceY, z);
 
                 Material topBlock;
                 Material underBlock = Material.DIRT;
-
-                // Biome-spezifische Oberfläche wählen
-                switch (biome) {
-                    case DESERT -> {
-                        topBlock = Material.SAND;
-                        underBlock = Material.SANDSTONE;
-                    }
-                    case SNOWY_TUNDRA, FROZEN_RIVER -> {
-                        topBlock = Material.SNOW_BLOCK;
-                    }
-                    case SWAMP -> {
-                        topBlock = Material.GRASS_BLOCK;
-                        underBlock = Material.DIRT;
-                    }
-                    default -> {
-                        topBlock = Material.GRASS_BLOCK;
-                    }
-                }
+                if (biome == Biome.DESERT) topBlock = Material.SAND;
+                else if (biome == Biome.SWAMP) topBlock = Material.MUD;
+                else if (biome == Biome.FOREST) topBlock = Material.GRASS_BLOCK;
+                else if (biome == Biome.SNOWY_PLAINS) topBlock = Material.SNOW_BLOCK;
+                else if (biome == Biome.BEACH) topBlock = Material.SAND;
+                else if (biome == Biome.PLAINS) topBlock = Material.GRASS_BLOCK;
+                else topBlock = Material.GRASS_BLOCK;
 
                 // Setze Oberflächenschichten
                 chunkData.setBlock(x, surfaceY, z, topBlock);
                 for (int y = surfaceY - 1; y > surfaceY - 4 && y >= 0; y--) {
-                    if (chunkData.getType(x, y, z) == Material.STONE)
-                        chunkData.setBlock(x, y, z, underBlock);
+                    if (chunkData.getType(x, y, z) == Material.STONE) chunkData.setBlock(x, y, z, underBlock);
                 }
             }
         }
@@ -180,8 +173,32 @@ public class MultiNoiseGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void generateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
-        super.generateCaves(worldInfo, random, chunkX, chunkZ, chunkData);
+    public void generateCaves(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull ChunkData chunkData) {
+        SimplexOctaveGenerator caveNoise = new SimplexOctaveGenerator(worldInfo.getSeed(), 3);
+        caveNoise.setScale(0.05);
+
+        int baseX = chunkX * 16;
+        int baseZ = chunkZ * 16;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = 5; y < 60; y++) {
+                    int worldX = baseX + x;
+                    int worldZ = baseZ + z;
+
+                    double noise = caveNoise.noise(worldX, y, worldZ, 0.5, 0.5);
+
+                    if (noise > 0.4) {
+                        chunkData.setBlock(x, y, z, Material.AIR);
+                    }
+                }
+            }
+        }
     }
 
     @Override

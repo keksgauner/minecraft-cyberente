@@ -28,14 +28,11 @@ import java.util.List;
 import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * A custom chunk generator for a moon-like world.
@@ -123,11 +120,6 @@ public class MoonGenerator extends ChunkGenerator {
                 }
             }
         }
-    }
-
-    @Override
-    public @Nullable BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
-        return Biome.DESERT;
     }
 
     @Override
