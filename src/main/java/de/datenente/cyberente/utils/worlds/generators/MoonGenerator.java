@@ -52,8 +52,7 @@ public class MoonGenerator extends ChunkGenerator {
     double scale = 0.008;
     // The frequency parameter sets how much detail each octave adds to the surface.
     // A frequency of 1 results in each octave having the same impact on the resulting surface.
-    // A frequency of smaller than 1 results in later octaves generating a smoother surface (usually you don't want
-    // this).
+    // A frequency of smaller than 1 results in later octaves generating a smoother surface
     double frequency = 1;
     // The amplitude parameter sets how much each octave contributes to the overall surface.
     // An amplitude of 1 results in each octave having the same impact on the resulting surface.

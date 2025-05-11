@@ -42,6 +42,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
 @Getter
@@ -97,9 +98,9 @@ public final class CyberEnte extends JavaPlugin {
     }
 
     @Override
-    public @Nullable ChunkGenerator getDefaultWorldGenerator(String worldName, @Nullable String id) {
+    public @Nullable ChunkGenerator getDefaultWorldGenerator(@NotNull String worldName, @Nullable String id) {
         if (id == null) return null;
-        CustomGenerator generator = CustomGenerator.valueOf(id);
+        CustomGenerator generator = CustomGenerator.valueOf(id.toUpperCase());
         return generator.getChunkGenerator();
     }
 
