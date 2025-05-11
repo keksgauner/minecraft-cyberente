@@ -23,46 +23,27 @@
  */
 package de.datenente.cyberente.utils.worlds.generators;
 
-import de.datenente.cyberente.utils.worlds.biome.DesertProvider;
 import de.datenente.cyberente.utils.worlds.populator.CraterPopulator;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.util.noise.PerlinOctaveGenerator;
+import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+/**
+ * MarsGenerator is a custom chunk generator for a Mars-like world.
+ * It generates a surface with red sandstone and populates it with craters.
+ */
 public class MarsGenerator extends ChunkGenerator {
 
     // RED_SAND -> TERRACOTTA -> RED_SANDSTONE
 
     int heightDifference = 40;
-
-    PerlinOctaveGenerator elevationNoiseGenerator;
-    PerlinOctaveGenerator detailNoiseGenerator;
-    PerlinOctaveGenerator roughNoiseGenerator;
-
-    @Override
-    public void generateNoise(
-            @NotNull WorldInfo worldInfo,
-            @NotNull Random random,
-            int chunkX,
-            int chunkZ,
-            @NotNull ChunkData chunkData) {
-        this.elevationNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 4);
-        this.elevationNoiseGenerator.setScale(1 / 200.0);
-
-        this.detailNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 4);
-        this.detailNoiseGenerator.setScale(1 / 30.0);
-
-        this.roughNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 1);
-        this.roughNoiseGenerator.setScale(1 / 100.0);
-    }
 
     @Override
     public void generateSurface(
@@ -76,14 +57,23 @@ public class MarsGenerator extends ChunkGenerator {
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
+        PerlinOctaveGenerator elevationNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 4);
+        elevationNoiseGenerator.setScale(1 / 200.0);
+
+        PerlinOctaveGenerator detailNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 4);
+        detailNoiseGenerator.setScale(1 / 30.0);
+
+        PerlinOctaveGenerator roughNoiseGenerator = new PerlinOctaveGenerator(worldInfo.getSeed(), 1);
+        roughNoiseGenerator.setScale(1 / 100.0);
+
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 int realX = worldX + x;
                 int realZ = worldZ + z;
 
-                double elevationTerrainNoise = this.elevationNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
-                double detailTerrainNoise = this.detailNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
-                double roughTerrainNoise = this.roughNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double elevationTerrainNoise = elevationNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double detailTerrainNoise = detailNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
+                double roughTerrainNoise = roughNoiseGenerator.noise(realX, realZ, 0.5, 0.5, true);
 
                 int blockHeight = (int) Math.round(
                         (elevationTerrainNoise + detailTerrainNoise * roughTerrainNoise) * this.heightDifference);
@@ -110,10 +100,19 @@ public class MarsGenerator extends ChunkGenerator {
             return;
         }
         int minHeight = chunkData.getMinHeight();
+        SimplexOctaveGenerator noise = new SimplexOctaveGenerator(worldInfo.getSeed(), 1);
+        noise.setScale(0.25);
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = minHeight; y < minHeight + random.nextInt(4) + 1; y++) {
+                int worldX = (chunkX << 4) + x;
+                int worldZ = (chunkZ << 4) + z;
+
+                double raw = noise.noise(worldX, worldZ, 0.6, 0.6);
+                int height = (int) ((raw + 1) * 2.5);
+                height = Math.max(0, Math.min(5, height));
+
+                for (int y = minHeight; y <= minHeight + height; y++) {
                     chunkData.setBlock(x, y, z, Material.BEDROCK);
                 }
             }
@@ -121,22 +120,7 @@ public class MarsGenerator extends ChunkGenerator {
     }
 
     @Override
-    public @Nullable BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
-        return new DesertProvider();
-    }
-
-    @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
         return List.of(new CraterPopulator());
     }
-
-    /*
-    @Override
-    public Location getFixedSpawnLocation(World world, Random random) {
-       Location spawnLocation = new Location(world, 0.5D, 64, 0.5D);
-        Location blockLocation = spawnLocation.clone().subtract(0D, 1D, 0D);
-        blockLocation.getBlock().setType(Material.BEDROCK);
-        return spawnLocation;
-    }
-     */
 }

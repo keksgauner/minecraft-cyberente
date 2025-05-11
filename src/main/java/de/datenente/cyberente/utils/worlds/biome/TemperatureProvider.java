@@ -28,18 +28,35 @@ import lombok.Getter;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.util.noise.SimplexOctaveGenerator;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public class DesertProvider extends BiomeProvider {
+public class TemperatureProvider extends BiomeProvider {
 
     @NotNull @Override
     public Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
-        return Biome.DESERT;
+        SimplexOctaveGenerator temperature = new SimplexOctaveGenerator(worldInfo.getSeed(), 2);
+        SimplexOctaveGenerator humidity = new SimplexOctaveGenerator(worldInfo.getSeed(), 2);
+        temperature.setScale(0.01);
+        humidity.setScale(0.01);
+
+        double temp = temperature.noise(x, z, 0.5, 1.0);
+        double hum = humidity.noise(x, z, 0.5, 1.0);
+
+        return pickBiome(temp, hum);
     }
 
     @NotNull @Override
     public List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
-        return List.of(Biome.DESERT);
+        return List.of(Biome.SNOWY_PLAINS, Biome.DESERT, Biome.SWAMP, Biome.PLAINS, Biome.FOREST);
+    }
+
+    Biome pickBiome(double temp, double hum) {
+        if (temp < -0.3) return Biome.SNOWY_PLAINS;
+        if (temp > 0.6 && hum < 0.3) return Biome.DESERT;
+        if (hum > 0.7) return Biome.SWAMP;
+        if (temp > 0.5) return Biome.PLAINS;
+        return Biome.FOREST;
     }
 }
