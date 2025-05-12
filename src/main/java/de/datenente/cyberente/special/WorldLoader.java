@@ -31,9 +31,7 @@ public class WorldLoader {
     public static void load() {
         StorageConfig storageConfig = StorageConfig.getInstance();
         storageConfig.getWorlds().forEach((worldName, worldData) -> {
-            CyberEnte.getInstance()
-                    .getLogger()
-                    .info("Loading world " + worldName + "!");
+            CyberEnte.getInstance().getLogger().info("Loading world " + worldName + "!");
             CustomWorldCreator.createWorld(worldName, worldData.getEnvironment(), worldData.getGenerator());
         });
     }
