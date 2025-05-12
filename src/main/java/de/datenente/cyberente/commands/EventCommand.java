@@ -23,7 +23,7 @@
  */
 package de.datenente.cyberente.commands;
 
-import de.datenente.cyberente.luckyblocks.LuckyBlockGenerator;
+import de.datenente.cyberente.utils.luckyblocks.LuckyBlockGenerator;
 import de.datenente.cyberente.utils.Message;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -31,6 +31,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class EventCommand extends Command {
 
@@ -57,5 +59,12 @@ public class EventCommand extends Command {
         }
 
         return true;
+    }
+
+    @Override
+    public @NotNull List<String> tabComplete(
+            @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
+            throws IllegalArgumentException {
+        return List.of();
     }
 }

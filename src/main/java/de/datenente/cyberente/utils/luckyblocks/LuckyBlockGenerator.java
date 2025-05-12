@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.luckyblocks;
+package de.datenente.cyberente.utils.luckyblocks;
 
 import java.util.Random;
 import org.bukkit.Material;

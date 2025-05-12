@@ -35,7 +35,9 @@ public class CustomWorldCreator {
         WorldCreator creator = new WorldCreator(worldName);
 
         creator.environment(environment);
-        creator.generator(generator.getChunkGenerator());
+        if(generator != null) {
+            creator.generator(generator.getChunkGenerator());
+        }
 
         return creator.createWorld();
     }

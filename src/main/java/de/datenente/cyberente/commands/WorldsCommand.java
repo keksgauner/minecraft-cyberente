@@ -159,36 +159,39 @@ public class WorldsCommand extends Command {
         return true;
     }
 
-    // TODO: filter einbauen
     @Override
     public @NotNull List<String> tabComplete(
             @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return List.of("tp", "generate", "remove", "delete", "list");
+            return Message.filter(List.of("tp", "generate", "remove", "delete", "list"), args[0]);
         }
 
         if (args.length == 2) {
-            String type = args[0].toLowerCase();
-            return Bukkit.getWorlds().stream().map(World::getName).toList();
+            return Message.filter(
+                    Bukkit.getWorlds().stream().map(World::getName).toList(), args[1]);
         }
 
         if (args.length == 3) {
             String type = args[0].toLowerCase();
             if (type.equals("generate")) {
-                return Arrays.stream(World.Environment.values())
-                        .map(World.Environment::name)
-                        .toList();
+                return Message.filter(
+                        Arrays.stream(World.Environment.values())
+                                .map(World.Environment::name)
+                                .toList(),
+                        args[2]);
             }
         }
 
         if (args.length == 4) {
             String type = args[0].toLowerCase();
             if (type.equals("generate")) {
-                return Arrays.stream(CustomGenerator.values())
-                        .map(CustomGenerator::name)
-                        .toList();
+                return Message.filter(
+                        Arrays.stream(CustomGenerator.values())
+                                .map(CustomGenerator::name)
+                                .toList(),
+                        args[3]);
             }
         }
 

@@ -23,6 +23,7 @@
  */
 package de.datenente.cyberente.utils;
 
+import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
@@ -69,5 +70,14 @@ public class Message {
      */
     public static void send(CommandSender sender, String message, Object... replacements) {
         sender.sendMessage(text(message, replacements));
+    }
+
+    public static List<String> filter(List<String> list, String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return list;
+        }
+        return list.stream()
+                .filter(s -> s.toLowerCase().contains(filter.toLowerCase()))
+                .toList();
     }
 }

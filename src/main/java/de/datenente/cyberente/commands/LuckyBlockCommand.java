@@ -23,7 +23,7 @@
  */
 package de.datenente.cyberente.commands;
 
-import de.datenente.cyberente.luckyblocks.LuckyBlockGenerator;
+import de.datenente.cyberente.utils.luckyblocks.LuckyBlockGenerator;
 import java.util.List;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -52,5 +52,12 @@ public class LuckyBlockCommand extends Command {
         }
 
         return true;
+    }
+
+    @Override
+    public @NotNull List<String> tabComplete(
+            @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
+            throws IllegalArgumentException {
+        return List.of();
     }
 }
