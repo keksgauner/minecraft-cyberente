@@ -42,6 +42,9 @@ import org.jetbrains.annotations.Nullable;
 // See: https://minecraft.wiki/w/World_generation
 // https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Fminecraft-noise-maps-and-how-do-they-generate-v0-8ddpi96i5lkd1.png%3Fwidth%3D890%26format%3Dpng%26auto%3Dwebp%26s%3D82c44cb3871f2f529dae90e4930314063adb062c
 // https://auburn.github.io/FastNoiseLite/
+// https://www.geogebra.org/graphing/yzgxvd8q
+// https://www.desmos.com/calculator/otr2abiuns
+// https://adrianb.io/2014/08/09/perlinnoise.html
 /**
  * MultiNoiseGenerator
  *
