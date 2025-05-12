@@ -51,6 +51,11 @@ public class WorldChangeListener implements Listener {
         String world = player.getWorld().getName();
         String fromWorld = changedWorldEvent.getFrom().getName();
 
+        // Todo: Link list
+        if(world.startsWith("world")) {
+            return;
+        }
+
         Inventory inventory = player.getInventory();
 
         // Inventory speichern
