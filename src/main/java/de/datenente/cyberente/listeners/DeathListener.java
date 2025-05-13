@@ -79,12 +79,10 @@ public class DeathListener implements Listener {
         List<ItemStack> drops = deathEvent.getDrops();
         ItemStack[] contents = drops.toArray(new ItemStack[0]);
         String base64 = ItemStack2Base64.itemStackArrayToBase64(contents);
-        int newLevel = deathEvent.getNewLevel();
-        int newExp = deathEvent.getNewExp();
+        int newLevel = deathEvent.getPlayer().getLevel();
+        float newExp = deathEvent.getPlayer().getExp();
 
         drops.clear();
-        deathEvent.setNewLevel(0);
-        deathEvent.setNewExp(0);
 
         while (deathBlock.getType() != Material.AIR) {
             deathLocation = deathLocation.add(0, 1, 0);
