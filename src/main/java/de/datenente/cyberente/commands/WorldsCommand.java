@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 public class WorldsCommand extends Command {
 
     public WorldsCommand() {
-        super("worlds", "Manage worlds", "/worlds", List.of());
+        super("worlds", "Manage worlds", "/worlds", List.of("w"));
     }
 
     @Override
