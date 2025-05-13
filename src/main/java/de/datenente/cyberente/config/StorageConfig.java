@@ -28,6 +28,7 @@ import de.datenente.cyberente.utils.config.JsonDocument;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -111,9 +112,7 @@ public class StorageConfig extends JsonDocument<StorageObject> {
     }
 
     public HashMap<String, StorageObject.Worlds> getWorlds() {
-        HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
-
-        return worldsMap;
+        return this.getStorage().getWorlds();
     }
 
     public void removeWorld(String world) {
@@ -121,5 +120,14 @@ public class StorageConfig extends JsonDocument<StorageObject> {
 
         worldsMap.remove(world);
         this.save();
+    }
+
+    public void setWorldGroup(String groupName, List<String> worlds) {
+        this.getStorage().getWorldGroups().put(groupName, worlds);
+        this.save();
+    }
+
+    public List<String> getWorldGroup(String groupName) {
+        return this.getStorage().getWorldGroups().getOrDefault(groupName, null);
     }
 }

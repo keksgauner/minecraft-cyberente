@@ -25,6 +25,7 @@ package de.datenente.cyberente.config.mappings;
 
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.util.HashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +39,7 @@ public class StorageObject {
     HashMap<String, PlayerInventory> deathSkulls = new HashMap<>(); // Location
 
     HashMap<String, Worlds> worlds = new HashMap<>(); // World Name
+    HashMap<String, List<String>> worldGroups = new HashMap<>();
 
     // HashMap für Inventar für jede Welt:
     // Hashmap<"SuperCommander:world_moon", "64xCOOKED_CHICKEN">

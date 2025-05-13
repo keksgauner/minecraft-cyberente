@@ -69,7 +69,8 @@ public class PingCommand extends Command {
             throws IllegalArgumentException {
 
         if (args.length == 1) {
-            return Message.filter(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), args[0]);
+            return Message.filter(
+                    Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), args[0]);
         }
 
         return List.of();
