@@ -8,5 +8,6 @@ load: STARTUP
 
 depend: [CyberEnte-Extended]
 
+website: https://www.e-duck.de
 description: Ein maßgeschneidertes Minecraft Paper-Plugin für den privaten CyberEnte-Server.
 authors: [CyberEnte, KeksGauner]
