@@ -52,7 +52,7 @@ public class WorldChangeListener implements Listener {
         String fromWorld = changedWorldEvent.getFrom().getName();
 
         // Todo: Link list
-        if (world.startsWith("world")) {
+        if (player.getWorld().getGenerator() == null) {
             return;
         }
 
