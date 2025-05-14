@@ -24,7 +24,9 @@
 package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
+import de.datenente.cyberente.config.FileConfig;
 import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
 import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.ItemStack2Base64;
 import de.datenente.cyberente.utils.Message;
@@ -46,12 +48,11 @@ public class WorldChangeListener implements Listener {
     @EventHandler
     public void onPerWorldInventory(PlayerChangedWorldEvent changedWorldEvent) {
         Player player = changedWorldEvent.getPlayer();
-        StorageConfig storageConfig = StorageConfig.getInstance();
 
-        String world = player.getWorld().getName();
-        String fromWorld = changedWorldEvent.getFrom().getName();
+        String fromWorld = changedWorldEvent.getFrom().getName(); // To Save
+        String world = player.getWorld().getName(); // To Load
 
-        // Todo: Link list
+        // Todo: groups
         if (player.getWorld().getGenerator() == null) {
             return;
         }
@@ -60,7 +61,7 @@ public class WorldChangeListener implements Listener {
 
         // Inventory speichern
         String base64 = ItemStack2Base64.itemStackArrayToBase64(inventory.getContents());
-        storageConfig.setPlayerInventory(player.getUniqueId(), fromWorld, base64, player.getLevel(), player.getExp());
+        FileConfig.setWorldInventory(player.getUniqueId(), fromWorld, base64, player.getLevel(), player.getExp());
 
         // Inventory leeren
         inventory.clear();
@@ -68,7 +69,7 @@ public class WorldChangeListener implements Listener {
         player.setExp(0);
 
         // Inventory laden
-        StorageObject.PlayerInventory inventoryNew = storageConfig.getPlayerInventory(player.getUniqueId(), world);
+        PlayerInventoryObject inventoryNew = FileConfig.getWorldInventory(player.getUniqueId(), world);
         if (inventoryNew == null) {
             CyberEnte.getInstance()
                     .getLogger()
@@ -91,8 +92,6 @@ public class WorldChangeListener implements Listener {
             player.removePotionEffect(PotionEffectType.SLOW_FALLING);
             player.removePotionEffect(PotionEffectType.JUMP_BOOST);
             player.setGameMode(GameMode.SURVIVAL);
-
-            Message.send(player, "Erfolgreich in <rainbow> world </rainbow> teleportiert!");
             return;
         }
 

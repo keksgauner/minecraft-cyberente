@@ -46,6 +46,11 @@ public class WorldsCommand extends Command {
     public boolean execute(
             @NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
 
+        if (!sender.isOp()) {
+            Message.send(sender, "You do not have permission to use this command!");
+            return true;
+        }
+
         if (args.length == 1) {
             String type = args[0].toLowerCase();
 
@@ -55,6 +60,11 @@ public class WorldsCommand extends Command {
                     worlds.append(world.getName()).append(", ");
                 }
                 Message.send(sender, "Worlds: {0}", worlds.toString());
+                return true;
+            }
+
+            if( type.equals("groups")) {
+                // TODO: Implement groups
                 return true;
             }
         }
@@ -79,11 +89,6 @@ public class WorldsCommand extends Command {
                     return true;
                 }
                 case "remove" -> {
-                    if (!sender.isOp()) {
-                        Message.send(sender, "You do not have permission to use this command!");
-                        return true;
-                    }
-
                     Message.send(sender, "Remove {0} World...", world);
                     CustomWorldCreator.unloadWorld(world, true);
 
@@ -93,11 +98,6 @@ public class WorldsCommand extends Command {
                     return true;
                 }
                 case "delete" -> {
-                    if (!sender.isOp()) {
-                        Message.send(sender, "You do not have permission to use this command!");
-                        return true;
-                    }
-
                     Message.send(sender, "Delete {0} World...", world);
                     CustomWorldCreator.deleteWorld(world);
 
@@ -111,15 +111,11 @@ public class WorldsCommand extends Command {
 
         if (args.length == 4) {
             String type = args[0].toLowerCase();
-            String world = args[1].toLowerCase();
-            String environment = args[2].toUpperCase();
-            String generator = args[3].toUpperCase();
 
             if (type.equals("generate")) {
-                if (!sender.isOp()) {
-                    Message.send(sender, "You do not have permission to use this command!");
-                    return true;
-                }
+                String world = args[1].toLowerCase();
+                String environment = args[2].toUpperCase();
+                String generator = args[3].toUpperCase();
 
                 World.Environment realEnvironment;
                 try {
@@ -151,11 +147,19 @@ public class WorldsCommand extends Command {
                 Message.send(sender, "{0} World generated!", world);
                 return true;
             }
+
+            if(type.equals("groups")) {
+                String group = args[1].toLowerCase();
+                String action = args[2].toUpperCase();
+                String world = args[3].toUpperCase();
+                // TODO: Implement groups
+            }
         }
 
         Message.send(sender, "Usage: /world <list>");
         Message.send(sender, "Usage: /world <tp/remove/delete> <world>");
         Message.send(sender, "Usage: /world <generate> <world> <environment> <generator>");
+        Message.send(sender, "Usage: /world <groups> <group> <add/remove> <world>");
         return true;
     }
 
@@ -163,14 +167,23 @@ public class WorldsCommand extends Command {
     public @NotNull List<String> tabComplete(
             @NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args)
             throws IllegalArgumentException {
+        if (!sender.isOp()) {
+            return List.of();
+        }
 
         if (args.length == 1) {
-            return Message.filter(List.of("tp", "generate", "remove", "delete", "list"), args[0]);
+            return Message.filter(List.of("tp", "generate", "remove", "delete", "list", "groups"), args[0]);
         }
 
         if (args.length == 2) {
-            return Message.filter(
-                    Bukkit.getWorlds().stream().map(World::getName).toList(), args[1]);
+            String type = args[0].toLowerCase();
+            if (type.equals("tp") || type.equals("generate") || type.equals("remove") || type.equals("delete")) {
+                return Message.filter(
+                        Bukkit.getWorlds().stream().map(World::getName).toList(), args[1]);
+            }
+            if(type.equals("groups")) {
+                // TODO: Implement groups
+            }
         }
 
         if (args.length == 3) {
@@ -182,6 +195,9 @@ public class WorldsCommand extends Command {
                                 .toList(),
                         args[2]);
             }
+            if(type.equals("groups")) {
+                return Message.filter(List.of("add","remove"), args[2]);
+            }
         }
 
         if (args.length == 4) {
@@ -192,6 +208,10 @@ public class WorldsCommand extends Command {
                                 .map(CustomGenerator::name)
                                 .toList(),
                         args[3]);
+            }
+            if(type.equals("groups")) {
+                return Message.filter(
+                        Bukkit.getWorlds().stream().map(World::getName).toList(), args[3]);
             }
         }
 
