@@ -53,8 +53,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class DeathListener implements Listener {
 
-    private static final FixedMetadataValue DEATH_KEY = new FixedMetadataValue(CyberEnte.getInstance(), Boolean.TRUE);
-
     private final HashMap<UUID, Block> openedDeathInventories = new HashMap<>();
 
     @EventHandler
@@ -94,7 +92,6 @@ public class DeathListener implements Listener {
         BlockState state = deathBlock.getState();
         if (!(state instanceof Skull skull)) return;
         skull.setOwningPlayer(player);
-        skull.setMetadata("death", DEATH_KEY);
         skull.update();
 
         StorageConfig storageConfig = StorageConfig.getInstance();
@@ -111,7 +108,8 @@ public class DeathListener implements Listener {
 
         BlockState state = clickedBlock.getState();
         if (!(state instanceof Skull skull)) return;
-        if (!skull.hasMetadata("death")) return;
+        StorageConfig storageConfig = StorageConfig.getInstance();
+        if(!storageConfig.hasDeathSkull(skull.getLocation())) return;
 
         Player player = interactEvent.getPlayer();
         if (openedDeathInventories.containsValue(clickedBlock)) {
@@ -120,7 +118,6 @@ public class DeathListener implements Listener {
 
         interactEvent.setCancelled(true);
 
-        StorageConfig storageConfig = StorageConfig.getInstance();
         StorageObject.PlayerInventory deathSkull = storageConfig.getDeathSkull(clickedBlock.getLocation());
         if (deathSkull == null) {
             Message.send(player, "<red>Es ist kein Inventar vorhanden!");
@@ -158,7 +155,8 @@ public class DeathListener implements Listener {
 
         BlockState state = clickedBlock.getState();
         if (!(state instanceof Skull skull)) return;
-        if (!skull.hasMetadata("death")) return;
+        StorageConfig storageConfig = StorageConfig.getInstance();
+        if(!storageConfig.hasDeathSkull(skull.getLocation())) return;
 
         Inventory inventory = closeEvent.getInventory();
         for (ItemStack item : inventory.getContents()) {
@@ -176,7 +174,9 @@ public class DeathListener implements Listener {
         Block block = blockBreakEvent.getBlock();
         BlockState state = block.getState();
         if (!(state instanceof Skull skull)) return;
-        if (!skull.hasMetadata("death")) return;
+        StorageConfig storageConfig = StorageConfig.getInstance();
+        if(!storageConfig.hasDeathSkull(skull.getLocation())) return;
+
         blockBreakEvent.setCancelled(true);
     }
 
@@ -187,7 +187,9 @@ public class DeathListener implements Listener {
             if (block.getType() != Material.PLAYER_HEAD) continue;
             BlockState state = block.getState();
             if (!(state instanceof Skull skull)) continue;
-            if (!skull.hasMetadata("death")) continue;
+            StorageConfig storageConfig = StorageConfig.getInstance();
+            if(!storageConfig.hasDeathSkull(skull.getLocation())) return;
+
             blockList.remove(block);
         }
     }

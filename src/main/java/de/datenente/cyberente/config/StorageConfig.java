@@ -68,6 +68,13 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         this.save();
     }
 
+    public boolean hasDeathSkull(Location location) {
+        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
+                this.getStorage().getDeathSkulls();
+
+        return deathSkulls.getOrDefault(serializeLocation(location), null) != null;
+    }
+
     public StorageObject.PlayerInventory getDeathSkull(Location location) {
         HashMap<String, StorageObject.PlayerInventory> deathSkulls =
                 this.getStorage().getDeathSkulls();
