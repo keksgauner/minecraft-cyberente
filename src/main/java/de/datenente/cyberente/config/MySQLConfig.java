@@ -23,6 +23,7 @@
  */
 package de.datenente.cyberente.config;
 
+import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.mappings.MySQLObject;
 import de.datenente.cyberente.utils.config.JsonDocument;
 import java.io.File;
@@ -32,19 +33,24 @@ import lombok.Getter;
 @Getter
 public class MySQLConfig extends JsonDocument<MySQLObject> {
 
-    @Getter
     static MySQLConfig instance;
+
+    public static MySQLConfig getInstance() {
+        if (instance == null) {
+            CyberEnte cyberEnte = CyberEnte.getInstance();
+            Logger logger = cyberEnte.getLogger();
+            File dataFolder = cyberEnte.getDataFolder();
+            instance = new MySQLConfig(logger, dataFolder);
+        }
+        return instance;
+    }
 
     public MySQLConfig(Logger pluginLogger, File dataFolder) {
         super(pluginLogger, dataFolder, MySQLObject.class, "mysql.json");
-
-        synchronized (this) {
-            instance = this;
-        }
     }
 
     @Override
     public void loadContent() {
-        this.reload();
+        this.save();
     }
 }

@@ -36,8 +36,16 @@ import lombok.Getter;
 @Getter
 public class Databases {
 
-    @Getter
     static Databases instance;
+
+    public static Databases getInstance() {
+        if (instance == null) {
+            CyberEnte cyberEnte = CyberEnte.getInstance();
+            Logger logger = cyberEnte.getLogger();
+            instance = new Databases(logger);
+        }
+        return instance;
+    }
 
     final HibernateConnection hibernateConnection;
     ScheduledFuture<?> databaseConnectTask;
@@ -47,10 +55,6 @@ public class Databases {
 
     public Databases(Logger logger) {
         this.hibernateConnection = new HibernateConnection(logger);
-
-        synchronized (this) {
-            instance = this;
-        }
     }
 
     public void openDatabaseConnection() {

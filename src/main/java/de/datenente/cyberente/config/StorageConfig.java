@@ -23,88 +23,45 @@
  */
 package de.datenente.cyberente.config;
 
+import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.config.JsonDocument;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
-import org.bukkit.Location;
 import org.bukkit.World;
 
 @Getter
 public class StorageConfig extends JsonDocument<StorageObject> {
 
-    @Getter
     static StorageConfig instance;
+
+    public static StorageConfig getInstance() {
+        if (instance == null) {
+            CyberEnte cyberEnte = CyberEnte.getInstance();
+            Logger logger = cyberEnte.getLogger();
+            File dataFolder = cyberEnte.getDataFolder();
+            instance = new StorageConfig(logger, dataFolder);
+        }
+        return instance;
+    }
 
     public StorageConfig(Logger pluginLogger, File dataFolder) {
         super(pluginLogger, dataFolder, StorageObject.class, "storage.json");
-
-        synchronized (this) {
-            instance = this;
-        }
     }
 
     @Override
     public void loadContent() {
-        this.reload();
-    }
-
-    String serializeLocation(Location location) {
-        return location.getWorld().getName() + ":" + location.getBlockX()
-                + ":" + location.getBlockY()
-                + ":" + location.getBlockZ();
-    }
-
-    public void setDeathSkull(Location location, String base64Inventory, Integer level, Float xp) {
-        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
-                this.getStorage().getDeathSkulls();
-
-        deathSkulls.put(serializeLocation(location), new StorageObject.PlayerInventory(base64Inventory, level, xp));
         this.save();
     }
 
-    public boolean hasDeathSkull(Location location) {
-        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
-                this.getStorage().getDeathSkulls();
-
-        return deathSkulls.getOrDefault(serializeLocation(location), null) != null;
-    }
-
-    public StorageObject.PlayerInventory getDeathSkull(Location location) {
-        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
-                this.getStorage().getDeathSkulls();
-
-        return deathSkulls.getOrDefault(serializeLocation(location), null);
-    }
-
-    public void removeDeathSkull(Location location) {
-        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
-                this.getStorage().getDeathSkulls();
-
-        deathSkulls.remove(serializeLocation(location));
-        this.save();
-    }
-
-    public void setPlayerInventory(UUID uuid, String world, String base64Inventory, Integer level, Float xp) {
-        HashMap<String, StorageObject.PlayerInventory> playerInventory =
-                this.getStorage().getPlayerInventory();
-
-        playerInventory.put(uuid + ":" + world, new StorageObject.PlayerInventory(base64Inventory, level, xp));
-        this.save();
-    }
-
-    public StorageObject.PlayerInventory getPlayerInventory(UUID uuid, String world) {
-        HashMap<String, StorageObject.PlayerInventory> playerInventory =
-                this.getStorage().getPlayerInventory();
-
-        return playerInventory.getOrDefault(uuid + ":" + world, null);
-    }
-
+    /**
+     * Worlds
+     */
     public void setWorld(String world, World.Environment environment, CustomGenerator generator) {
         HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
 
@@ -129,7 +86,24 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         this.save();
     }
 
+    /**
+     * World Groups
+     */
     public void setWorldGroup(String groupName, List<String> worlds) {
+        this.getStorage().getWorldGroups().put(groupName, worlds);
+        this.save();
+    }
+
+    public void addWorldToGroup(String groupName, String world) {
+        List<String> worlds = this.getStorage().getWorldGroups().getOrDefault(groupName, new ArrayList<>());
+        worlds.add(world);
+        this.getStorage().getWorldGroups().put(groupName, worlds);
+        this.save();
+    }
+
+    public void removeWorldFromGroup(String groupName, String world) {
+        List<String> worlds = this.getStorage().getWorldGroups().getOrDefault(groupName, new ArrayList<>());
+        worlds.remove(world);
         this.getStorage().getWorldGroups().put(groupName, worlds);
         this.save();
     }

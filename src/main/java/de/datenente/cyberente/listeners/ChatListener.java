@@ -50,6 +50,9 @@ public class ChatListener implements Listener {
 
         String plainMessage = PlainTextComponentSerializer.plainText().serialize(message);
 
+        // # is hidden in the chat. lg KeksGauner
+        if (plainMessage.startsWith("#")) return;
+
         Component finalMessage = Message.text(
                 "<hover:show_text:'<gold>{0}</gold>'><dark_green>{1}</dark_green></hover> <gray>></gray> {2}",
                 currentTime, player.getName(), plainMessage);
@@ -99,7 +102,7 @@ public class ChatListener implements Listener {
             message = message.replaceText(TextReplacementConfig.builder()
                     .match(matcher.group())
                     .replacement(Message.text(
-                            "<hover:show_text:'<gold>Open URL</gold>'><click:open_url:'{0}'><green>[{0}]</green></click></hover>",
+                            "<hover:show_text:'<gold>Open URL</gold>'><click:open_url:'{0}'><green>{0}</green></click></hover>",
                             matcher.group()))
                     .build());
         }

@@ -24,8 +24,6 @@
 package de.datenente.cyberente;
 
 import de.datenente.cyberente.commands.*;
-import de.datenente.cyberente.config.MySQLConfig;
-import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
@@ -60,17 +58,14 @@ public final class CyberEnte extends JavaPlugin {
         synchronized (this) {
             instance = this;
         }
-
-        registerConfigs();
     }
 
     @Override
     public void onEnable() {
-        getLogger().info("Plugin CyberEnte wird geladen!");
+        getLogger().info("Plugin CyberEnte wird aktiviert!");
         this.startTime = Instant.now();
 
         // Hibernate
-        new Databases(getLogger());
         Databases.getInstance().openDatabaseConnection();
         Databases.getInstance().startDatabaseConnectTask();
 
@@ -102,11 +97,6 @@ public final class CyberEnte extends JavaPlugin {
         if (id == null) return null;
         CustomGenerator generator = CustomGenerator.valueOf(id.toUpperCase());
         return generator.getChunkGenerator();
-    }
-
-    void registerConfigs() {
-        new MySQLConfig(getLogger(), getDataFolder());
-        new StorageConfig(getLogger(), getDataFolder());
     }
 
     void registerListeners() {
