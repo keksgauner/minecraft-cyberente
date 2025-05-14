@@ -23,7 +23,6 @@
  */
 package de.datenente.cyberente.listeners;
 
-import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.ItemStack2Base64;
@@ -49,7 +48,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 public class DeathListener implements Listener {
 
@@ -109,7 +107,7 @@ public class DeathListener implements Listener {
         BlockState state = clickedBlock.getState();
         if (!(state instanceof Skull skull)) return;
         StorageConfig storageConfig = StorageConfig.getInstance();
-        if(!storageConfig.hasDeathSkull(skull.getLocation())) return;
+        if (!storageConfig.hasDeathSkull(skull.getLocation())) return;
 
         Player player = interactEvent.getPlayer();
         if (openedDeathInventories.containsValue(clickedBlock)) {
@@ -155,8 +153,6 @@ public class DeathListener implements Listener {
 
         BlockState state = clickedBlock.getState();
         if (!(state instanceof Skull skull)) return;
-        StorageConfig storageConfig = StorageConfig.getInstance();
-        if(!storageConfig.hasDeathSkull(skull.getLocation())) return;
 
         Inventory inventory = closeEvent.getInventory();
         for (ItemStack item : inventory.getContents()) {
@@ -175,7 +171,7 @@ public class DeathListener implements Listener {
         BlockState state = block.getState();
         if (!(state instanceof Skull skull)) return;
         StorageConfig storageConfig = StorageConfig.getInstance();
-        if(!storageConfig.hasDeathSkull(skull.getLocation())) return;
+        if (!storageConfig.hasDeathSkull(skull.getLocation())) return;
 
         blockBreakEvent.setCancelled(true);
     }
@@ -188,7 +184,7 @@ public class DeathListener implements Listener {
             BlockState state = block.getState();
             if (!(state instanceof Skull skull)) continue;
             StorageConfig storageConfig = StorageConfig.getInstance();
-            if(!storageConfig.hasDeathSkull(skull.getLocation())) return;
+            if (!storageConfig.hasDeathSkull(skull.getLocation())) return;
 
             blockList.remove(block);
         }
