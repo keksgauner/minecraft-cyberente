@@ -23,9 +23,7 @@
  */
 package de.datenente.cyberente.config.mappings;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * Class representing the configuration for a MySQL database connection.

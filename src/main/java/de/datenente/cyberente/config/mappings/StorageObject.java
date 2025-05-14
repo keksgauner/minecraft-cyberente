@@ -36,8 +36,6 @@ import org.bukkit.World;
 @Getter
 @Setter
 public class StorageObject {
-    HashMap<String, PlayerInventory> deathSkulls = new HashMap<>(); // Location
-
     HashMap<String, Worlds> worlds = new HashMap<>(); // World Name
     HashMap<String, List<String>> worldGroups = new HashMap<>();
 

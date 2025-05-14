@@ -23,14 +23,12 @@
  */
 package de.datenente.cyberente.config.mappings;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class DeathSkullObject {
+public class PlayerInventoryObject {
     String base64; // Base64 encoded inventory
     Integer level;
     Float xp;

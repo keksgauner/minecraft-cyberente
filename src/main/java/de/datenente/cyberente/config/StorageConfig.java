@@ -66,36 +66,6 @@ public class StorageConfig extends JsonDocument<StorageObject> {
                 + ":" + location.getBlockZ();
     }
 
-    public void setDeathSkull(Location location, String base64Inventory, Integer level, Float xp) {
-        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
-                this.getStorage().getDeathSkulls();
-
-        deathSkulls.put(serializeLocation(location), new StorageObject.PlayerInventory(base64Inventory, level, xp));
-        this.save();
-    }
-
-    public boolean hasDeathSkull(Location location) {
-        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
-                this.getStorage().getDeathSkulls();
-
-        return deathSkulls.getOrDefault(serializeLocation(location), null) != null;
-    }
-
-    public StorageObject.PlayerInventory getDeathSkull(Location location) {
-        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
-                this.getStorage().getDeathSkulls();
-
-        return deathSkulls.getOrDefault(serializeLocation(location), null);
-    }
-
-    public void removeDeathSkull(Location location) {
-        HashMap<String, StorageObject.PlayerInventory> deathSkulls =
-                this.getStorage().getDeathSkulls();
-
-        deathSkulls.remove(serializeLocation(location));
-        this.save();
-    }
-
     public void setPlayerInventory(UUID uuid, String world, String base64Inventory, Integer level, Float xp) {
         HashMap<String, StorageObject.PlayerInventory> playerInventory =
                 this.getStorage().getPlayerInventory();

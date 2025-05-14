@@ -23,8 +23,8 @@
  */
 package de.datenente.cyberente.listeners;
 
-import de.datenente.cyberente.config.StorageConfig;
-import de.datenente.cyberente.config.mappings.StorageObject;
+import de.datenente.cyberente.config.FileConfig;
+import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
 import de.datenente.cyberente.utils.ItemStack2Base64;
 import de.datenente.cyberente.utils.Message;
 import java.util.HashMap;
@@ -75,8 +75,8 @@ public class DeathListener implements Listener {
         List<ItemStack> drops = deathEvent.getDrops();
         ItemStack[] contents = drops.toArray(new ItemStack[0]);
         String base64 = ItemStack2Base64.itemStackArrayToBase64(contents);
-        int newLevel = deathEvent.getPlayer().getLevel();
-        float newExp = deathEvent.getPlayer().getExp();
+        int level = deathEvent.getPlayer().getLevel();
+        float exp = deathEvent.getPlayer().getExp();
 
         drops.clear();
 
@@ -92,8 +92,7 @@ public class DeathListener implements Listener {
         skull.setOwningPlayer(player);
         skull.update();
 
-        StorageConfig storageConfig = StorageConfig.getInstance();
-        storageConfig.setDeathSkull(deathLocation, base64, newLevel, (float) newExp);
+        FileConfig.setDeathSkull(deathLocation, base64, level, exp);
     }
 
     @EventHandler
@@ -106,8 +105,7 @@ public class DeathListener implements Listener {
 
         BlockState state = clickedBlock.getState();
         if (!(state instanceof Skull skull)) return;
-        StorageConfig storageConfig = StorageConfig.getInstance();
-        if (!storageConfig.hasDeathSkull(skull.getLocation())) return;
+        if (!FileConfig.hasDeathSkull(skull.getLocation())) return;
 
         Player player = interactEvent.getPlayer();
         if (openedDeathInventories.containsValue(clickedBlock)) {
@@ -116,7 +114,7 @@ public class DeathListener implements Listener {
 
         interactEvent.setCancelled(true);
 
-        StorageObject.PlayerInventory deathSkull = storageConfig.getDeathSkull(clickedBlock.getLocation());
+        PlayerInventoryObject deathSkull = FileConfig.getDeathSkull(clickedBlock.getLocation());
         if (deathSkull == null) {
             Message.send(player, "<red>Es ist kein Inventar vorhanden!");
             return;
@@ -126,7 +124,7 @@ public class DeathListener implements Listener {
         int level = deathSkull.getLevel();
         float xp = deathSkull.getXp();
 
-        storageConfig.removeDeathSkull(clickedBlock.getLocation());
+        FileConfig.deleteDeathSkull(clickedBlock.getLocation());
 
         Inventory deathInventory = Bukkit.createInventory(null, 9 * 6, Component.text("Letzte Items"));
         for (ItemStack item : contents) {
@@ -151,6 +149,7 @@ public class DeathListener implements Listener {
         if (!openedDeathInventories.containsKey(uuid)) return;
         Block clickedBlock = openedDeathInventories.get(uuid);
 
+        // Useless Test
         BlockState state = clickedBlock.getState();
         if (!(state instanceof Skull skull)) return;
 
@@ -170,8 +169,7 @@ public class DeathListener implements Listener {
         Block block = blockBreakEvent.getBlock();
         BlockState state = block.getState();
         if (!(state instanceof Skull skull)) return;
-        StorageConfig storageConfig = StorageConfig.getInstance();
-        if (!storageConfig.hasDeathSkull(skull.getLocation())) return;
+        if (!FileConfig.hasDeathSkull(skull.getLocation())) return;
 
         blockBreakEvent.setCancelled(true);
     }
@@ -183,8 +181,7 @@ public class DeathListener implements Listener {
             if (block.getType() != Material.PLAYER_HEAD) continue;
             BlockState state = block.getState();
             if (!(state instanceof Skull skull)) continue;
-            StorageConfig storageConfig = StorageConfig.getInstance();
-            if (!storageConfig.hasDeathSkull(skull.getLocation())) return;
+            if (!FileConfig.hasDeathSkull(skull.getLocation())) return;
 
             blockList.remove(block);
         }
