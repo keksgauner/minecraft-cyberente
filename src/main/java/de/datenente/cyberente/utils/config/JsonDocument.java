@@ -114,7 +114,7 @@ public abstract class JsonDocument<T> implements Config {
     }
 
     /**
-     * Pre-loads the configuration file. If the file does not exist, it creates a new instance of the storage object and saves it.
+     * Pre-loads the configuration file. If the file does not exist, it creates a new instance of the storage.
      *
      * @throws IllegalStateException if the folder for the config cannot be created.
      */
@@ -123,17 +123,10 @@ public abstract class JsonDocument<T> implements Config {
                 && (!this.getFile().getParentFile().mkdirs()))
             throw new IllegalStateException("Could not create folder for config");
 
-        if (!this.getFile().exists()) {
-            try {
-                this.storage = this.getClassOfT().getDeclaredConstructor().newInstance();
-            } catch (InstantiationException
-                    | IllegalAccessException
-                    | InvocationTargetException
-                    | NoSuchMethodException ex) {
-                this.getPluginLogger().log(Level.SEVERE, "Could not create new instance of storage: ", ex);
-            }
-            this.save();
-            return;
+        try {
+            this.load();
+        } catch (FileNotFoundException ex) {
+            this.getPluginLogger().log(Level.SEVERE, "Could not load configuration file: ", ex);
         }
 
         this.loadContent();
@@ -146,10 +139,22 @@ public abstract class JsonDocument<T> implements Config {
      */
     @Override
     public void load() throws FileNotFoundException {
-        try (final FileReader fileReader = new FileReader(this.getFile())) {
-            this.storage = this.getGson().fromJson(fileReader, this.getClassOfT());
-        } catch (IOException ex) {
-            this.getPluginLogger().log(Level.SEVERE, "Could not load configuration file: ", ex);
+        if (this.getFile().exists()) {
+            try (final FileReader fileReader = new FileReader(this.getFile())) {
+                this.storage = this.getGson().fromJson(fileReader, this.getClassOfT());
+            } catch (IOException ex) {
+                this.getPluginLogger().log(Level.SEVERE, "Could not load configuration file: ", ex);
+            }
+            return;
+        }
+
+        try {
+            this.storage = this.getClassOfT().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException
+                | NoSuchMethodException ex) {
+            this.getPluginLogger().log(Level.SEVERE, "Could not create new instance of storage: ", ex);
         }
     }
 
@@ -177,5 +182,16 @@ public abstract class JsonDocument<T> implements Config {
         } catch (IOException ex) {
             this.getPluginLogger().log(Level.SEVERE, "Could not save configuration file: ", ex);
         }
+    }
+
+    /**
+     * Deletes the configuration file.
+     */
+    @Override
+    public boolean delete() {
+        if (this.getFile().exists()) {
+            return this.getFile().delete();
+        }
+        return false;
     }
 }

@@ -26,27 +26,12 @@ package de.datenente.cyberente.config.mappings;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * Class representing the configuration for a MySQL database connection.
- */
+@Setter
 @Getter
-public class MySQLObject {
-    /** The host of the MySQL database. */
-    String host = "localhost";
-
-    /** The port of the MySQL database. */
-    int port = 3306;
-
-    /** The username for the MySQL database connection. */
-    String username = "root";
-
-    /** The password for the MySQL database connection. */
-    String password = "secret";
-
-    /** The name of the MySQL database. */
-    String database = "cyberente";
-
-    /** if the sql query should be shown */
-    boolean showSql = false;
+public class DeathSkullObject {
+    String base64; // Base64 encoded inventory
+    Integer level;
+    Float xp;
 }

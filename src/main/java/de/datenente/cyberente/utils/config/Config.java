@@ -53,4 +53,9 @@ public interface Config {
      * Saves the current state of the configuration to a persistent storage.
      */
     void save();
+
+    /**
+     * Deletes the file.
+     */
+    boolean delete();
 }

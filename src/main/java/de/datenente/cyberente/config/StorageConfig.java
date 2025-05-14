@@ -23,6 +23,7 @@
  */
 package de.datenente.cyberente.config;
 
+import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.config.JsonDocument;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
@@ -38,20 +39,25 @@ import org.bukkit.World;
 @Getter
 public class StorageConfig extends JsonDocument<StorageObject> {
 
-    @Getter
     static StorageConfig instance;
+
+    public static StorageConfig getInstance() {
+        if (instance == null) {
+            CyberEnte cyberEnte = CyberEnte.getInstance();
+            Logger logger = cyberEnte.getLogger();
+            File dataFolder = cyberEnte.getDataFolder();
+            instance = new StorageConfig(logger, dataFolder);
+        }
+        return instance;
+    }
 
     public StorageConfig(Logger pluginLogger, File dataFolder) {
         super(pluginLogger, dataFolder, StorageObject.class, "storage.json");
-
-        synchronized (this) {
-            instance = this;
-        }
     }
 
     @Override
     public void loadContent() {
-        this.reload();
+        this.save();
     }
 
     String serializeLocation(Location location) {

@@ -50,6 +50,9 @@ public class ChatListener implements Listener {
 
         String plainMessage = PlainTextComponentSerializer.plainText().serialize(message);
 
+        // # is hidden in the chat. lg KeksGauner
+        if (plainMessage.startsWith("#")) return;
+
         Component finalMessage = Message.text(
                 "<hover:show_text:'<gold>{0}</gold>'><dark_green>{1}</dark_green></hover> <gray>></gray> {2}",
                 currentTime, player.getName(), plainMessage);
