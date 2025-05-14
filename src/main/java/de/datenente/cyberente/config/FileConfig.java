@@ -27,6 +27,7 @@ import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
 import de.datenente.cyberente.utils.config.JsonDocument;
 import java.io.File;
+import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -47,12 +48,18 @@ public class FileConfig<T> extends JsonDocument<T> {
                 + "_" + location.getBlockZ();
     }
 
+    /**
+     * Death Skull
+     */
     public static FileConfig<PlayerInventoryObject> getDeathSkullFile(Location location) {
         CyberEnte cyberEnte = CyberEnte.getInstance();
         Logger logger = cyberEnte.getLogger();
         File dataFolder = cyberEnte.getDataFolder();
         return new FileConfig<>(
-                logger, dataFolder, PlayerInventoryObject.class, "skulls/" + serializeLocation(location) + ".json");
+                logger,
+                dataFolder,
+                PlayerInventoryObject.class,
+                "deathskulls/" + serializeLocation(location) + ".json");
     }
 
     public static void setDeathSkull(Location location, String base64Inventory, Integer level, Float xp) {
@@ -79,5 +86,32 @@ public class FileConfig<T> extends JsonDocument<T> {
     public static boolean deleteDeathSkull(Location location) {
         FileConfig<PlayerInventoryObject> deathSkull = getDeathSkullFile(location);
         return deathSkull.delete();
+    }
+
+    /**
+     * Player Inventory
+     * */
+    public static FileConfig<PlayerInventoryObject> getWorldInventoryFile(UUID uuid, String world) {
+        CyberEnte cyberEnte = CyberEnte.getInstance();
+        Logger logger = cyberEnte.getLogger();
+        File dataFolder = cyberEnte.getDataFolder();
+        return new FileConfig<>(
+                logger, dataFolder, PlayerInventoryObject.class, "inventory/" + world + "_" + uuid + ".json");
+    }
+
+    public static void setWorldInventory(UUID uuid, String world, String base64Inventory, Integer level, Float xp) {
+        FileConfig<PlayerInventoryObject> worldInventory = getWorldInventoryFile(uuid, world);
+        worldInventory.getStorage().setBase64(base64Inventory);
+        worldInventory.getStorage().setLevel(level);
+        worldInventory.getStorage().setXp(xp);
+        worldInventory.save();
+    }
+
+    public static PlayerInventoryObject getWorldInventory(UUID uuid, String world) {
+        FileConfig<PlayerInventoryObject> worldInventory = getWorldInventoryFile(uuid, world);
+        if (worldInventory.getFile().exists()) {
+            return worldInventory.getStorage();
+        }
+        return null;
     }
 }

@@ -39,10 +39,6 @@ public class StorageObject {
     HashMap<String, Worlds> worlds = new HashMap<>(); // World Name
     HashMap<String, List<String>> worldGroups = new HashMap<>();
 
-    // HashMap für Inventar für jede Welt:
-    // Hashmap<"SuperCommander:world_moon", "64xCOOKED_CHICKEN">
-    HashMap<String, PlayerInventory> playerInventory = new HashMap<>(); // Player Name:world
-
     @Getter
     @Setter
     @AllArgsConstructor
@@ -67,15 +63,6 @@ public class StorageObject {
             World realWorld = Bukkit.getWorld(world);
             return new Location(realWorld, x, y, z, yaw, pitch);
         }
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class PlayerInventory {
-        String base64; // Base64 encoded inventory
-        Integer level;
-        Float xp;
     }
 
     @Getter

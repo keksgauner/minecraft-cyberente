@@ -102,7 +102,7 @@ public class ChatListener implements Listener {
             message = message.replaceText(TextReplacementConfig.builder()
                     .match(matcher.group())
                     .replacement(Message.text(
-                            "<hover:show_text:'<gold>Open URL</gold>'><click:open_url:'{0}'><green>[{0}]</green></click></hover>",
+                            "<hover:show_text:'<gold>Open URL</gold>'><click:open_url:'{0}'><green>{0}</green></click></hover>",
                             matcher.group()))
                     .build());
         }

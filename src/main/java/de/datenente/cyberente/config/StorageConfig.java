@@ -28,12 +28,11 @@ import de.datenente.cyberente.config.mappings.StorageObject;
 import de.datenente.cyberente.utils.config.JsonDocument;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
-import org.bukkit.Location;
 import org.bukkit.World;
 
 @Getter
@@ -60,27 +59,9 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         this.save();
     }
 
-    String serializeLocation(Location location) {
-        return location.getWorld().getName() + ":" + location.getBlockX()
-                + ":" + location.getBlockY()
-                + ":" + location.getBlockZ();
-    }
-
-    public void setPlayerInventory(UUID uuid, String world, String base64Inventory, Integer level, Float xp) {
-        HashMap<String, StorageObject.PlayerInventory> playerInventory =
-                this.getStorage().getPlayerInventory();
-
-        playerInventory.put(uuid + ":" + world, new StorageObject.PlayerInventory(base64Inventory, level, xp));
-        this.save();
-    }
-
-    public StorageObject.PlayerInventory getPlayerInventory(UUID uuid, String world) {
-        HashMap<String, StorageObject.PlayerInventory> playerInventory =
-                this.getStorage().getPlayerInventory();
-
-        return playerInventory.getOrDefault(uuid + ":" + world, null);
-    }
-
+    /**
+     * Worlds
+     */
     public void setWorld(String world, World.Environment environment, CustomGenerator generator) {
         HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
 
@@ -105,7 +86,24 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         this.save();
     }
 
+    /**
+     * World Groups
+     */
     public void setWorldGroup(String groupName, List<String> worlds) {
+        this.getStorage().getWorldGroups().put(groupName, worlds);
+        this.save();
+    }
+
+    public void addWorldToGroup(String groupName, String world) {
+        List<String> worlds = this.getStorage().getWorldGroups().getOrDefault(groupName, new ArrayList<>());
+        worlds.add(world);
+        this.getStorage().getWorldGroups().put(groupName, worlds);
+        this.save();
+    }
+
+    public void removeWorldFromGroup(String groupName, String world) {
+        List<String> worlds = this.getStorage().getWorldGroups().getOrDefault(groupName, new ArrayList<>());
+        worlds.remove(world);
         this.getStorage().getWorldGroups().put(groupName, worlds);
         this.save();
     }
