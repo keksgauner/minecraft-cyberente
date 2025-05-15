@@ -25,9 +25,13 @@ package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.config.FileConfig;
 import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
+import de.datenente.cyberente.hibernate.Databases;
+import de.datenente.cyberente.hibernate.database.PlayerDatabase;
+import de.datenente.cyberente.hibernate.mappings.SQLPlayer;
 import de.datenente.cyberente.utils.Base64Inventory;
 import de.datenente.cyberente.utils.Message;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -65,6 +69,16 @@ public class DeathListener implements Listener {
                 deathLocation.getBlockX(),
                 deathLocation.getBlockY(),
                 deathLocation.getBlockZ());
+    }
+
+    @EventHandler
+    public void onDeathDatabase(PlayerDeathEvent deathEvent) {
+        Player player = deathEvent.getEntity();
+
+        PlayerDatabase playerDatabase = Databases.getInstance().getPlayerDatabase();
+        SQLPlayer sqlPlayer = playerDatabase.getPlayer(player.getUniqueId());
+        sqlPlayer.setDeaths(sqlPlayer.getDeaths() + 1);
+        playerDatabase.savePlayer(sqlPlayer);
     }
 
     @EventHandler

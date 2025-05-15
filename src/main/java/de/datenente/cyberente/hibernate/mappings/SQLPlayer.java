@@ -74,4 +74,7 @@ public class SQLPlayer extends TimestampEntity implements Serializable {
 
     @Column(nullable = false)
     Long playtime = 0L;
+
+    @Column(nullable = false)
+    Long deaths = 0L;
 }
