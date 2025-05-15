@@ -84,9 +84,11 @@ public class WorldChangeListener implements Listener {
     @EventHandler
     public void onPerWorldMode(PlayerChangedWorldEvent changedWorldEvent) {
         Player player = changedWorldEvent.getPlayer();
+        World fromWorld = changedWorldEvent.getFrom();
         World world = player.getWorld();
 
-        if (world.getGenerator() == null) {
+        // Reset player effects & gamemode
+        if (fromWorld.getGenerator() instanceof MoonGenerator || fromWorld.getGenerator() instanceof MarsGenerator) {
             player.removePotionEffect(PotionEffectType.SLOW_FALLING);
             player.removePotionEffect(PotionEffectType.JUMP_BOOST);
             player.setGameMode(GameMode.SURVIVAL);

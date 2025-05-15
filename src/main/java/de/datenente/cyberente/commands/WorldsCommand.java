@@ -64,16 +64,14 @@ public class WorldsCommand extends Command {
             }
 
             if (type.equals("groups")) {
-                // TODO: refactor his
                 StringBuilder worlds = new StringBuilder();
-                for (String key : StorageConfig.getInstance().getWorldGroups().keySet()) {
-                    worlds.append(key).append(": ");;
-                    for(String value : StorageConfig.getInstance().getWorldGroups().get(key)) {
-                        worlds.append(value).append(", ");
-                    }
-                    worlds.append("| ");
-                }
-                Message.send(sender, "Worlds: {0}", worlds.toString());
+                StorageConfig.getInstance().getWorldGroups().forEach((key, values) -> {
+                    worlds.append(key)
+                            .append(": ")
+                            .append(String.join(", ", values))
+                            .append(" | ");
+                });
+                Message.send(sender, "Groups: {0}", worlds.toString());
                 return true;
             }
         }
@@ -81,6 +79,7 @@ public class WorldsCommand extends Command {
         if (args.length == 2) {
             String type = args[0].toLowerCase();
             String world = args[1].toLowerCase();
+
             switch (type) {
                 case "tp" -> {
                     if (!(sender instanceof Player player)) {
@@ -121,9 +120,9 @@ public class WorldsCommand extends Command {
         if (args.length == 3) {
             String type = args[0].toLowerCase();
 
-            if (type.equals("group")) {
+            if (type.equals("groups")) {
                 String action = args[1].toLowerCase();
-                String group = args[2].toUpperCase();
+                String group = args[2].toLowerCase();
                 StorageConfig storageConfig = StorageConfig.getInstance();
 
                 if (action.equals("add")) {
@@ -135,7 +134,7 @@ public class WorldsCommand extends Command {
                     Message.send(sender, "Die welten Gruppe {0} wurde hinzugefügt!", group);
                     return true;
                 }
-                if (args.equals("remove")) {
+                if (action.equals("remove")) {
                     if (!storageConfig.hasWorldGroups(group)) {
                         Message.send(sender, "Die welten Gruppe {0} existiert nicht!", group);
                         return true;
@@ -185,10 +184,10 @@ public class WorldsCommand extends Command {
                 Message.send(sender, "{0} World generated!", world);
                 return true;
             }
-            if (type.equals("groups")) {
+            if (type.equals("group")) {
                 String group = args[1].toLowerCase();
-                String action = args[2].toUpperCase();
-                String world = args[3].toUpperCase();
+                String action = args[2].toLowerCase();
+                String world = args[3].toLowerCase();
                 StorageConfig storageConfig = StorageConfig.getInstance();
 
                 if (action.equals("add")) {
@@ -200,7 +199,7 @@ public class WorldsCommand extends Command {
                     Message.send(sender, "Die Welt {0} wurde der gruppe {1} hinzugefügt!", world, group);
                     return true;
                 }
-                if (args.equals("remove")) {
+                if (action.equals("remove")) {
                     if (!storageConfig.hasWorldGroups(group)) {
                         Message.send(sender, "Die welten Gruppe {0} existiert nicht!", group);
                         return true;
@@ -212,7 +211,7 @@ public class WorldsCommand extends Command {
             }
         }
 
-        Message.send(sender, "Usage: /world <list>");
+        Message.send(sender, "Usage: /world <list/groups>");
         Message.send(sender, "Usage: /world <tp/remove/delete> <world>");
         Message.send(sender, "Usage: /world generate <world> <environment> <generator>");
         Message.send(sender, "Usage: /world groups <add/remove> <group>");
