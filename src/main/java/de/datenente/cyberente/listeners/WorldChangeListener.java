@@ -26,10 +26,11 @@ package de.datenente.cyberente.listeners;
 import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.FileConfig;
 import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
-import de.datenente.cyberente.utils.ItemStack2Base64;
+import de.datenente.cyberente.utils.Base64Inventory;
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
 import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
+import java.io.IOException;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -58,7 +59,7 @@ public class WorldChangeListener implements Listener {
         Inventory inventory = player.getInventory();
 
         // Inventory speichern
-        String base64 = ItemStack2Base64.itemStackArrayToBase64(inventory.getContents());
+        String base64 = Base64Inventory.itemStackArrayToBase64(inventory.getContents());
         FileConfig.setWorldInventory(player.getUniqueId(), fromWorld, base64, player.getLevel(), player.getExp());
 
         // Inventory leeren
@@ -75,7 +76,13 @@ public class WorldChangeListener implements Listener {
             return;
         }
 
-        ItemStack[] contents = ItemStack2Base64.itemStackArrayFromBase64(inventoryNew.getBase64());
+        ItemStack[] contents;
+        try {
+            contents = Base64Inventory.itemStackArrayFromBase64(inventoryNew.getBase64());
+        } catch (IOException ex) {
+            Message.send(player, "<red>Das Inventar konnte nicht geladen werden!</red>");
+            return;
+        }
         inventory.setContents(contents);
         player.setLevel(inventoryNew.getLevel());
         player.setExp(inventoryNew.getXp());

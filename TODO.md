@@ -22,6 +22,7 @@
 - [ ] **/playtime** - Zeigt die Spielzeit eines Spielers an
 - [ ] **/death** - Zeigt die Tode eines Spielers an
 - [ ] **/info** - Zeigt Infos über den Server/Spieler an
+- [ ] **/invsee** - Zeigt das Inventar eines Spielers an
 
 ---
 

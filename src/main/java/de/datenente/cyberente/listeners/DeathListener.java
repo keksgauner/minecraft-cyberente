@@ -25,8 +25,9 @@ package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.config.FileConfig;
 import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
-import de.datenente.cyberente.utils.ItemStack2Base64;
+import de.datenente.cyberente.utils.Base64Inventory;
 import de.datenente.cyberente.utils.Message;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -74,7 +75,7 @@ public class DeathListener implements Listener {
 
         List<ItemStack> drops = deathEvent.getDrops();
         ItemStack[] contents = drops.toArray(new ItemStack[0]);
-        String base64 = ItemStack2Base64.itemStackArrayToBase64(contents);
+        String base64 = Base64Inventory.itemStackArrayToBase64(contents);
         int level = deathEvent.getPlayer().getLevel();
         float exp = deathEvent.getPlayer().getExp();
 
@@ -116,10 +117,16 @@ public class DeathListener implements Listener {
 
         PlayerInventoryObject deathSkull = FileConfig.getDeathSkull(clickedBlock.getLocation());
         if (deathSkull == null) {
-            Message.send(player, "<red>Es ist kein Inventar vorhanden!");
+            Message.send(player, "<red>Es ist kein Inventar vorhanden!</red>");
             return;
         }
-        ItemStack[] contents = ItemStack2Base64.itemStackArrayFromBase64(deathSkull.getBase64());
+        ItemStack[] contents;
+        try {
+            contents = Base64Inventory.itemStackArrayFromBase64(deathSkull.getBase64());
+        } catch (IOException ex) {
+            Message.send(player, "<red>Das Inventar konnte nicht geladen werden!</red>");
+            return;
+        }
         if (contents == null) return;
         int level = deathSkull.getLevel();
         float xp = deathSkull.getXp();

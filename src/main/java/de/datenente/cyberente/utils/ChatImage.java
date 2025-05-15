@@ -37,7 +37,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Image2Chat {
+public class ChatImage {
 
     /**
      * Send the head image to the player

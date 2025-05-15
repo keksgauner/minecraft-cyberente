@@ -24,7 +24,7 @@
 package de.datenente.cyberente.commands;
 
 import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.utils.Image2Chat;
+import de.datenente.cyberente.utils.ChatImage;
 import de.datenente.cyberente.utils.Message;
 import java.awt.*;
 import java.io.IOException;
@@ -50,17 +50,17 @@ public class ChatImageCommand extends Command {
             // BufferedImage image = ImageIO.read(stream);
 
             try {
-                Image image = Image2Chat.imageFromURL(args[0]);
+                Image image = ChatImage.imageFromURL(args[0]);
                 if (image == null) {
                     Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
                     return true;
                 }
 
                 if (sender instanceof ConsoleCommandSender consoleCommandSender)
-                    Image2Chat.sendImage(consoleCommandSender, image, 50, 30);
+                    ChatImage.sendImage(consoleCommandSender, image, 50, 30);
 
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
-                    Image2Chat.sendImage(onlinePlayer, image, 30, 20);
+                    ChatImage.sendImage(onlinePlayer, image, 30, 20);
                 }
             } catch (IOException ex) {
                 Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
@@ -75,17 +75,17 @@ public class ChatImageCommand extends Command {
                 int width = Integer.parseInt(args[1]);
                 int height = Integer.parseInt(args[2]);
 
-                Image image = Image2Chat.imageFromURL(args[0]);
+                Image image = ChatImage.imageFromURL(args[0]);
                 if (image == null) {
                     Message.send(sender, "<red>Das Bild konnte nicht geladen werden!</red>");
                     return true;
                 }
 
                 if (sender instanceof ConsoleCommandSender consoleCommandSender)
-                    Image2Chat.sendImage(consoleCommandSender, image, width, height);
+                    ChatImage.sendImage(consoleCommandSender, image, width, height);
 
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
-                    Image2Chat.sendImage(onlinePlayer, image, width, height);
+                    ChatImage.sendImage(onlinePlayer, image, width, height);
                 }
             } catch (NumberFormatException ex) {
                 Message.send(sender, "<red>Die Breite und Höhe müssen Zahlen sein!</red>");
