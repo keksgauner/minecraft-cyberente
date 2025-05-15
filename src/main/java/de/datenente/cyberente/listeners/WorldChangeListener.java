@@ -25,6 +25,7 @@ package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.config.FileConfig;
+import de.datenente.cyberente.config.StorageConfig;
 import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
 import de.datenente.cyberente.utils.Base64Inventory;
 import de.datenente.cyberente.utils.Message;
@@ -48,19 +49,24 @@ public class WorldChangeListener implements Listener {
     public void onPerWorldInventory(PlayerChangedWorldEvent changedWorldEvent) {
         Player player = changedWorldEvent.getPlayer();
 
-        String fromWorld = changedWorldEvent.getFrom().getName(); // To Save
-        String world = player.getWorld().getName(); // To Load
+        World fromWorld = changedWorldEvent.getFrom(); // To Save
+        World world = player.getWorld(); // To Load
 
-        // Todo: groups
-        if (player.getWorld().getGenerator() == null) {
-            return;
+        StorageConfig storageConfig = StorageConfig.getInstance();
+        String saveKey = storageConfig.getWorldGroupKey(fromWorld.getName());
+        if (saveKey == null) {
+            saveKey = "default";
+        }
+        String loadKey = storageConfig.getWorldGroupKey(world.getName());
+        if (loadKey == null) {
+            loadKey = "default";
         }
 
         Inventory inventory = player.getInventory();
 
         // Inventory speichern
         String base64 = Base64Inventory.itemStackArrayToBase64(inventory.getContents());
-        FileConfig.setWorldInventory(player.getUniqueId(), fromWorld, base64, player.getLevel(), player.getExp());
+        FileConfig.setWorldInventory(player.getUniqueId(), saveKey, base64, player.getLevel(), player.getExp());
 
         // Inventory leeren
         inventory.clear();
@@ -68,7 +74,7 @@ public class WorldChangeListener implements Listener {
         player.setExp(0);
 
         // Inventory laden
-        PlayerInventoryObject inventoryNew = FileConfig.getWorldInventory(player.getUniqueId(), world);
+        PlayerInventoryObject inventoryNew = FileConfig.getWorldInventory(player.getUniqueId(), loadKey);
         if (inventoryNew == null) {
             CyberEnte.getInstance()
                     .getLogger()

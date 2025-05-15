@@ -69,6 +69,13 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         this.save();
     }
 
+    public void removeWorld(String world) {
+        HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
+
+        worldsMap.remove(world);
+        this.save();
+    }
+
     public StorageObject.Worlds getWorld(String world) {
         HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
 
@@ -79,22 +86,24 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         return this.getStorage().getWorlds();
     }
 
-    public void removeWorld(String world) {
-        HashMap<String, StorageObject.Worlds> worldsMap = this.getStorage().getWorlds();
-
-        worldsMap.remove(world);
+    /**
+     * World Groups
+     */
+    public void addWorldGroup(String groupName) {
+        this.getStorage().getWorldGroups().put(groupName, new ArrayList<>());
         this.save();
     }
 
-    /**
-     * World Groups
-     * Group = Element in den Gruppen
-     * Groups = Die Gruppen
-     */
     public void addWorldGroup(String groupName, String world) {
         List<String> worlds = this.getStorage().getWorldGroups().getOrDefault(groupName, new ArrayList<>());
         worlds.add(world);
         this.getStorage().getWorldGroups().put(groupName, worlds);
+        this.save();
+    }
+
+    public void removeWorldGroup(String groupName) {
+        HashMap<String, List<String>> worldGroups = this.getStorage().getWorldGroups();
+        worldGroups.remove(groupName);
         this.save();
     }
 
@@ -109,32 +118,21 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         return this.getStorage().getWorldGroups().getOrDefault(groupName, null);
     }
 
-    public HashMap<String, List<String>> getWorldGroups() {
-        return this.getStorage().getWorldGroups();
-    }
-
-    public void addWorldGroups(String groupName) {
-        this.getStorage().getWorldGroups().put(groupName, new ArrayList<>());
-        this.save();
-    }
-
-    public void removeWorldGroups(String groupName) {
-        HashMap<String, List<String>> worldGroups = this.getStorage().getWorldGroups();
-        worldGroups.remove(groupName);
-        this.save();
-    }
-
-    public boolean hasWorldGroups(String groupName) {
+    public boolean hasWorldGroup(String groupName) {
         HashMap<String, List<String>> worldGroups = this.getStorage().getWorldGroups();
         return worldGroups.containsKey(groupName);
     }
 
-    public String getWorldGroups(String world) {
+    public String getWorldGroupKey(String world) {
         for (String group : this.getStorage().getWorldGroups().keySet()) {
             if (this.getStorage().getWorldGroups().get(group).contains(world)) {
                 return group;
             }
         }
         return null;
+    }
+
+    public HashMap<String, List<String>> getWorldGroups() {
+        return this.getStorage().getWorldGroups();
     }
 }

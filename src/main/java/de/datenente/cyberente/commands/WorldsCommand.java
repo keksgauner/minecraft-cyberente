@@ -126,20 +126,20 @@ public class WorldsCommand extends Command {
                 StorageConfig storageConfig = StorageConfig.getInstance();
 
                 if (action.equals("add")) {
-                    if (storageConfig.hasWorldGroups(group)) {
+                    if (storageConfig.hasWorldGroup(group)) {
                         Message.send(sender, "Die welten Gruppe {0} existiert bereits!", group);
                         return true;
                     }
-                    storageConfig.addWorldGroups(group);
+                    storageConfig.addWorldGroup(group);
                     Message.send(sender, "Die welten Gruppe {0} wurde hinzugefügt!", group);
                     return true;
                 }
                 if (action.equals("remove")) {
-                    if (!storageConfig.hasWorldGroups(group)) {
+                    if (!storageConfig.hasWorldGroup(group)) {
                         Message.send(sender, "Die welten Gruppe {0} existiert nicht!", group);
                         return true;
                     }
-                    storageConfig.removeWorldGroups(group);
+                    storageConfig.removeWorldGroup(group);
                     Message.send(sender, "Die welten Gruppe {0} wurde gelöscht!", group);
                     return true;
                 }
@@ -191,8 +191,8 @@ public class WorldsCommand extends Command {
                 StorageConfig storageConfig = StorageConfig.getInstance();
 
                 if (action.equals("add")) {
-                    if (!storageConfig.hasWorldGroups(group)) {
-                        Message.send(sender, "Die welten Gruppe {0} existiert nicht!", group);
+                    if (storageConfig.getWorldGroupKey(world) != null) {
+                        Message.send(sender, "Die Welt {0} existiert bereits in einer Gruppe!", world);
                         return true;
                     }
                     storageConfig.addWorldGroup(group, world);
@@ -200,7 +200,7 @@ public class WorldsCommand extends Command {
                     return true;
                 }
                 if (action.equals("remove")) {
-                    if (!storageConfig.hasWorldGroups(group)) {
+                    if (!storageConfig.hasWorldGroup(group)) {
                         Message.send(sender, "Die welten Gruppe {0} existiert nicht!", group);
                         return true;
                     }
