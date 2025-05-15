@@ -64,7 +64,16 @@ public class WorldsCommand extends Command {
             }
 
             if (type.equals("groups")) {
-                // TODO: Implement groups
+                // TODO: refactor his
+                StringBuilder worlds = new StringBuilder();
+                for (String key : StorageConfig.getInstance().getWorldGroups().keySet()) {
+                    worlds.append(key).append(": ");;
+                    for(String value : StorageConfig.getInstance().getWorldGroups().get(key)) {
+                        worlds.append(value).append(", ");
+                    }
+                    worlds.append("| ");
+                }
+                Message.send(sender, "Worlds: {0}", worlds.toString());
                 return true;
             }
         }
@@ -205,9 +214,9 @@ public class WorldsCommand extends Command {
 
         Message.send(sender, "Usage: /world <list>");
         Message.send(sender, "Usage: /world <tp/remove/delete> <world>");
-        Message.send(sender, "Usage: /world <generate> <world> <environment> <generator>");
-        Message.send(sender, "Usage: /world <groups> <add/remove> <group>");
-        Message.send(sender, "Usage: /world <group> <group> <add/remove> <world>");
+        Message.send(sender, "Usage: /world generate <world> <environment> <generator>");
+        Message.send(sender, "Usage: /world groups <add/remove> <group>");
+        Message.send(sender, "Usage: /world group <group> <add/remove> <world>");
         return true;
     }
 
