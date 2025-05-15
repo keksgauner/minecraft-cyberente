@@ -107,7 +107,6 @@ public class WorldChangeListener implements Listener {
             player.removePotionEffect(PotionEffectType.SLOW_FALLING);
             player.removePotionEffect(PotionEffectType.JUMP_BOOST);
             player.setGameMode(GameMode.SURVIVAL);
-            return;
         }
 
         if (world.getGenerator() instanceof MoonGenerator) {
