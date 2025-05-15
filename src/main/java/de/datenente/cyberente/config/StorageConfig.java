@@ -88,20 +88,17 @@ public class StorageConfig extends JsonDocument<StorageObject> {
 
     /**
      * World Groups
+     * Group = Element in den Gruppen
+     * Groups = Die Gruppen
      */
-    public void setWorldGroup(String groupName, List<String> worlds) {
-        this.getStorage().getWorldGroups().put(groupName, worlds);
-        this.save();
-    }
-
-    public void addWorldToGroup(String groupName, String world) {
+    public void addWorldGroup(String groupName, String world) {
         List<String> worlds = this.getStorage().getWorldGroups().getOrDefault(groupName, new ArrayList<>());
         worlds.add(world);
         this.getStorage().getWorldGroups().put(groupName, worlds);
         this.save();
     }
 
-    public void removeWorldFromGroup(String groupName, String world) {
+    public void removeWorldGroup(String groupName, String world) {
         List<String> worlds = this.getStorage().getWorldGroups().getOrDefault(groupName, new ArrayList<>());
         worlds.remove(world);
         this.getStorage().getWorldGroups().put(groupName, worlds);
@@ -110,5 +107,34 @@ public class StorageConfig extends JsonDocument<StorageObject> {
 
     public List<String> getWorldGroup(String groupName) {
         return this.getStorage().getWorldGroups().getOrDefault(groupName, null);
+    }
+
+    public HashMap<String, List<String>> getWorldGroups() {
+        return this.getStorage().getWorldGroups();
+    }
+
+    public void addWorldGroups(String groupName) {
+        this.getStorage().getWorldGroups().put(groupName, new ArrayList<>());
+        this.save();
+    }
+
+    public void removeWorldGroups(String groupName) {
+        HashMap<String, List<String>> worldGroups = this.getStorage().getWorldGroups();
+        worldGroups.remove(groupName);
+        this.save();
+    }
+
+    public boolean hasWorldGroups(String groupName) {
+        HashMap<String, List<String>> worldGroups = this.getStorage().getWorldGroups();
+        return worldGroups.containsKey(groupName);
+    }
+
+    public String getWorldGroups(String world) {
+        for (String group : this.getStorage().getWorldGroups().keySet()) {
+            if (this.getStorage().getWorldGroups().get(group).contains(world)) {
+                return group;
+            }
+        }
+        return null;
     }
 }

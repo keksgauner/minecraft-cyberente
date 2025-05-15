@@ -63,7 +63,7 @@ public class WorldsCommand extends Command {
                 return true;
             }
 
-            if( type.equals("groups")) {
+            if (type.equals("groups")) {
                 // TODO: Implement groups
                 return true;
             }
@@ -109,6 +109,35 @@ public class WorldsCommand extends Command {
             }
         }
 
+        if (args.length == 3) {
+            String type = args[0].toLowerCase();
+
+            if (type.equals("group")) {
+                String action = args[1].toLowerCase();
+                String group = args[2].toUpperCase();
+                StorageConfig storageConfig = StorageConfig.getInstance();
+
+                if (action.equals("add")) {
+                    if (storageConfig.hasWorldGroups(group)) {
+                        Message.send(sender, "Die welten Gruppe {0} existiert bereits!", group);
+                        return true;
+                    }
+                    storageConfig.addWorldGroups(group);
+                    Message.send(sender, "Die welten Gruppe {0} wurde hinzugefügt!", group);
+                    return true;
+                }
+                if (args.equals("remove")) {
+                    if (!storageConfig.hasWorldGroups(group)) {
+                        Message.send(sender, "Die welten Gruppe {0} existiert nicht!", group);
+                        return true;
+                    }
+                    storageConfig.removeWorldGroups(group);
+                    Message.send(sender, "Die welten Gruppe {0} wurde gelöscht!", group);
+                    return true;
+                }
+            }
+        }
+
         if (args.length == 4) {
             String type = args[0].toLowerCase();
 
@@ -147,19 +176,38 @@ public class WorldsCommand extends Command {
                 Message.send(sender, "{0} World generated!", world);
                 return true;
             }
-
-            if(type.equals("groups")) {
+            if (type.equals("groups")) {
                 String group = args[1].toLowerCase();
                 String action = args[2].toUpperCase();
                 String world = args[3].toUpperCase();
-                // TODO: Implement groups
+                StorageConfig storageConfig = StorageConfig.getInstance();
+
+                if (action.equals("add")) {
+                    if (!storageConfig.hasWorldGroups(group)) {
+                        Message.send(sender, "Die welten Gruppe {0} existiert nicht!", group);
+                        return true;
+                    }
+                    storageConfig.addWorldGroup(group, world);
+                    Message.send(sender, "Die Welt {0} wurde der gruppe {1} hinzugefügt!", world, group);
+                    return true;
+                }
+                if (args.equals("remove")) {
+                    if (!storageConfig.hasWorldGroups(group)) {
+                        Message.send(sender, "Die welten Gruppe {0} existiert nicht!", group);
+                        return true;
+                    }
+                    storageConfig.removeWorldGroup(group, world);
+                    Message.send(sender, "Die Welt {0} wurde von der gruppe {1} gelöscht!", world, group);
+                    return true;
+                }
             }
         }
 
         Message.send(sender, "Usage: /world <list>");
         Message.send(sender, "Usage: /world <tp/remove/delete> <world>");
         Message.send(sender, "Usage: /world <generate> <world> <environment> <generator>");
-        Message.send(sender, "Usage: /world <groups> <group> <add/remove> <world>");
+        Message.send(sender, "Usage: /world <groups> <add/remove> <group>");
+        Message.send(sender, "Usage: /world <group> <group> <add/remove> <world>");
         return true;
     }
 
@@ -172,7 +220,7 @@ public class WorldsCommand extends Command {
         }
 
         if (args.length == 1) {
-            return Message.filter(List.of("tp", "generate", "remove", "delete", "list", "groups"), args[0]);
+            return Message.filter(List.of("tp", "generate", "remove", "delete", "list", "groups", "group"), args[0]);
         }
 
         if (args.length == 2) {
@@ -181,13 +229,19 @@ public class WorldsCommand extends Command {
                 return Message.filter(
                         Bukkit.getWorlds().stream().map(World::getName).toList(), args[1]);
             }
-            if(type.equals("groups")) {
-                // TODO: Implement groups
+            if (type.equals("groups")) {
+                return Message.filter(List.of("add", "remove"), args[1]);
+            }
+            if (type.equals("group")) {
+                StorageConfig storageConfig = StorageConfig.getInstance();
+                return Message.filter(
+                        storageConfig.getWorldGroups().keySet().stream().toList(), args[1]);
             }
         }
 
         if (args.length == 3) {
             String type = args[0].toLowerCase();
+            String action = args[1].toLowerCase();
             if (type.equals("generate")) {
                 return Message.filter(
                         Arrays.stream(World.Environment.values())
@@ -195,8 +249,13 @@ public class WorldsCommand extends Command {
                                 .toList(),
                         args[2]);
             }
-            if(type.equals("groups")) {
-                return Message.filter(List.of("add","remove"), args[2]);
+            if (type.equals("groups") && action.equals("remove")) {
+                StorageConfig storageConfig = StorageConfig.getInstance();
+                return Message.filter(
+                        storageConfig.getWorldGroups().keySet().stream().toList(), args[2]);
+            }
+            if (type.equals("group")) {
+                return Message.filter(List.of("add", "remove"), args[2]);
             }
         }
 
@@ -209,7 +268,7 @@ public class WorldsCommand extends Command {
                                 .toList(),
                         args[3]);
             }
-            if(type.equals("groups")) {
+            if (type.equals("group")) {
                 return Message.filter(
                         Bukkit.getWorlds().stream().map(World::getName).toList(), args[3]);
             }
