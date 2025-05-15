@@ -62,6 +62,8 @@ public class WorldChangeListener implements Listener {
             loadKey = "default";
         }
 
+        if (saveKey.equals(loadKey)) return;
+
         Inventory inventory = player.getInventory();
 
         // Inventory speichern
