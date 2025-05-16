@@ -24,6 +24,7 @@
 package de.datenente.cyberente.utils.worlds.populator;
 
 import java.util.Random;
+import org.bukkit.Material;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
@@ -41,10 +42,26 @@ public class CraterPopulator extends BlockPopulator {
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
 
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                int realX = worldX + x;
-                int realZ = worldZ + z;
+        // Wahrscheinlichkeit für einen Krater (z. B. 5%)
+        double craterProbability = 0.05;
+
+        // Prüfen, ob ein Krater erstellt werden soll
+        if (random.nextDouble() < craterProbability) {
+            // Zufällige Position im Chunk
+            int x = worldX + random.nextInt(16);
+            int z = worldZ + random.nextInt(16);
+            int y = limitedRegion.getHighestBlockYAt(x, z);
+
+            // Krater erstellen (z. B. als einfache Vertiefung)
+            int craterRadius = 3 + random.nextInt(3); // Radius zwischen 3 und 5
+            for (int dx = -craterRadius; dx <= craterRadius; dx++) {
+                for (int dz = -craterRadius; dz <= craterRadius; dz++) {
+                    if (dx * dx + dz * dz <= craterRadius * craterRadius) {
+                        for (int dy = 0; dy < 3; dy++) { // Tiefe des Kraters
+                            limitedRegion.setType(x + dx, y - dy, z + dz, Material.AIR);
+                        }
+                    }
+                }
             }
         }
     }

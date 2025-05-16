@@ -23,6 +23,7 @@
  */
 package de.datenente.cyberente.utils.worlds;
 
+import de.datenente.cyberente.utils.worlds.generators.LuckyBlockGenerator;
 import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
 import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
 import de.datenente.cyberente.utils.worlds.generators.MultiNoiseGenerator;
@@ -33,6 +34,7 @@ import org.bukkit.generator.ChunkGenerator;
 public enum CustomGenerator {
     MOON(new MoonGenerator()),
     MARS(new MarsGenerator()),
+    LUCKY_BLOCK(new LuckyBlockGenerator()),
     TEST(new MultiNoiseGenerator()),
 
     NONE(null);

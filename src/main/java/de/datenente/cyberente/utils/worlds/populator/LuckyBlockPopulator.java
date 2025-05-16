@@ -21,23 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.utils.luckyblocks;
+package de.datenente.cyberente.utils.worlds.populator;
 
 import java.util.Random;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
+import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.LimitedRegion;
+import org.bukkit.generator.WorldInfo;
+import org.jetbrains.annotations.NotNull;
 
-public class LuckyBlockGenerator {
+public class LuckyBlockPopulator extends BlockPopulator {
 
-    private final Random random = new Random();
+    @Override
+    public void populate(
+            @NotNull WorldInfo worldInfo,
+            @NotNull Random random,
+            int chunkX,
+            int chunkZ,
+            @NotNull LimitedRegion limitedRegion) {
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
 
-    public void generateLuckyBlocks(World world, int count, int minX, int maxX, int minZ, int maxZ, int y) {
-        for (int i = 0; i < count; i++) {
-            int x = random.nextInt(maxX - minX + 1) + minX;
-            int z = random.nextInt(maxZ - minZ + 1) + minZ;
-            Block block = world.getBlockAt(x, y, z);
-            block.setType(Material.GOLD_BLOCK); // LuckyBlock-Symbol
+        // Anzahl der Schammblöcke, die pro Chunk generiert werden sollen
+        int spongeCount = 5;
+
+        for (int i = 0; i < spongeCount; i++) {
+            // Zufällige X-, Y- und Z-Koordinaten innerhalb des Chunks
+            int x = worldX + random.nextInt(16);
+            int z = worldZ + random.nextInt(16);
+            int y = limitedRegion.getHighestBlockYAt(x, z) + 1;
+
+            // Setze den Block auf Schamm
+            limitedRegion.setType(x, y, z, Material.SPONGE);
         }
     }
 }
