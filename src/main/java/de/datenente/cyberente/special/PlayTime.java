@@ -32,7 +32,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PlayTime {
-    public static void startTimer() {
+    public static void startPlayTimeTask() {
         CyberEnte.getInstance()
                 .getScheduledExecutorService()
                 .schedule(

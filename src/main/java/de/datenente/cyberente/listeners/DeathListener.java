@@ -31,7 +31,6 @@ import de.datenente.cyberente.hibernate.mappings.SQLPlayer;
 import de.datenente.cyberente.utils.Base64Inventory;
 import de.datenente.cyberente.utils.Message;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;

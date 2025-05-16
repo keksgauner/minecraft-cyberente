@@ -26,6 +26,7 @@ package de.datenente.cyberente.listeners;
 import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.hibernate.database.PlayerDatabase;
 import de.datenente.cyberente.hibernate.mappings.SQLPlayer;
+import de.datenente.cyberente.special.AFKDetector;
 import de.datenente.cyberente.utils.Message;
 import java.time.Instant;
 import java.time.LocalTime;
@@ -83,5 +84,12 @@ public class JoinLeaveListener implements Listener {
         SQLPlayer sqlPlayer = playerDatabase.getPlayer(player.getUniqueId());
         sqlPlayer.setLastLeave(Instant.now());
         playerDatabase.savePlayer(sqlPlayer);
+    }
+
+    @EventHandler
+    public void onPlayerQuitCleanUp(PlayerQuitEvent quitEvent) {
+        Player player = quitEvent.getPlayer();
+
+        AFKDetector.getInstance().cleanUp(player.getUniqueId());
     }
 }

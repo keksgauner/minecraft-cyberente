@@ -28,6 +28,7 @@ import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
 import de.datenente.cyberente.recipes.PotionRecipe;
+import de.datenente.cyberente.special.AFKDetector;
 import de.datenente.cyberente.special.PlayTime;
 import de.datenente.cyberente.special.WorldLoader;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
@@ -75,7 +76,8 @@ public final class CyberEnte extends JavaPlugin {
         // Special Features
         BreadRecipe.register();
         PotionRecipe.register();
-        PlayTime.startTimer();
+        PlayTime.startPlayTimeTask();
+        AFKDetector.getInstance().startAFKCheckTask();
 
         Bukkit.getScheduler().runTask(this, WorldLoader::load);
     }
@@ -108,6 +110,7 @@ public final class CyberEnte extends JavaPlugin {
         pluginManager.registerEvents(new DropChestListener(), this);
         // pluginManager.registerEvents(new CheatBlockListener(), this);
         pluginManager.registerEvents(new JoinLeaveListener(), this);
+        pluginManager.registerEvents(new MoveListener(), this);
         pluginManager.registerEvents(new ReplantListener(), this);
         pluginManager.registerEvents(new StairSittingListener(), this);
         pluginManager.registerEvents(new VehicleListener(), this);
