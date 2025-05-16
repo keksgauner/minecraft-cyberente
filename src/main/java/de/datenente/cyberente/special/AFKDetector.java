@@ -39,7 +39,7 @@ public class AFKDetector {
     final HashMap<UUID, Long> lastMovement = new HashMap<>();
     final HashMap<UUID, Boolean> status = new HashMap<>();
 
-    static final long AFK_TIME_SECONDS = 10;
+    static final long AFK_TIME_SECONDS = 60 * 5; // 5 minutes
 
     static AFKDetector instance;
 
@@ -85,6 +85,7 @@ public class AFKDetector {
         // Set last movement to now if not set
         if (last == 0L) {
             detectedMovement(player);
+            return System.currentTimeMillis();
         }
         return last;
     }
