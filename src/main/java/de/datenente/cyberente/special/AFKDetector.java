@@ -61,17 +61,11 @@ public class AFKDetector {
 
     public void detectedMovement(Player player) {
         UUID uuid = player.getUniqueId();
-        updateLastMovement(uuid);
-
-        afkStatus(player, false);
-    }
-
-    public void updateLastMovement(UUID uuid) {
         this.getLastMovement().put(uuid, System.currentTimeMillis());
-    }
 
-    public long getLastMovement(UUID uuid) {
-        return this.getLastMovement().getOrDefault(uuid, System.currentTimeMillis());
+        if(afkStatus(player.getUniqueId())) {
+            afkStatus(player, false);
+        }
     }
 
     public boolean afkStatus(UUID uuid) {
@@ -110,10 +104,12 @@ public class AFKDetector {
                 .getScheduledExecutorService()
                 .schedule(
                         () -> {
+                            long now = System.currentTimeMillis();
+
                             for (Player player : Bukkit.getOnlinePlayers()) {
                                 UUID uuid = player.getUniqueId();
-                                long last = getLastMovement(uuid);
-                                long diff = (System.currentTimeMillis() - last) / 1000;
+                                long last = lastMovement.getOrDefault(uuid, now);
+                                long diff = (now - last) / 1000;
 
                                 if (diff >= AFK_TIME_SECONDS && !afkStatus(uuid)) {
                                     afkStatus(player, true);
