@@ -35,7 +35,7 @@ public class PlayTime {
     public static void startPlayTimeTask() {
         CyberEnte.getInstance()
                 .getScheduledExecutorService()
-                .schedule(
+                .scheduleAtFixedRate(
                         () -> {
                             PlayerDatabase playerDatabase =
                                     Databases.getInstance().getPlayerDatabase();
@@ -47,6 +47,7 @@ public class PlayTime {
                                 }
                             }
                         },
+                        0L,
                         1L,
                         TimeUnit.MINUTES);
     }

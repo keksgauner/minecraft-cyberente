@@ -45,7 +45,7 @@ public class AFKCommand extends Command {
         }
 
         AFKDetector afkDetector = AFKDetector.getInstance();
-        afkDetector.afkStatus(player, !afkDetector.afkStatus(player.getUniqueId()));
+        afkDetector.status(player, !afkDetector.status(player.getUniqueId()));
 
         return true;
     }

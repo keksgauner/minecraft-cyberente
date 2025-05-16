@@ -50,29 +50,79 @@ public class AFKDetector {
         return instance;
     }
 
+    /**
+     * Cleans up the AFK status of a player.
+     * @param player The player to clean up.
+     */
     public void cleanUp(Player player) {
         UUID uuid = player.getUniqueId();
         this.getLastMovement().remove(uuid);
         this.getStatus().remove(uuid);
 
-        Team team = getAFKTeam(player);
-        team.removePlayer(player);
+        Team team = getTeam(player);
+        team.unregister();
     }
 
+    /**
+     * Updates players last movement time.
+     * @param player The player who moved.
+     */
     public void detectedMovement(Player player) {
         UUID uuid = player.getUniqueId();
         this.getLastMovement().put(uuid, System.currentTimeMillis());
-
-        if (afkStatus(player.getUniqueId())) {
-            afkStatus(player, false);
-        }
+        status(player, false);
     }
 
-    public boolean afkStatus(UUID uuid) {
+    /**
+     * Returns the last movement time of a player.
+     * If the player has not moved, it sets the last movement time to now.
+     * @param player The player to check.
+     * @return The last movement time of the player.
+     */
+    public long lastMovement(Player player) {
+        UUID uuid = player.getUniqueId();
+        long last = this.getLastMovement().getOrDefault(uuid, 0L);
+        // Set last movement to now if not set
+        if (last == 0L) {
+            detectedMovement(player);
+        }
+        return last;
+    }
+    /**
+     * Checks if a player is AFK.
+     * @param uuid The UUID of the player to check.
+     * @return True if the player is AFK, false otherwise.
+     */
+    public boolean status(UUID uuid) {
         return this.getStatus().getOrDefault(uuid, false);
     }
 
-    public Team getAFKTeam(Player player) {
+    /**
+     * Sets the AFK status of a player.
+     * @param player The player to set the status for.
+     * @param status The AFK status to set.
+     */
+    public void status(Player player, boolean status) {
+        UUID uuid = player.getUniqueId();
+        boolean oldStatus = this.getStatus().getOrDefault(uuid, false);
+        if (oldStatus == status) {
+            return;
+        }
+
+        this.getStatus().put(uuid, status);
+        // AFK Message & Info
+        if (status) {
+            Message.broadcast("{0} ist jetzt AFK.", player.getName());
+
+            updateTeam(player);
+            return;
+        }
+        Message.broadcast("{0} ist nicht mehr AFK.", player.getName());
+
+        updateTeam(player);
+    }
+
+    public Team getTeam(Player player) {
         Scoreboard scoreboard = player.getScoreboard();
         Team team = scoreboard.getTeam("AFK");
         if (team == null) {
@@ -82,41 +132,31 @@ public class AFKDetector {
         return team;
     }
 
-    public void afkStatus(Player player, boolean status) {
-        UUID uuid = player.getUniqueId();
-        this.getStatus().put(uuid, status);
-        // AFK Message & Info
-        if (status) {
-            Message.broadcast("{0} ist jetzt AFK.", player.getName());
-
-            Team team = getAFKTeam(player);
-            team.addPlayer(player);
-            return;
+    public void updateTeam(Player player) {
+        for (Player other : Bukkit.getOnlinePlayers()) {
+            Team team = getTeam(other);
+            if (status(player.getUniqueId())) {
+                team.addPlayer(player);
+                continue;
+            }
+            team.removePlayer(player);
         }
-        Message.broadcast("{0} ist nicht mehr AFK.", player.getName());
+    }
 
-        Team team = getAFKTeam(player);
-        team.removePlayer(player);
+    public void checkStatus(Player player) {
+        long now = System.currentTimeMillis();
+        long last = lastMovement(player);
+        long diff = (now - last) / 1000;
+
+        if (diff >= AFK_TIME_SECONDS) {
+            status(player, true);
+        }
     }
 
     public void startAFKCheckTask() {
         CyberEnte.getInstance()
                 .getScheduledExecutorService()
-                .schedule(
-                        () -> {
-                            long now = System.currentTimeMillis();
-
-                            for (Player player : Bukkit.getOnlinePlayers()) {
-                                UUID uuid = player.getUniqueId();
-                                long last = lastMovement.getOrDefault(uuid, now);
-                                long diff = (now - last) / 1000;
-
-                                if (diff >= AFK_TIME_SECONDS && !afkStatus(uuid)) {
-                                    afkStatus(player, true);
-                                }
-                            }
-                        },
-                        1L,
-                        TimeUnit.SECONDS);
+                .scheduleAtFixedRate(
+                        () -> Bukkit.getOnlinePlayers().forEach(this::checkStatus), 0L, 1L, TimeUnit.SECONDS);
     }
 }

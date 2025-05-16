@@ -55,13 +55,19 @@ public class JoinLeaveListener implements Listener {
     @EventHandler
     public void onPlayerJoinDatabase(PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
-        String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-        Component finalMessage = Message.text(
-                "<dark_gray>[</dark_gray><green>+</green><dark_gray>]</dark_gray> <hover:show_text:'<gold>{0}</gold>'><gradient:#ADF3FD:#ADF3FD>{1}</gradient></hover>",
-                currentTime, player.getName());
+        PlayerDatabase playerDatabase = Databases.getInstance().getPlayerDatabase();
+        SQLPlayer sqlPlayer = playerDatabase.createOrUpdate(player.getUniqueId(), player.getName());
+        sqlPlayer.setLastJoin(Instant.now());
+        playerDatabase.savePlayer(sqlPlayer);
+    }
 
-        joinEvent.joinMessage(finalMessage);
+    @EventHandler
+    public void onPlayerJoinSpecial(PlayerJoinEvent joinEvent) {
+        Player player = joinEvent.getPlayer();
+
+        AFKDetector afkDetector = AFKDetector.getInstance();
+        afkDetector.updateTeam(player);
     }
 
     @EventHandler
