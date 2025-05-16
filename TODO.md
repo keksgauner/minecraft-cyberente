@@ -14,7 +14,7 @@
 - [x] **/clearchat** – Löscht den Chat für alle Spieler
 - [x] **/ping** – Zeigt den Ping eines Spielers (nur Java-Spieler)
 - [X] **/imagechat** – Bilder im Chat senden können
-- [ ] **/afk** – Setzt den Spieler in den AFK Modus
+- [X] **/afk** – Setzt den Spieler in den AFK Modus
 - [ ] **/vehicle** - Spawnt ein Auto
 - [X] **/worlds** - Teleportiert/Generiert andere Welten
 - [X] **/trash** - Öffnet einen Mülleimer
