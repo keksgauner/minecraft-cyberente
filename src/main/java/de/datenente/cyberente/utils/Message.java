@@ -26,6 +26,7 @@ package de.datenente.cyberente.utils;
 import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 public class Message {
@@ -70,6 +71,24 @@ public class Message {
      */
     public static void send(CommandSender sender, String message, Object... replacements) {
         sender.sendMessage(text(message, replacements));
+    }
+
+    /**
+     * Send a message to all players
+     * @param message the message
+     */
+    public static void broadcast(String message) {
+        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(text(message)));
+    }
+
+    /**
+     * Send a message to all players with replacements
+     * {0} = {0}, {1} = {1}, ...
+     * @param message the message
+     * @param replacements the replacements
+     */
+    public static void broadcast(String message, Object... replacements) {
+        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(text(message, replacements)));
     }
 
     public static List<String> filter(List<String> list, String filter) {

@@ -22,7 +22,7 @@ public class AFKCommand extends Command {
         }
 
         AFKDetector afkDetector = AFKDetector.getInstance();
-        afkDetector.setAfkStatus(player.getUniqueId(), !afkDetector.getAfkStatus().getOrDefault(player.getUniqueId(), false));
+        afkDetector.setAfkStatus(player, !afkDetector.getAfkStatus().getOrDefault(player.getUniqueId(), false));
 
         return true;
     }

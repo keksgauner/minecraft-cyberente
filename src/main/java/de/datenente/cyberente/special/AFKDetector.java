@@ -59,17 +59,17 @@ public class AFKDetector {
 
         this.getLastMovement().put(uuid, now);
 
-        setAfkStatus(uuid, false);
+        setAfkStatus(player, false);
     }
 
-    public void setAfkStatus(UUID uuid, boolean status) {
+    public void setAfkStatus(Player player, boolean status) {
+        UUID uuid = player.getUniqueId();
         this.getAfkStatus().put(uuid, status);
         if (status) {
-            Bukkit.broadcast(
-                    Message.text("{0} ist jetzt AFK.", Bukkit.getPlayer(uuid).getName()));
+                    Message.broadcast("{0} ist jetzt AFK.", player.getName());
         } else {
-            Bukkit.broadcast(Message.text(
-                    "{0} ist nicht mehr AFK.", Bukkit.getPlayer(uuid).getName()));
+            Message.broadcast(
+                    "{0} ist nicht mehr AFK.", player.getName());
         }
     }
 
@@ -86,7 +86,7 @@ public class AFKDetector {
                                 long diff = (now - last) / 1000;
 
                                 if (diff >= AFK_TIME_SECONDS && !afkStatus.getOrDefault(uuid, false)) {
-                                    setAfkStatus(uuid, true);
+                                    setAfkStatus(player, true);
                                 }
                             }
                         },
