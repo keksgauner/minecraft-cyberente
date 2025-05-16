@@ -35,7 +35,7 @@ import org.bukkit.entity.Player;
 @Getter
 public class AFKDetector {
     final HashMap<UUID, Long> lastMovement = new HashMap<>();
-    final HashMap<UUID, Boolean> afkStatus = new HashMap<>();
+    final HashMap<UUID, Boolean> status = new HashMap<>();
 
     static final long AFK_TIME_SECONDS = 10;
 
@@ -50,27 +50,37 @@ public class AFKDetector {
 
     public void cleanUp(UUID uuid) {
         this.getLastMovement().remove(uuid);
-        this.getAfkStatus().remove(uuid);
+        this.getStatus().remove(uuid);
     }
 
     public void detectedMovement(Player player) {
         UUID uuid = player.getUniqueId();
-        long now = System.currentTimeMillis();
+        updateLastMovement(uuid);
 
-        this.getLastMovement().put(uuid, now);
-
-        setAfkStatus(player, false);
+        afkStatus(player, false);
     }
 
-    public void setAfkStatus(Player player, boolean status) {
+    public void updateLastMovement(UUID uuid) {
+        this.getLastMovement().put(uuid, System.currentTimeMillis());
+    }
+
+    public long getLastMovement(UUID uuid) {
+        return this.getLastMovement().getOrDefault(uuid, System.currentTimeMillis());
+    }
+
+    public boolean afkStatus(UUID uuid) {
+        return this.getStatus().getOrDefault(uuid, false);
+    }
+
+    public void afkStatus(Player player, boolean status) {
         UUID uuid = player.getUniqueId();
-        this.getAfkStatus().put(uuid, status);
+        this.getStatus().put(uuid, status);
+        // AFK Message & Info
         if (status) {
-                    Message.broadcast("{0} ist jetzt AFK.", player.getName());
-        } else {
-            Message.broadcast(
-                    "{0} ist nicht mehr AFK.", player.getName());
+            Message.broadcast("{0} ist jetzt AFK.", player.getName());
+            return;
         }
+        Message.broadcast("{0} ist nicht mehr AFK.", player.getName());
     }
 
     public void startAFKCheckTask() {
@@ -78,15 +88,13 @@ public class AFKDetector {
                 .getScheduledExecutorService()
                 .schedule(
                         () -> {
-                            long now = System.currentTimeMillis();
-
                             for (Player player : Bukkit.getOnlinePlayers()) {
                                 UUID uuid = player.getUniqueId();
-                                long last = lastMovement.getOrDefault(uuid, now);
-                                long diff = (now - last) / 1000;
+                                long last = getLastMovement(uuid);
+                                long diff = (System.currentTimeMillis() - last) / 1000;
 
-                                if (diff >= AFK_TIME_SECONDS && !afkStatus.getOrDefault(uuid, false)) {
-                                    setAfkStatus(player, true);
+                                if (diff >= AFK_TIME_SECONDS && !afkStatus(uuid)) {
+                                    afkStatus(player, true);
                                 }
                             }
                         },

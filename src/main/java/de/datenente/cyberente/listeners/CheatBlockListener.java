@@ -25,7 +25,6 @@ package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.utils.Message;
 import io.papermc.paper.event.world.WorldGameRuleChangeEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
