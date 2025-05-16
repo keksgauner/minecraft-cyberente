@@ -31,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 @Getter
 public class AFKDetector {
@@ -48,9 +50,13 @@ public class AFKDetector {
         return instance;
     }
 
-    public void cleanUp(UUID uuid) {
+    public void cleanUp(Player player) {
+        UUID uuid = player.getUniqueId();
         this.getLastMovement().remove(uuid);
         this.getStatus().remove(uuid);
+
+        Team team = getAFKTeam(player);
+        team.removePlayer(player);
     }
 
     public void detectedMovement(Player player) {
@@ -72,15 +78,31 @@ public class AFKDetector {
         return this.getStatus().getOrDefault(uuid, false);
     }
 
+    public Team getAFKTeam(Player player) {
+        Scoreboard scoreboard = player.getScoreboard();
+        Team team = scoreboard.getTeam("AFK");
+        if (team == null) {
+            team = scoreboard.registerNewTeam("AFK");
+            team.prefix(Message.text("[AFK] "));
+        }
+        return team;
+    }
+
     public void afkStatus(Player player, boolean status) {
         UUID uuid = player.getUniqueId();
         this.getStatus().put(uuid, status);
         // AFK Message & Info
         if (status) {
             Message.broadcast("{0} ist jetzt AFK.", player.getName());
+
+            Team team = getAFKTeam(player);
+            team.addPlayer(player);
             return;
         }
         Message.broadcast("{0} ist nicht mehr AFK.", player.getName());
+
+        Team team = getAFKTeam(player);
+        team.removePlayer(player);
     }
 
     public void startAFKCheckTask() {

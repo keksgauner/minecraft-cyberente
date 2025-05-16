@@ -90,6 +90,6 @@ public class JoinLeaveListener implements Listener {
     public void onPlayerQuitCleanUp(PlayerQuitEvent quitEvent) {
         Player player = quitEvent.getPlayer();
 
-        AFKDetector.getInstance().cleanUp(player.getUniqueId());
+        AFKDetector.getInstance().cleanUp(player);
     }
 }
