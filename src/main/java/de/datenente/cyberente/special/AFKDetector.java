@@ -63,7 +63,7 @@ public class AFKDetector {
         UUID uuid = player.getUniqueId();
         this.getLastMovement().put(uuid, System.currentTimeMillis());
 
-        if(afkStatus(player.getUniqueId())) {
+        if (afkStatus(player.getUniqueId())) {
             afkStatus(player, false);
         }
     }
