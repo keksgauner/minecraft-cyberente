@@ -138,9 +138,9 @@ public class AFKDetector {
             Team team = getTeam(other);
             if (status(player.getUniqueId())) {
                 team.addPlayer(player);
-                continue;
+            } else {
+                team.removePlayer(player);
             }
-            team.removePlayer(player);
         }
     }
 
