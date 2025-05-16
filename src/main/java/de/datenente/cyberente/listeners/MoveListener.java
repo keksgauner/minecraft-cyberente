@@ -36,7 +36,7 @@ public class MoveListener implements Listener {
         AFKDetector afkDetector = AFKDetector.getInstance();
 
         if (!playerMoveEvent.getFrom().toVector().equals(playerMoveEvent.getTo().toVector())) {
-            afkDetector.detectMovement(player);
+            afkDetector.detectedMovement(player);
         }
     }
 }

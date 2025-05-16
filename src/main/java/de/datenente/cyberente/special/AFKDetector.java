@@ -27,10 +27,10 @@ import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.utils.Message;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
 public class AFKDetector {
@@ -49,37 +49,48 @@ public class AFKDetector {
     }
 
     public void cleanUp(UUID uuid) {
-        lastMovement.remove(uuid);
-        afkStatus.remove(uuid);
+        this.getLastMovement().remove(uuid);
+        this.getAfkStatus().remove(uuid);
     }
 
-    public void detectMovement(Player player) {
+    public void detectedMovement(Player player) {
         UUID uuid = player.getUniqueId();
-        getLastMovement().put(uuid, System.currentTimeMillis());
+        long now = System.currentTimeMillis();
 
-        if (getAfkStatus().getOrDefault(uuid, false)) {
-            getAfkStatus().put(uuid, false);
-            Bukkit.broadcast(Message.text("Spieler {0} ist nicht mehr AFK.", player.getName()));
+        this.getLastMovement().put(uuid, now);
+
+        setAfkStatus(uuid, false);
+    }
+
+    public void setAfkStatus(UUID uuid, boolean status) {
+        this.getAfkStatus().put(uuid, status);
+        if (status) {
+            Bukkit.broadcast(
+                    Message.text("{0} ist jetzt AFK.", Bukkit.getPlayer(uuid).getName()));
+        } else {
+            Bukkit.broadcast(Message.text(
+                    "{0} ist nicht mehr AFK.", Bukkit.getPlayer(uuid).getName()));
         }
     }
 
     public void startAFKCheckTask() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                long now = System.currentTimeMillis();
+        CyberEnte.getInstance()
+                .getScheduledExecutorService()
+                .schedule(
+                        () -> {
+                            long now = System.currentTimeMillis();
 
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    UUID uuid = player.getUniqueId();
-                    long last = lastMovement.getOrDefault(uuid, now);
-                    long diff = (now - last) / 1000;
+                            for (Player player : Bukkit.getOnlinePlayers()) {
+                                UUID uuid = player.getUniqueId();
+                                long last = lastMovement.getOrDefault(uuid, now);
+                                long diff = (now - last) / 1000;
 
-                    if (diff >= AFK_TIME_SECONDS && !afkStatus.getOrDefault(uuid, false)) {
-                        afkStatus.put(uuid, true);
-                        Bukkit.broadcast(Message.text("Spieler {0} ist jetzt AFK.", player.getName()));
-                    }
-                }
-            }
-        }.runTaskTimer(CyberEnte.getInstance(), 0L, 20L);
+                                if (diff >= AFK_TIME_SECONDS && !afkStatus.getOrDefault(uuid, false)) {
+                                    setAfkStatus(uuid, true);
+                                }
+                            }
+                        },
+                        1L,
+                        TimeUnit.SECONDS);
     }
 }
