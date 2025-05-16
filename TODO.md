@@ -4,7 +4,7 @@
 
 > *Hinweis: Entwicklung ggf. später geplant*
 - [ ] **InfoWorld** – Eigene Hub-Welt mit Infos (z.B. Koordinaten)
-- [ ] **MondWorld** – Mond-Welt mit Mond-Items (Astronautenanzug, Mondstein, etc.) -> andere Gravitation und Mobs
+- [X] **MondWorld** – Mond-Welt mit Mond-Items (Astronautenanzug, Mondstein, etc.) -> andere Gravitation und Mobs
 - [ ] **DayNight-Timer** - Zeigt an, wie lange es bis zur Nacht oder Tag dauert
 
 ---
@@ -40,7 +40,7 @@
 - [ ] **Seen** – Zeigt den letzten Online-Zeitpunkt eines Spielers an
 - [X] **Replanter** – Felder nach dem Ernten automatisch wieder bepflanzen
 - [ ] **Todes Nachricht** – Zeigt beim Tod des Spielers eine zufällige Beleidigung an
-- [ ] **Death Zähler** – Zählt die Tode der Spieler
+- [X] **Death Zähler** – Zählt die Tode der Spieler
 - [ ] **Fahrzeuge** – Fahrzeuge mit dem man rumfahren kann
 
 ---
