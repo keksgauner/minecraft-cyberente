@@ -29,6 +29,7 @@ import de.datenente.cyberente.listeners.*;
 import de.datenente.cyberente.recipes.BreadRecipe;
 import de.datenente.cyberente.recipes.PotionRecipe;
 import de.datenente.cyberente.special.AFKDetector;
+import de.datenente.cyberente.special.DayNight;
 import de.datenente.cyberente.special.PlayTime;
 import de.datenente.cyberente.special.WorldLoader;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
@@ -78,6 +79,7 @@ public final class CyberEnte extends JavaPlugin {
         PotionRecipe.register();
         PlayTime.startPlayTimeTask();
         AFKDetector.getInstance().startAFKCheckTask();
+        DayNight.getInstance().startDayNightCycleTask();
 
         Bukkit.getScheduler().runTask(this, WorldLoader::load);
     }
@@ -92,6 +94,11 @@ public final class CyberEnte extends JavaPlugin {
 
         StairSittingListener.clean();
         VehicleListener.clean();
+
+        this.getScheduledExecutorService().shutdown();
+
+        AFKDetector.getInstance().removeAll();
+        DayNight.getInstance().removeAll();
     }
 
     @Override

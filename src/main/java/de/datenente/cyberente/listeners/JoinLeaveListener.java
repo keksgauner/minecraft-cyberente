@@ -27,11 +27,13 @@ import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.hibernate.database.PlayerDatabase;
 import de.datenente.cyberente.hibernate.mappings.SQLPlayer;
 import de.datenente.cyberente.special.AFKDetector;
+import de.datenente.cyberente.special.DayNight;
 import de.datenente.cyberente.utils.Message;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -67,7 +69,12 @@ public class JoinLeaveListener implements Listener {
         Player player = joinEvent.getPlayer();
 
         AFKDetector afkDetector = AFKDetector.getInstance();
-        afkDetector.updateTeam(player);
+        for (Player other : Bukkit.getOnlinePlayers()) {
+            afkDetector.updateTeam(other);
+        }
+
+        DayNight dayNight = DayNight.getInstance();
+        dayNight.addPlayer(player);
     }
 
     @EventHandler
@@ -97,5 +104,8 @@ public class JoinLeaveListener implements Listener {
         Player player = quitEvent.getPlayer();
 
         AFKDetector.getInstance().cleanUp(player);
+
+        DayNight dayNight = DayNight.getInstance();
+        dayNight.removePlayer(player);
     }
 }

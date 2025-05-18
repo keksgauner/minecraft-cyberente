@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -113,22 +114,23 @@ public class AFKDetector {
         this.getStatus().put(uuid, status);
         // AFK Message & Info
         if (status) {
-            Message.broadcast("{0} ist jetzt AFK.", player.getName());
+            Message.broadcast("<gray>{0} ist jetzt AFK.", player.getName());
 
             updateTeam(player);
             return;
         }
-        Message.broadcast("{0} ist nicht mehr AFK.", player.getName());
+        Message.broadcast("<gray>{0} ist nicht mehr AFK.", player.getName());
 
         updateTeam(player);
     }
 
     public Team getTeam(Player player) {
         Scoreboard scoreboard = player.getScoreboard();
-        Team team = scoreboard.getTeam("AFK");
+        Team team = scoreboard.getTeam("afk");
         if (team == null) {
-            team = scoreboard.registerNewTeam("AFK");
+            team = scoreboard.registerNewTeam("afk");
             team.prefix(Message.text("[AFK] "));
+            team.color(NamedTextColor.GRAY);
         }
         return team;
     }
@@ -159,5 +161,13 @@ public class AFKDetector {
                 .getScheduledExecutorService()
                 .scheduleAtFixedRate(
                         () -> Bukkit.getOnlinePlayers().forEach(this::checkStatus), 0L, 1L, TimeUnit.SECONDS);
+    }
+
+    public void removeAll() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            cleanUp(player);
+        }
+        this.getLastMovement().clear();
+        this.getStatus().clear();
     }
 }
