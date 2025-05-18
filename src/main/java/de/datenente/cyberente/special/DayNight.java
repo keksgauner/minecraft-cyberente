@@ -67,7 +67,7 @@ public class DayNight {
                                 long minutes = totalSeconds / 60;
                                 long seconds = totalSeconds % 60;
 
-                                bossBar.setTitle("☀ Tag: noch " + minutes + " Minuten " + seconds + " Sekunden");
+                                bossBar.setTitle("Tag: noch " + minutes + " Minuten " + seconds + " Sekunden");
                                 bossBar.setColor(BarColor.YELLOW);
                             } else {
                                 long remainingTicks = 24000 - time;
@@ -75,7 +75,7 @@ public class DayNight {
                                 long minutes = totalSeconds / 60;
                                 long seconds = totalSeconds % 60;
 
-                                bossBar.setTitle("🌙 Nacht: noch " + minutes + " Minuten " + seconds + " Sekunden");
+                                bossBar.setTitle("Nacht: noch " + minutes + " Minuten " + seconds + " Sekunden");
                                 bossBar.setColor(BarColor.PURPLE);
                             }
                         }),

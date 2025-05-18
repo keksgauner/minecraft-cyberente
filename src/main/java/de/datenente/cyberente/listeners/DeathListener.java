@@ -93,6 +93,7 @@ public class DeathListener implements Listener {
         float exp = deathEvent.getPlayer().getExp();
 
         drops.clear();
+        deathEvent.setDroppedExp(0);
 
         while (deathBlock.getType() != Material.AIR) {
             deathLocation = deathLocation.add(0, 1, 0);

@@ -92,8 +92,7 @@ public class ChatListener implements Listener {
         String plainMessage = PlainTextComponentSerializer.plainText().serialize(message);
 
         // Regex pattern to match links
-        Pattern pattern = Pattern.compile(
-                "https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)");
+        Pattern pattern = Pattern.compile("(https?://)?([\\\\w.-]+)\\\\.([a-z\\\\.]{2,6})([/\\\\w\\\\.-]*)*/?");
         Matcher matcher = pattern.matcher(plainMessage);
 
         while (matcher.find()) {
