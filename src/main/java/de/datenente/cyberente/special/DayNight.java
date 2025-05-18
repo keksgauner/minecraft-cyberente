@@ -24,15 +24,13 @@
 package de.datenente.cyberente.special;
 
 import de.datenente.cyberente.CyberEnte;
+import java.util.concurrent.TimeUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.util.concurrent.TimeUnit;
 
 public class DayNight {
 
@@ -65,16 +63,25 @@ public class DayNight {
 
                             if (time < 12000) {
                                 long remainingTicks = 12000 - time;
-                                long secondsLeft = remainingTicks / 20;
-                                bossBar.setTitle("☀ Tag: noch " + secondsLeft + " Sekunden");
+                                long totalSeconds = remainingTicks / 20;
+                                long minutes = totalSeconds / 60;
+                                long seconds = totalSeconds % 60;
+
+                                bossBar.setTitle("☀ Tag: noch " + minutes + " Minuten " + seconds + " Sekunden");
                                 bossBar.setColor(BarColor.YELLOW);
                             } else {
                                 long remainingTicks = 24000 - time;
-                                long secondsLeft = remainingTicks / 20;
-                                bossBar.setTitle("🌙 Nacht: noch " + secondsLeft + " Sekunden");
+                                long totalSeconds = remainingTicks / 20;
+                                long minutes = totalSeconds / 60;
+                                long seconds = totalSeconds % 60;
+
+                                bossBar.setTitle("🌙 Nacht: noch " + minutes + " Minuten " + seconds + " Sekunden");
                                 bossBar.setColor(BarColor.PURPLE);
                             }
-                        }, 0L, 1L, TimeUnit.SECONDS);
+                        },
+                        0L,
+                        1L,
+                        TimeUnit.SECONDS);
     }
 
     public void removeAll() {
