@@ -69,9 +69,7 @@ public class JoinLeaveListener implements Listener {
         Player player = joinEvent.getPlayer();
 
         AFKDetector afkDetector = AFKDetector.getInstance();
-        for (Player other : Bukkit.getOnlinePlayers()) {
-            afkDetector.updateTeam(other);
-        }
+        afkDetector.updateTeam();
 
         DayNight dayNight = DayNight.getInstance();
         dayNight.addPlayer(player);

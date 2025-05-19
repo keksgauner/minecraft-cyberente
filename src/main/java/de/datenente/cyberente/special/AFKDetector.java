@@ -146,6 +146,12 @@ public class AFKDetector {
         }
     }
 
+    public void updateTeam() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            updateTeam(player);
+        }
+    }
+
     public void checkStatus(Player player) {
         long now = System.currentTimeMillis();
         long last = lastMovement(player);
