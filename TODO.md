@@ -15,7 +15,7 @@
 - [x] **/ping** – Zeigt den Ping eines Spielers (nur Java-Spieler)
 - [X] **/imagechat** – Bilder im Chat senden können
 - [X] **/afk** – Setzt den Spieler in den AFK Modus
-- [ ] **/vehicle** - Spawnt ein Auto
+- [X] **/vehicle** - Spawnt ein Auto
 - [X] **/worlds** - Teleportiert/Generiert andere Welten
 - [X] **/trash** - Öffnet einen Mülleimer
 - [ ] **/seen** - Zeigt den letzten Online-Zeitpunkt eines Spielers an
@@ -37,7 +37,7 @@
 - [X] **ChickenGrow** – Hühner auf Feldern anpflanzen und wachsen lassen
 - [X] **AFK-Manager** – AFK-Spieler automatisch als AFK kennzeichnen
 - [X] **Playtime** – Spielzeiten der Spieler erfassen und speichern
-- [ ] **Seen** – Zeigt den letzten Online-Zeitpunkt eines Spielers an
+- [X] **Seen** – Zeigt den letzten Online-Zeitpunkt eines Spielers an
 - [X] **Replanter** – Felder nach dem Ernten automatisch wieder bepflanzen
 - [ ] **Todes Nachricht** – Zeigt beim Tod des Spielers eine zufällige Beleidigung an
 - [X] **Death Zähler** – Zählt die Tode der Spieler
