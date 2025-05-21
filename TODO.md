@@ -5,7 +5,7 @@
 > *Hinweis: Entwicklung ggf. später geplant*
 - [ ] **InfoWorld** – Eigene Hub-Welt mit Infos (z.B. Koordinaten)
 - [X] **MondWorld** – Mond-Welt mit Mond-Items (Astronautenanzug, Mondstein, etc.) -> andere Gravitation und Mobs
-- [ ] **DayNight-Timer** - Zeigt an, wie lange es bis zur Nacht oder Tag dauert
+- [X] **DayNight-Timer** - Zeigt an, wie lange es bis zur Nacht oder Tag dauert
 
 ---
 
