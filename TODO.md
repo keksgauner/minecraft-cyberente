@@ -42,6 +42,9 @@
 - [ ] **Todes Nachricht** – Zeigt beim Tod des Spielers eine zufällige Beleidigung an
 - [X] **Death Zähler** – Zählt die Tode der Spieler
 - [ ] **Fahrzeuge** – Fahrzeuge mit dem man rumfahren kann
+- [ ] **Chicken anbauen** - erzeugt random Entitäten, Strukturen, Mobs usw (auf eigener Welt auf dem Testserver
+- [ ] **Random Rezepte** - Auf einer eigenen Welt sind alle Rezepte zufällig
+- [ ] **New Dimensions** es werden neue Dimensionen hinzugefügt
 
 ---
 
