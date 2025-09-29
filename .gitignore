@@ -1,5 +1,15 @@
-# Project exclude paths
-/.gradle/
-/build/
-/build/classes/java/main/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# IDE / Editor settings
 /.idea
+
+# gradle
+/.gradle/
+
+# misc
+.DS_Store
+*.pem
+Thumbs.db
+
+# production
+/build
