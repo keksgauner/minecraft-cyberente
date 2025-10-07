@@ -24,8 +24,8 @@
 package de.datenente.cyberente.hibernate;
 
 import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.config.MySQLConfig;
-import de.datenente.cyberente.config.mappings.MySQLObject;
+import de.datenente.cyberente.configuration.MySQLConfig;
+import de.datenente.cyberente.configuration.mappings.MySQLObject;
 import de.datenente.cyberente.hibernate.database.PlayerDatabase;
 import de.datenente.cyberente.utils.hibernate.HibernateConnection;
 import java.util.concurrent.ScheduledFuture;

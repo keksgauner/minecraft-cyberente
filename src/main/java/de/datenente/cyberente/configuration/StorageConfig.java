@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.config;
+package de.datenente.cyberente.configuration;
 
 import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.config.mappings.StorageObject;
-import de.datenente.cyberente.utils.config.JsonDocument;
+import de.datenente.cyberente.configuration.mappings.StorageObject;
+import de.datenente.cyberente.utils.configuration.JsonDocument;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,19 +44,19 @@ public class StorageConfig extends JsonDocument<StorageObject> {
         if (instance == null) {
             CyberEnte cyberEnte = CyberEnte.getInstance();
             Logger logger = cyberEnte.getLogger();
-            File dataFolder = cyberEnte.getDataFolder();
-            instance = new StorageConfig(logger, dataFolder);
+            Path dataDirectory = cyberEnte.getDataFolder().toPath();
+            instance = new StorageConfig(logger, dataDirectory);
         }
         return instance;
     }
 
-    public StorageConfig(Logger pluginLogger, File dataFolder) {
-        super(pluginLogger, dataFolder, StorageObject.class, "storage.json");
+    public StorageConfig(Logger pluginLogger, Path dataDirectory) {
+        super(pluginLogger, dataDirectory, StorageObject.class, "storage.json");
     }
 
     @Override
     public void loadContent() {
-        this.save();
+        // Nothing to do here, the default values are already set in the StorageObject class
     }
 
     /**

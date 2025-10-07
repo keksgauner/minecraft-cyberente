@@ -24,9 +24,9 @@
 package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.config.FileConfig;
-import de.datenente.cyberente.config.StorageConfig;
-import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
+import de.datenente.cyberente.configuration.FileConfig;
+import de.datenente.cyberente.configuration.StorageConfig;
+import de.datenente.cyberente.configuration.mappings.PlayerInventoryObject;
 import de.datenente.cyberente.utils.Base64Inventory;
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;

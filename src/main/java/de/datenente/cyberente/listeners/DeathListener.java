@@ -23,8 +23,8 @@
  */
 package de.datenente.cyberente.listeners;
 
-import de.datenente.cyberente.config.FileConfig;
-import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
+import de.datenente.cyberente.configuration.FileConfig;
+import de.datenente.cyberente.configuration.mappings.PlayerInventoryObject;
 import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.hibernate.database.PlayerDatabase;
 import de.datenente.cyberente.hibernate.mappings.SQLPlayer;

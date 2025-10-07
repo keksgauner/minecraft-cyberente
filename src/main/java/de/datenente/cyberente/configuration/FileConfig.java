@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.config;
+package de.datenente.cyberente.configuration;
 
 import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.config.mappings.PlayerInventoryObject;
-import de.datenente.cyberente.utils.config.JsonDocument;
-import java.io.File;
+import de.datenente.cyberente.configuration.mappings.PlayerInventoryObject;
+import de.datenente.cyberente.utils.configuration.JsonDocument;
+import java.nio.file.Path;
 import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -35,12 +35,14 @@ import org.bukkit.Location;
 @Getter
 public class FileConfig<T> extends JsonDocument<T> {
 
-    public FileConfig(Logger pluginLogger, File dataFolder, Class<T> clazz, String file) {
-        super(pluginLogger, dataFolder, clazz, file);
+    public FileConfig(Logger pluginLogger, Path dataDirectory, Class<T> clazz, String file) {
+        super(pluginLogger, dataDirectory, clazz, file);
     }
 
     @Override
-    public void loadContent() {}
+    public void loadContent() {
+        // Nothing to do here, the default values are already set in the MySQLObject class
+    }
 
     static String serializeLocation(Location location) {
         return location.getWorld().getName() + "_" + location.getBlockX()
@@ -54,10 +56,10 @@ public class FileConfig<T> extends JsonDocument<T> {
     public static FileConfig<PlayerInventoryObject> getDeathSkullFile(Location location) {
         CyberEnte cyberEnte = CyberEnte.getInstance();
         Logger logger = cyberEnte.getLogger();
-        File dataFolder = cyberEnte.getDataFolder();
+        Path dataDirectory = cyberEnte.getDataFolder().toPath();
         return new FileConfig<>(
                 logger,
-                dataFolder,
+                dataDirectory,
                 PlayerInventoryObject.class,
                 "deathskulls/" + serializeLocation(location) + ".json");
     }
@@ -94,9 +96,9 @@ public class FileConfig<T> extends JsonDocument<T> {
     public static FileConfig<PlayerInventoryObject> getWorldInventoryFile(UUID uuid, String world) {
         CyberEnte cyberEnte = CyberEnte.getInstance();
         Logger logger = cyberEnte.getLogger();
-        File dataFolder = cyberEnte.getDataFolder();
+        Path dataDirectory = cyberEnte.getDataFolder().toPath();
         return new FileConfig<>(
-                logger, dataFolder, PlayerInventoryObject.class, "inventory/" + world + "_" + uuid + ".json");
+                logger, dataDirectory, PlayerInventoryObject.class, "inventory/" + world + "_" + uuid + ".json");
     }
 
     public static void setWorldInventory(UUID uuid, String world, String base64Inventory, Integer level, Float xp) {

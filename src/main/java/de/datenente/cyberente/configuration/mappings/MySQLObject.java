@@ -21,36 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.config;
+package de.datenente.cyberente.configuration.mappings;
 
-import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.config.mappings.MySQLObject;
-import de.datenente.cyberente.utils.config.JsonDocument;
-import java.io.File;
-import java.util.logging.Logger;
 import lombok.Getter;
 
+/**
+ * Class representing the configuration for a MySQL database connection.
+ */
 @Getter
-public class MySQLConfig extends JsonDocument<MySQLObject> {
+public class MySQLObject {
+    /** The host of the MySQL database. */
+    String host = "localhost";
 
-    static MySQLConfig instance;
+    /** The port of the MySQL database. */
+    int port = 3306;
 
-    public static MySQLConfig getInstance() {
-        if (instance == null) {
-            CyberEnte cyberEnte = CyberEnte.getInstance();
-            Logger logger = cyberEnte.getLogger();
-            File dataFolder = cyberEnte.getDataFolder();
-            instance = new MySQLConfig(logger, dataFolder);
-        }
-        return instance;
-    }
+    /** The username for the MySQL database connection. */
+    String username = "root";
 
-    public MySQLConfig(Logger pluginLogger, File dataFolder) {
-        super(pluginLogger, dataFolder, MySQLObject.class, "mysql.json");
-    }
+    /** The password for the MySQL database connection. */
+    String password = "secret";
 
-    @Override
-    public void loadContent() {
-        this.save();
-    }
+    /** The name of the MySQL database. */
+    String database = "cyberente";
+
+    /** if the sql query should be shown */
+    boolean showSql = false;
 }

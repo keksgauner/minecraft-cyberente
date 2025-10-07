@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.config.mappings;
+package de.datenente.cyberente.configuration.mappings;
 
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.util.HashMap;

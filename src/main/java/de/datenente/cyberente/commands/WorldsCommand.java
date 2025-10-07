@@ -23,7 +23,7 @@
  */
 package de.datenente.cyberente.commands;
 
-import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.configuration.StorageConfig;
 import de.datenente.cyberente.utils.Message;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import de.datenente.cyberente.utils.worlds.CustomWorldCreator;

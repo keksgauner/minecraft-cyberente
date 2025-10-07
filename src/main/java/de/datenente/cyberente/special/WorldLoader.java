@@ -24,7 +24,7 @@
 package de.datenente.cyberente.special;
 
 import de.datenente.cyberente.CyberEnte;
-import de.datenente.cyberente.config.StorageConfig;
+import de.datenente.cyberente.configuration.StorageConfig;
 import de.datenente.cyberente.utils.worlds.CustomWorldCreator;
 
 public class WorldLoader {

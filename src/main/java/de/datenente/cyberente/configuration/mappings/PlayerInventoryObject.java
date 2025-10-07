@@ -21,41 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.utils.config;
+package de.datenente.cyberente.configuration.mappings;
 
-import java.io.FileNotFoundException;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Interface representing a configuration handler.
- * Provides methods to load, reload, and save configuration data.
- */
-public interface Config {
-
-    /**
-     * Loads the content of the configuration.
-     * This method should be implemented to initialize or refresh the configuration data.
-     */
-    void loadContent();
-
-    /**
-     * Loads the configuration from a persistent storage.
-     *
-     * @throws FileNotFoundException if the configuration file is not found.
-     */
-    void load() throws FileNotFoundException;
-
-    /**
-     * Reloads the configuration, typically by re-reading the configuration file.
-     */
-    void reload();
-
-    /**
-     * Saves the current state of the configuration to a persistent storage.
-     */
-    void save();
-
-    /**
-     * Deletes the file.
-     */
-    boolean delete();
+@Setter
+@Getter
+public class PlayerInventoryObject {
+    String base64; // Base64 encoded inventory
+    Integer level;
+    Float xp;
 }

@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.utils.config;
+package de.datenente.cyberente.utils.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -46,7 +47,7 @@ public abstract class JsonDocument<T> implements Config {
     /** The logger to use for logging. */
     final Logger pluginLogger;
     /** The folder where the data is stored. */
-    final File dataFolder;
+    final Path dataDirectory;
     /** The class type of the storage object. */
     final Class<T> classOfT;
 
@@ -67,25 +68,25 @@ public abstract class JsonDocument<T> implements Config {
      * Constructor for JsonDocument with a specified folder.
      *
      * @param pluginLogger The logger to use for logging.
-     * @param dataFolder The folder where the data is stored.
+     * @param dataDirectory The folder where the data is stored.
      * @param classOfT The class type of the storage object.
      * @param name The name of the configuration file.
      * @param folder The folder where the configuration file is located.
      */
     protected JsonDocument(
             final Logger pluginLogger,
-            final File dataFolder,
+            final Path dataDirectory,
             final Class<T> classOfT,
             final String name,
             final String folder) {
         this.pluginLogger = pluginLogger;
-        this.dataFolder = dataFolder;
+        this.dataDirectory = dataDirectory;
         this.classOfT = classOfT;
 
         this.name = name;
         this.folder = folder + PATH_DELIMITER;
 
-        final String path = this.getDataFolder() + PATH_DELIMITER + this.getFolder();
+        final String path = this.getDataDirectory() + PATH_DELIMITER + this.getFolder();
         this.file = new File(path, this.getName());
 
         this.preLoad();
@@ -95,20 +96,20 @@ public abstract class JsonDocument<T> implements Config {
      * Constructor for JsonDocument without a specified folder.
      *
      * @param pluginLogger The logger to use for logging.
-     * @param dataFolder The folder where the data is stored.
+     * @param dataDirectory The folder where the data is stored.
      * @param classOfT The class type of the storage object.
      * @param name The name of the configuration file.
      */
     protected JsonDocument(
-            final Logger pluginLogger, final File dataFolder, final Class<T> classOfT, final String name) {
+            final Logger pluginLogger, final Path dataDirectory, final Class<T> classOfT, final String name) {
         this.pluginLogger = pluginLogger;
-        this.dataFolder = dataFolder;
+        this.dataDirectory = dataDirectory;
         this.classOfT = classOfT;
 
         this.name = name;
         this.folder = "";
 
-        this.file = new File(this.getDataFolder(), this.getName());
+        this.file = new File(this.getDataDirectory().toFile(), this.getName());
 
         this.preLoad();
     }
@@ -156,6 +157,8 @@ public abstract class JsonDocument<T> implements Config {
                 | NoSuchMethodException ex) {
             this.getPluginLogger().log(Level.SEVERE, "Could not create new instance of storage: ", ex);
         }
+        // Save the newly created instance to create the file
+        this.save();
     }
 
     /**
