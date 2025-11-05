@@ -29,6 +29,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
@@ -47,6 +48,15 @@ public class CustomItem {
     ItemStack itemStack;
     ItemFactory itemFactory;
     ItemMeta itemMeta;
+
+    /**
+     * Get a message from the MiniMessage
+     * @param message the message
+     * @return the message
+     */
+    public static Component text(String message) {
+        return MiniMessage.miniMessage().deserialize(message);
+    }
 
     public static CustomItem of(Material material) {
         return new CustomItem(material);
@@ -79,20 +89,19 @@ public class CustomItem {
     }
 
     public CustomItem displayName(String name) {
-        this.displayName(Message.text(name));
+        this.displayName(text(name));
         return this;
     }
 
     public CustomItem lore(Component... lore) {
-        List<Component> loreList = new ArrayList<>();
-        Arrays.stream(lore).forEach(l -> loreList.add(l));
+        List<Component> loreList = new ArrayList<>(Arrays.asList(lore));
         this.getItemMeta().lore(loreList);
         return this;
     }
 
     public CustomItem lore(String... lore) {
         List<Component> loreList = new ArrayList<>();
-        Arrays.stream(lore).forEach(l -> loreList.add(Message.text(l)));
+        Arrays.stream(lore).forEach(l -> loreList.add(text(l)));
         this.getItemMeta().lore(loreList);
         return this;
     }
