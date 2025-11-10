@@ -24,6 +24,8 @@
 package de.datenente.cyberente.listeners;
 
 import de.datenente.cyberente.CyberEnte;
+import de.datenente.cyberente.utils.Message;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -89,27 +91,48 @@ public class ChickenPlantListener implements Listener {
                                     futureRef.get().cancel(true);
                                     return;
                                 }
-
                                 if (tick >= 13) {
                                     // Task syncron laufen lassen
-                                    Bukkit.getScheduler().runTask(CyberEnte.getInstance(), () -> {
-                                        if (!chicken.isValid()) return;
-                                        chicken.teleport(
-                                                clickedBlock.getLocation().add(0, 1, 0));
-                                        chicken.setAdult();
-                                        chicken.setAgeLock(false);
-                                        chicken.setAI(true);
-                                        chicken.setSilent(false);
-                                        chicken.setInvulnerable(false);
-                                        chicken.setGravity(true);
-                                        world.playSound(chicken.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 1f, 1f);
-                                    });
+                                    CyberEnte.getInstance()
+                                            .getScheduledExecutorService()
+                                            .schedule(
+                                                    () -> {
+                                                        if (!chicken.isValid()) return;
+                                                        try {
+                                                            chicken.teleportAsync(clickedBlock
+                                                                            .getLocation()
+                                                                            .add(0, 1, 0))
+                                                                    .get();
+                                                        } catch (final InterruptedException | ExecutionException ex) {
+                                                            Message.send(
+                                                                    player,
+                                                                    "<red>An error occurred while trying to teleport!</red>");
+                                                        }
+                                                        chicken.setAdult();
+                                                        chicken.setAgeLock(false);
+                                                        chicken.setAI(true);
+                                                        chicken.setSilent(false);
+                                                        chicken.setInvulnerable(false);
+                                                        chicken.setGravity(true);
+                                                        world.playSound(
+                                                                chicken.getLocation(),
+                                                                Sound.ENTITY_CHICKEN_AMBIENT,
+                                                                1f,
+                                                                1f);
+                                                    },
+                                                    100,
+                                                    TimeUnit.MILLISECONDS);
                                     futureRef.get().cancel(true);
                                     return;
                                 }
 
                                 offset += 0.01;
-                                chicken.teleportAsync(location.clone().add(0, offset, 0));
+                                try {
+                                    chicken.teleportAsync(location.clone().add(0, offset, 0))
+                                            .get();
+                                } catch (final InterruptedException | ExecutionException ex) {
+                                    Message.send(player, "<red>An error occurred while trying to teleport!</red>");
+                                }
                                 tick++;
                             }
                         },

@@ -98,24 +98,36 @@ public class ChickenPlantRandomEntityListener implements Listener {
                                 }
 
                                 if (tick >= 13) {
-                                    Bukkit.getScheduler().runTask(CyberEnte.getInstance(), () -> {
-                                        if (!chicken.isValid()) return;
+                                    CyberEnte.getInstance()
+                                            .getScheduledExecutorService()
+                                            .schedule(
+                                                    () -> {
+                                                        if (!chicken.isValid()) return;
 
-                                        chicken.teleport(
-                                                clickedBlock.getLocation().add(0, 1, 0));
-                                        chicken.setAdult();
-                                        chicken.setAgeLock(false);
-                                        chicken.setAI(true);
-                                        chicken.setSilent(false);
-                                        chicken.setInvulnerable(false);
-                                        chicken.setGravity(true);
-                                        world.playSound(chicken.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 1f, 1f);
+                                                        chicken.teleport(clickedBlock
+                                                                .getLocation()
+                                                                .add(0, 1, 0));
+                                                        chicken.setAdult();
+                                                        chicken.setAgeLock(false);
+                                                        chicken.setAI(true);
+                                                        chicken.setSilent(false);
+                                                        chicken.setInvulnerable(false);
+                                                        chicken.setGravity(true);
+                                                        world.playSound(
+                                                                chicken.getLocation(),
+                                                                Sound.ENTITY_CHICKEN_AMBIENT,
+                                                                1f,
+                                                                1f);
 
-                                        // Jetzt: Struktur mit Loot generieren!
-                                        spawnRandomEntityOrEffect(
-                                                world,
-                                                clickedBlock.getLocation().add(0, 1, 0));
-                                    });
+                                                        // Jetzt: Struktur mit Loot generieren!
+                                                        spawnRandomEntityOrEffect(
+                                                                world,
+                                                                clickedBlock
+                                                                        .getLocation()
+                                                                        .add(0, 1, 0));
+                                                    },
+                                                    100,
+                                                    TimeUnit.MILLISECONDS);
                                     futureRef.get().cancel(true);
                                     return;
                                 }

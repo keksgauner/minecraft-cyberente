@@ -55,7 +55,7 @@ public class DayNight {
         CyberEnte.getInstance()
                 .getScheduledExecutorService()
                 .scheduleAtFixedRate(
-                        () -> Bukkit.getScheduler().runTask(CyberEnte.getInstance(), () -> {
+                        () -> {
                             World world = Bukkit.getWorlds().getFirst(); // Hauptwelt
                             long time = world.getTime(); // 0 - 23999
                             double progress = time / 24000.0;
@@ -78,7 +78,7 @@ public class DayNight {
                                 bossBar.setTitle("Nacht: noch " + minutes + " Minuten " + seconds + " Sekunden");
                                 bossBar.setColor(BarColor.PURPLE);
                             }
-                        }),
+                        },
                         0L,
                         1L,
                         TimeUnit.SECONDS);

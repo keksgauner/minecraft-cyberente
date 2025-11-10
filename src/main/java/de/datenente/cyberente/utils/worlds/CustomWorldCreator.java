@@ -23,8 +23,10 @@
  */
 package de.datenente.cyberente.utils.worlds;
 
+import de.datenente.cyberente.utils.Message;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -46,8 +48,14 @@ public class CustomWorldCreator {
         World world = Bukkit.getWorld(worldName);
         if (world == null) return false;
 
-        world.getPlayers()
-                .forEach(player -> player.teleport(Bukkit.getWorlds().getFirst().getSpawnLocation()));
+        world.getPlayers().forEach(player -> {
+            try {
+                player.teleportAsync(Bukkit.getWorlds().getFirst().getSpawnLocation())
+                        .get();
+            } catch (final InterruptedException | ExecutionException ex) {
+                Message.send(player, "<red>An error occurred while trying to teleport!</red>");
+            }
+        });
         return Bukkit.unloadWorld(world, save);
     }
 

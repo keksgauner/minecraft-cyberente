@@ -29,6 +29,7 @@ import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import de.datenente.cyberente.utils.worlds.CustomWorldCreator;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -93,7 +94,11 @@ public class WorldsCommand extends Command {
                         return true;
                     }
 
-                    player.teleport(realWorld.getSpawnLocation());
+                    try {
+                        player.teleportAsync(realWorld.getSpawnLocation()).get();
+                    } catch (final InterruptedException | ExecutionException ex) {
+                        Message.send(sender, "<red>An error occurred while trying to teleport!</red>");
+                    }
                     return true;
                 }
                 case "remove" -> {

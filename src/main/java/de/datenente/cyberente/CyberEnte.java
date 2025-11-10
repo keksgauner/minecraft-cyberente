@@ -36,8 +36,8 @@ import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -81,7 +81,7 @@ public final class CyberEnte extends JavaPlugin {
         AFKDetector.getInstance().startAFKCheckTask();
         DayNight.getInstance().startDayNightCycleTask();
 
-        Bukkit.getScheduler().runTask(this, WorldLoader::load);
+        CyberEnte.getInstance().getScheduledExecutorService().schedule(WorldLoader::load, 100, TimeUnit.MILLISECONDS);
     }
 
     @Override
