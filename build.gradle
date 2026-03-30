@@ -5,10 +5,8 @@ plugins {
     id "com.gradleup.shadow" version "9.4.1"
 }
 
-defaultTasks("shadowJar")
-
-group = 'de.datenente'
-version = '1.0.0-SNAPSHOT'
+group = project.property("group")
+version = project.property("version")
 
 repositories {
     mavenCentral()
@@ -62,22 +60,44 @@ tasks {
     }
 }
 
-def targetJavaVersion = 21
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+jar {
+    archiveFileName.set("${project.name}-${version}.jar")
+
+    manifest {
+        attributes (
+                "Build-Jdk": "${System.properties["java.vendor"]} ${System.properties["java.vm.version"]}",
+                "Created-By": "Gradle ${gradle.gradleVersion}",
+                "Git-Branch": getBranch(),
+                "Git-Hash": getHash()
+                )
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
+static def getBranch() {
+    def process = "git branch --show-current".execute()
+    process.waitFor()
+    return process.text.trim()
+}
 
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release.set(targetJavaVersion)
-    }
+static def getHash() {
+    def process = "git rev-parse HEAD".execute()
+    process.waitFor()
+    return process.text.trim()
+}
+
+def javaVersion = JavaVersion.VERSION_25
+def javaMajorVersion = javaVersion.getMajorVersion().toInteger()
+
+java {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+
+    toolchain.languageVersion = JavaLanguageVersion.of(javaMajorVersion)
+}
+
+compileJava {
+    options.encoding = "UTF-8"
+    options.release.set(javaMajorVersion)
 }
 
 processResources {
@@ -96,7 +116,7 @@ spotless {
             exclude("**/build/**", "**/build-*/**")
         }
         greclipse()
-        indentWithSpaces(4)
+        leadingTabsToSpaces(4)
         trimTrailingWhitespace()
         endWithNewline()
     }
@@ -106,7 +126,7 @@ spotless {
             exclude("**/build/**", "**/build-*/**")
         }
         trimTrailingWhitespace()
-        indentWithSpaces(2)
+        leadingTabsToSpaces(2)
         endWithNewline()
     }
     java {
