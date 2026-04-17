@@ -26,6 +26,7 @@ package de.datenente.cyberente.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -37,6 +38,8 @@ import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -65,7 +68,7 @@ public class CustomItem {
 
     public CustomItem(final Material material) {
         this.itemFactory = Bukkit.getItemFactory();
-        this.itemStack = new ItemStack(material);
+        this.itemStack = ItemStack.of(material);
 
         if (this.getItemStack().getItemMeta() == null) {
             this.itemMeta =
@@ -163,6 +166,30 @@ public class CustomItem {
 
     public CustomItem amount(final int size) {
         this.getItemStack().setAmount(size);
+        return this;
+    }
+
+    public CustomItem persistentDataContainerString(String namespace, String key, String value) {
+        return this.persistentDataContainerString(new NamespacedKey(namespace, key), value);
+    }
+
+    public CustomItem persistentDataContainerString(NamespacedKey namespaceKey, String value) {
+        return this.persistentDataContainer(namespaceKey, PersistentDataType.STRING, value);
+    }
+
+    public <T, Z> CustomItem persistentDataContainer(
+            String namespace, String key, PersistentDataType<T, Z> type, Z value) {
+        return this.persistentDataContainer(new NamespacedKey(namespace, key), type, value);
+    }
+
+    public <T, Z> CustomItem persistentDataContainer(
+            NamespacedKey namespaceKey, PersistentDataType<T, Z> type, Z value) {
+        return this.persistentDataContainer(
+                persistentDataContainer -> persistentDataContainer.set(namespaceKey, type, value));
+    }
+
+    public CustomItem persistentDataContainer(Consumer<PersistentDataContainer> consumer) {
+        this.getItemStack().editPersistentDataContainer(consumer);
         return this;
     }
 
