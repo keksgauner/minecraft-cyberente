@@ -2,7 +2,7 @@
 
 [![Build](https://img.shields.io/github/actions/workflow/status/keksgauner/minecraft-cyberente/ci.yaml?branch=master&label=Build&style=for-the-badge)](https://github.com/keksgauner/minecraft-cyberente/actions)
 [![Release](https://img.shields.io/github/v/release/keksgauner/minecraft-cyberente?label=Release&style=for-the-badge)](https://github.com/keksgauner/minecraft-cyberente/releases)
-[![Java](https://img.shields.io/badge/Java-21+-orange?style=for-the-badge&logo=openjdk)](https://jdk.java.net/21/)
+[![Java](https://img.shields.io/badge/Java-25+-orange?style=for-the-badge&logo=openjdk)](https://jdk.java.net/25/)
 [![License](https://img.shields.io/github/license/keksgauner/minecraft-cyberente?style=for-the-badge)](https://github.com/keksgauner/minecraft-cyberente/blob/main/LICENSE)
 
 > 🛠️ Ein maßgeschneidertes **Minecraft Paper-Plugin** für den privaten CyberEnte-Server.
@@ -59,7 +59,7 @@ Ersetze `<name>` durch den Namen der Welt und `MOON` durch den gewünschten Gene
 
 **Voraussetzungen:**
 
-- ✅ JDK 21 oder höher
+- ✅ JDK 25 oder höher
 - 🌐 Internetverbindung
 
 **Schritte:**

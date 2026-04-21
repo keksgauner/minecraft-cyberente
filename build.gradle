@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id "java"
     id "xyz.jpenilla.run-paper" version "3.0.2"
     id "com.diffplug.spotless" version "8.4.0"
     id "com.gradleup.shadow" version "9.4.1"
@@ -63,6 +63,26 @@ jar {
     archiveFileName.set("${project.name}-${version}-original.jar")
 }
 
+def gitBranch = providers.exec {
+    commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
+}.standardOutput.asText.map { it.trim() }.orElse("unknown")
+
+def gitHash = providers.exec {
+    commandLine("git", "rev-parse", "HEAD")
+}.standardOutput.asText.map { it.trim() }.orElse("unknown")
+
+tasks.withType(Jar).configureEach {
+    manifest {
+        attributes(
+                "Build-Jdk": "${System.getProperty('java.version')} (${System.getProperty('java.vendor')})",
+                "Created-By": "Gradle ${gradle.gradleVersion}",
+                "Git-Hash": gitHash.get(),
+                "Git-Branch": gitBranch.get(),
+                "Build-Time": OffsetDateTime.now().toString()
+                )
+    }
+}
+
 def javaVersion = JavaVersion.VERSION_25
 def javaMajorVersion = javaVersion.getMajorVersion().toInteger()
 
@@ -81,8 +101,8 @@ compileJava {
 processResources {
     def props = [version: version]
     inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
+    filteringCharset "UTF-8"
+    filesMatching("plugin.yml") {
         expand props
     }
 }
@@ -101,7 +121,7 @@ spotless {
     format "misc", {
         target fileTree(".") {
             include("**/*.md", "**/.gitignore", "LICENSE_HEADER", "**/*.yaml", "**/*.yml", "**/*.json")
-            exclude("**/build/**", "**/build-*/**")
+            exclude("**/build/**", "**/build-*/**", "**/*.gradle")
         }
         trimTrailingWhitespace()
         leadingTabsToSpaces(2)
