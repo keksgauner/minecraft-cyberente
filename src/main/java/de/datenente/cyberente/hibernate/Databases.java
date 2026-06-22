@@ -26,6 +26,7 @@ package de.datenente.cyberente.hibernate;
 import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.configuration.MySQLConfig;
 import de.datenente.cyberente.configuration.mappings.MySQLObject;
+import de.datenente.cyberente.hibernate.database.HomeDatabase;
 import de.datenente.cyberente.hibernate.database.PlayerDatabase;
 import de.datenente.cyberente.utils.hibernate.HibernateConnection;
 import java.util.concurrent.ScheduledFuture;
@@ -52,6 +53,7 @@ public class Databases {
 
     // All databases
     PlayerDatabase playerDatabase;
+    HomeDatabase homeDatabase;
 
     public Databases(Logger logger) {
         this.hibernateConnection = new HibernateConnection(logger);
@@ -72,6 +74,7 @@ public class Databases {
 
         // Register all databases
         playerDatabase = new PlayerDatabase(this.getHibernateConnection());
+        homeDatabase = new HomeDatabase(this.getHibernateConnection());
 
         this.getHibernateConnection().buildSessionFactory().test();
     }
