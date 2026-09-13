@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.datenente.cyberente.utils;
+package de.datenente.cyberente.utils.serialization;
 
 import java.io.*;
 import org.bukkit.Bukkit;
@@ -31,6 +31,7 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+@Deprecated(forRemoval = true)
 public class Base64Inventory {
 
     public static ItemStack[] itemStackArrayFromBase64(String data) throws IOException {

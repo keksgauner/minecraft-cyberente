@@ -2,12 +2,13 @@ name: CyberEnte
 version: '${version}'
 
 main: de.datenente.cyberente.CyberEnte
-api-version: '1.21'
+api-version: '26.2'
 folia-supported: true
 
 load: STARTUP
 
 depend: [CyberEnte-Extended]
+softdepend: [NBTAPI]
 
 website: https://cyberduckspace.de
 description: Ein maßgeschneidertes Minecraft Paper-Plugin für den privaten CyberEnte-Server.

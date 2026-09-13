@@ -28,8 +28,8 @@ import de.datenente.cyberente.configuration.mappings.PlayerInventoryObject;
 import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.hibernate.database.PlayerDatabase;
 import de.datenente.cyberente.hibernate.mappings.SQLPlayer;
-import de.datenente.cyberente.utils.Base64Inventory;
 import de.datenente.cyberente.utils.Message;
+import de.datenente.cyberente.utils.serialization.NbtInventory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +88,7 @@ public class DeathListener implements Listener {
 
         List<ItemStack> drops = deathEvent.getDrops();
         ItemStack[] contents = drops.toArray(new ItemStack[0]);
-        String base64 = Base64Inventory.itemStackArrayToBase64(contents);
+        String base64 = NbtInventory.itemStackArrayToBase64(contents);
         int level = deathEvent.getPlayer().getLevel();
         float exp = deathEvent.getPlayer().getExp();
 
@@ -136,7 +136,7 @@ public class DeathListener implements Listener {
         }
         ItemStack[] contents;
         try {
-            contents = Base64Inventory.itemStackArrayFromBase64(deathSkull.getBase64());
+            contents = NbtInventory.itemStackArrayFromBase64(deathSkull.getBase64());
         } catch (IOException ex) {
             Message.send(player, "<red>Das Inventar konnte nicht geladen werden!</red>");
             return;

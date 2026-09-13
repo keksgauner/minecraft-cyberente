@@ -27,8 +27,8 @@ import de.datenente.cyberente.CyberEnte;
 import de.datenente.cyberente.configuration.FileConfig;
 import de.datenente.cyberente.configuration.StorageConfig;
 import de.datenente.cyberente.configuration.mappings.PlayerInventoryObject;
-import de.datenente.cyberente.utils.Base64Inventory;
 import de.datenente.cyberente.utils.Message;
+import de.datenente.cyberente.utils.serialization.NbtInventory;
 import de.datenente.cyberente.utils.worlds.generators.MarsGenerator;
 import de.datenente.cyberente.utils.worlds.generators.MoonGenerator;
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class WorldChangeListener implements Listener {
         Inventory inventory = player.getInventory();
 
         // Inventory speichern
-        String base64 = Base64Inventory.itemStackArrayToBase64(inventory.getContents());
+        String base64 = NbtInventory.itemStackArrayToBase64(inventory.getContents());
         FileConfig.setWorldInventory(player.getUniqueId(), saveKey, base64, player.getLevel(), player.getExp());
 
         // Inventory leeren
@@ -86,7 +86,7 @@ public class WorldChangeListener implements Listener {
 
         ItemStack[] contents;
         try {
-            contents = Base64Inventory.itemStackArrayFromBase64(inventoryNew.getBase64());
+            contents = NbtInventory.itemStackArrayFromBase64(inventoryNew.getBase64());
         } catch (IOException ex) {
             Message.send(player, "<red>Das Inventar konnte nicht geladen werden!</red>");
             return;
