@@ -31,6 +31,7 @@ import de.datenente.cyberente.hibernate.database.PlayerDatabase;
 import de.datenente.cyberente.utils.hibernate.HibernateConnection;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
 
@@ -70,31 +71,57 @@ public class Databases {
                         mysqlObject.getUsername(),
                         mysqlObject.getPassword(),
                         mysqlObject.isShowSql());
-        this.getHibernateConnection().buildServiceRegistry().buildMetadataSources();
 
         // Register all databases
-        playerDatabase = new PlayerDatabase(this.getHibernateConnection());
-        homeDatabase = new HomeDatabase(this.getHibernateConnection());
+        if (playerDatabase == null) {
+            playerDatabase = new PlayerDatabase(this.getHibernateConnection());
+        }
+        if (homeDatabase == null) {
+            homeDatabase = new HomeDatabase(this.getHibernateConnection());
+        }
 
-        this.getHibernateConnection().buildSessionFactory().test();
+        boolean connected = this.getHibernateConnection().reconnect();
+        if (connected) {
+            this.getHibernateConnection().getLogger().info("Database connection established.");
+        } else {
+            this.getHibernateConnection()
+                    .getLogger()
+                    .warning("Initial database connection failed. Background task will retry.");
+        }
     }
 
     public void startDatabaseConnectTask() {
+        if (this.databaseConnectTask != null && !this.databaseConnectTask.isCancelled()) {
+            this.databaseConnectTask.cancel(false);
+        }
+
         this.databaseConnectTask = CyberEnte.getInstance()
                 .getScheduledExecutorService()
-                .scheduleAtFixedRate(
+                .scheduleWithFixedDelay(
                         () -> {
-                            if (getHibernateConnection() == null) {
-                                openDatabaseConnection();
-                            }
+                            try {
+                                if (getHibernateConnection() == null) {
+                                    openDatabaseConnection();
+                                    return;
+                                }
 
-                            if (!getHibernateConnection().test()) {
-                                getHibernateConnection().close();
-                                openDatabaseConnection();
+                                if (!getHibernateConnection().test()) {
+                                    CyberEnte.getInstance()
+                                            .getLogger()
+                                            .warning("Database connection lost! Attempting to reconnect...");
+                                    getHibernateConnection().reconnect();
+                                }
+                            } catch (Throwable t) {
+                                CyberEnte.getInstance()
+                                        .getLogger()
+                                        .log(
+                                                Level.WARNING,
+                                                "Error in database connection check task: " + t.getMessage(),
+                                                t);
                             }
                         },
-                        2,
-                        15,
-                        TimeUnit.MINUTES);
+                        10,
+                        30,
+                        TimeUnit.SECONDS);
     }
 }

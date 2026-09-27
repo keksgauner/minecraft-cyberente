@@ -32,12 +32,13 @@ import de.datenente.cyberente.special.AFKDetector;
 import de.datenente.cyberente.special.DayNight;
 import de.datenente.cyberente.special.PlayTime;
 import de.datenente.cyberente.special.WorldLoader;
+import de.datenente.cyberente.utils.Task;
 import de.datenente.cyberente.utils.worlds.CustomGenerator;
 import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -52,7 +53,6 @@ public final class CyberEnte extends JavaPlugin {
     static CyberEnte instance;
 
     Instant startTime;
-    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(250);
 
     @Override
     public void onLoad() {
@@ -88,6 +88,10 @@ public final class CyberEnte extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Plugin CyberEnte wird deaktiviert!");
 
+        if (Databases.getInstance().getDatabaseConnectTask() != null) {
+            Databases.getInstance().getDatabaseConnectTask().cancel(true);
+        }
+
         Databases.getInstance().getHibernateConnection().close();
 
         getServer().resetRecipes();
@@ -95,7 +99,7 @@ public final class CyberEnte extends JavaPlugin {
         StairSittingListener.clean();
         VehicleListener.clean();
 
-        this.getScheduledExecutorService().shutdown();
+        Task.getInstance().cancel();
 
         AFKDetector.getInstance().removeAll();
         DayNight.getInstance().removeAll();

@@ -28,6 +28,7 @@ import de.datenente.cyberente.hibernate.Databases;
 import de.datenente.cyberente.hibernate.database.PlayerDatabase;
 import de.datenente.cyberente.hibernate.mappings.SQLPlayer;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -37,14 +38,20 @@ public class PlayTime {
                 .getScheduledExecutorService()
                 .scheduleAtFixedRate(
                         () -> {
-                            PlayerDatabase playerDatabase =
-                                    Databases.getInstance().getPlayerDatabase();
-                            for (Player player : Bukkit.getOnlinePlayers()) {
-                                SQLPlayer sqlPlayer = playerDatabase.getPlayer(player.getUniqueId());
-                                if (sqlPlayer != null) {
-                                    sqlPlayer.setPlaytime(sqlPlayer.getPlaytime() + 1);
-                                    playerDatabase.savePlayer(sqlPlayer);
+                            try {
+                                PlayerDatabase playerDatabase =
+                                        Databases.getInstance().getPlayerDatabase();
+                                for (Player player : Bukkit.getOnlinePlayers()) {
+                                    SQLPlayer sqlPlayer = playerDatabase.getPlayer(player.getUniqueId());
+                                    if (sqlPlayer != null) {
+                                        sqlPlayer.setPlaytime(sqlPlayer.getPlaytime() + 1);
+                                        playerDatabase.savePlayer(sqlPlayer);
+                                    }
                                 }
+                            } catch (Throwable t) {
+                                CyberEnte.getInstance()
+                                        .getLogger()
+                                        .log(Level.WARNING, "Error in PlayTime task: " + t.getMessage(), t);
                             }
                         },
                         0L,

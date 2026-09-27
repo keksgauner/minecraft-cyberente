@@ -166,7 +166,11 @@ public class AFKDetector {
         CyberEnte.getInstance()
                 .getScheduledExecutorService()
                 .scheduleAtFixedRate(
-                        () -> Bukkit.getOnlinePlayers().forEach(this::checkStatus), 0L, 1L, TimeUnit.SECONDS);
+                        () -> Bukkit.getScheduler().runTask(CyberEnte.getInstance(), () -> Bukkit.getOnlinePlayers()
+                                .forEach(this::checkStatus)),
+                        0L,
+                        1L,
+                        TimeUnit.SECONDS);
     }
 
     public void removeAll() {

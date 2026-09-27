@@ -92,36 +92,31 @@ public class ChickenPlantListener implements Listener {
                                     return;
                                 }
                                 if (tick >= 13) {
-                                    // Task syncron laufen lassen
-                                    CyberEnte.getInstance()
-                                            .getScheduledExecutorService()
-                                            .schedule(
+                                    // Task synchron laufen lassen
+                                    Bukkit.getScheduler()
+                                            .runTaskLater(
+                                                    CyberEnte.getInstance(),
                                                     () -> {
                                                         if (!chicken.isValid()) return;
-                                                        try {
-                                                            chicken.teleportAsync(clickedBlock
-                                                                            .getLocation()
-                                                                            .add(0, 1, 0))
-                                                                    .get();
-                                                        } catch (final InterruptedException | ExecutionException ex) {
-                                                            Message.send(
-                                                                    player,
-                                                                    "<red>An error occurred while trying to teleport!</red>");
-                                                        }
-                                                        chicken.setAdult();
-                                                        chicken.setAgeLock(false);
-                                                        chicken.setAI(true);
-                                                        chicken.setSilent(false);
-                                                        chicken.setInvulnerable(false);
-                                                        chicken.setGravity(true);
-                                                        world.playSound(
-                                                                chicken.getLocation(),
-                                                                Sound.ENTITY_CHICKEN_AMBIENT,
-                                                                1f,
-                                                                1f);
+                                                        chicken.teleportAsync(clickedBlock
+                                                                        .getLocation()
+                                                                        .add(0, 1, 0))
+                                                                .thenAccept(success -> {
+                                                                    if (!chicken.isValid()) return;
+                                                                    chicken.setAdult();
+                                                                    chicken.setAgeLock(false);
+                                                                    chicken.setAI(true);
+                                                                    chicken.setSilent(false);
+                                                                    chicken.setInvulnerable(false);
+                                                                    chicken.setGravity(true);
+                                                                    world.playSound(
+                                                                            chicken.getLocation(),
+                                                                            Sound.ENTITY_CHICKEN_AMBIENT,
+                                                                            1f,
+                                                                            1f);
+                                                                });
                                                     },
-                                                    100,
-                                                    TimeUnit.MILLISECONDS);
+                                                    2L);
                                     futureRef.get().cancel(true);
                                     return;
                                 }

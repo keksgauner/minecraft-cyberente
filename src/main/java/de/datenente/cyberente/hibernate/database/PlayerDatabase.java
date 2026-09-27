@@ -28,6 +28,7 @@ import de.datenente.cyberente.utils.hibernate.HibernateConnection;
 import de.datenente.cyberente.utils.hibernate.HibernateDatabase;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -61,6 +62,11 @@ public class PlayerDatabase implements HibernateDatabase {
             session.merge(sqlPlayer);
             session.getTransaction().commit();
             return sqlPlayer;
+        } catch (Exception ex) {
+            this.getHibernateConnection()
+                    .getLogger()
+                    .log(Level.SEVERE, "Could not create or update player in database!", ex);
+            return null;
         }
     }
 
@@ -70,6 +76,11 @@ public class PlayerDatabase implements HibernateDatabase {
                     session.createNamedQuery(SQLPlayer.HQL_GET_SEARCH_BY_NAME, SQLPlayer.class);
             playerQuery.setParameter("name", playerName);
             return !playerQuery.getResultList().isEmpty();
+        } catch (Exception ex) {
+            this.getHibernateConnection()
+                    .getLogger()
+                    .log(Level.SEVERE, "Could not check if player exists in database!", ex);
+            return false;
         }
     }
 
@@ -83,6 +94,9 @@ public class PlayerDatabase implements HibernateDatabase {
             playerQuery.setMaxResults(limit);
 
             return playerQuery.getResultList();
+        } catch (Exception ex) {
+            this.getHibernateConnection().getLogger().log(Level.SEVERE, "Could not search player in database!", ex);
+            return List.of();
         }
     }
 
@@ -91,7 +105,13 @@ public class PlayerDatabase implements HibernateDatabase {
             final Query<SQLPlayer> playerQuery =
                     session.createNamedQuery(SQLPlayer.HQL_GET_SEARCH_BY_UUID, SQLPlayer.class);
             playerQuery.setParameter("uuid", uuid.toString());
-            return playerQuery.getSingleResult();
+            List<SQLPlayer> resultList = playerQuery.getResultList();
+            return resultList.isEmpty() ? null : resultList.getFirst();
+        } catch (Exception ex) {
+            this.getHibernateConnection()
+                    .getLogger()
+                    .log(Level.SEVERE, "Could not get player by uuid from database!", ex);
+            return null;
         }
     }
 
@@ -100,7 +120,13 @@ public class PlayerDatabase implements HibernateDatabase {
             final Query<SQLPlayer> playerQuery =
                     session.createNamedQuery(SQLPlayer.HQL_GET_SEARCH_BY_NAME, SQLPlayer.class);
             playerQuery.setParameter("name", name);
-            return playerQuery.getSingleResult();
+            List<SQLPlayer> resultList = playerQuery.getResultList();
+            return resultList.isEmpty() ? null : resultList.getFirst();
+        } catch (Exception ex) {
+            this.getHibernateConnection()
+                    .getLogger()
+                    .log(Level.SEVERE, "Could not get player by name from database!", ex);
+            return null;
         }
     }
 
@@ -109,6 +135,8 @@ public class PlayerDatabase implements HibernateDatabase {
             session.beginTransaction();
             session.merge(player);
             session.getTransaction().commit();
+        } catch (Exception ex) {
+            this.getHibernateConnection().getLogger().log(Level.SEVERE, "Could not save player to database!", ex);
         }
     }
 }

@@ -23,7 +23,10 @@
  */
 package de.datenente.cyberente.utils.hibernate;
 
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -44,59 +47,66 @@ public class HibernateConnection {
     StandardServiceRegistry serviceRegistry;
     MetadataSources metadataSources;
 
+    private final Map<String, Object> connectionSettings = new HashMap<>();
+    private final Set<Class<?>> annotatedClasses = new LinkedHashSet<>();
+
     public HibernateConnection(final Logger logger) {
         this.logger = logger;
         this.serviceRegistryBuilder = new StandardServiceRegistryBuilder();
     }
 
-    public HibernateConnection addConnectionSettings(
+    public synchronized HibernateConnection addConnectionSettings(
             final String host,
             final int port,
             final String database,
             final String username,
             final String password,
             final boolean showSql) {
-        final Map<String, Object> settings = Map.of(
-                // JdbcSettings.JAKARTA_JDBC_DRIVER,
-                // "com.mysql.cj.jdbc.Driver",
-                // JdbcSettings.DIALECT,
-                // "org.hibernate.dialect.MySQLDialect",
+        this.connectionSettings.put(
                 JdbcSettings.JAKARTA_JDBC_URL,
-                "jdbc:mariadb://" + host + ":" + port + "/" + database,
-                JdbcSettings.JAKARTA_JDBC_USER,
-                username,
-                JdbcSettings.JAKARTA_JDBC_PASSWORD,
-                password,
-                SchemaToolingSettings.JAKARTA_HBM2DDL_DATABASE_ACTION,
-                "UPDATE",
-                JdbcSettings.ISOLATION,
-                "READ_COMMITTED",
-                JdbcSettings.AUTOCOMMIT,
-                true,
-                JdbcSettings.SHOW_SQL,
-                showSql,
-                JdbcSettings.FORMAT_SQL,
-                true);
+                "jdbc:mariadb://" + host + ":" + port + "/" + database
+                        + "?autoReconnect=true&connectTimeout=5000&socketTimeout=30000&tcpKeepAlive=true");
+        this.connectionSettings.put(JdbcSettings.JAKARTA_JDBC_USER, username);
+        this.connectionSettings.put(JdbcSettings.JAKARTA_JDBC_PASSWORD, password);
+        this.connectionSettings.put(SchemaToolingSettings.JAKARTA_HBM2DDL_DATABASE_ACTION, "UPDATE");
+        this.connectionSettings.put(JdbcSettings.ISOLATION, "READ_COMMITTED");
+        this.connectionSettings.put(JdbcSettings.AUTOCOMMIT, true);
+        this.connectionSettings.put(JdbcSettings.SHOW_SQL, showSql);
+        this.connectionSettings.put(JdbcSettings.FORMAT_SQL, true);
 
-        settings.forEach(this.getServiceRegistryBuilder()::applySetting);
         return this;
     }
 
-    public HibernateConnection buildServiceRegistry() {
-        this.serviceRegistry = this.getServiceRegistryBuilder().build();
+    public synchronized HibernateConnection addAnnotatedClass(final Class<?> annotatedClass) {
+        if (annotatedClass != null) {
+            this.annotatedClasses.add(annotatedClass);
+            if (this.metadataSources != null) {
+                this.metadataSources.addAnnotatedClass(annotatedClass);
+            }
+        }
         return this;
     }
 
-    public HibernateConnection buildMetadataSources() {
+    public synchronized HibernateConnection buildServiceRegistry() {
+        this.serviceRegistryBuilder = new StandardServiceRegistryBuilder();
+        this.connectionSettings.forEach(this.serviceRegistryBuilder::applySetting);
+        this.serviceRegistry = this.serviceRegistryBuilder.build();
+        return this;
+    }
+
+    public synchronized HibernateConnection buildMetadataSources() {
         if (this.getServiceRegistry() == null) {
             this.getLogger().severe("ServiceRegistry is null");
             return this;
         }
         this.metadataSources = new MetadataSources(this.getServiceRegistry());
+        for (Class<?> clazz : this.annotatedClasses) {
+            this.metadataSources.addAnnotatedClass(clazz);
+        }
         return this;
     }
 
-    public HibernateConnection buildSessionFactory() {
+    public synchronized HibernateConnection buildSessionFactory() {
         if (this.getMetadataSources() == null) {
             this.getLogger().severe("MetadataSources is null");
             return this;
@@ -105,40 +115,80 @@ public class HibernateConnection {
         return this;
     }
 
+    public synchronized boolean reconnect() {
+        close();
+        try {
+            buildServiceRegistry();
+            buildMetadataSources();
+            buildSessionFactory();
+            return test();
+        } catch (Exception ex) {
+            this.getLogger().log(Level.WARNING, "Failed to connect to database: " + ex.getMessage(), ex);
+            close();
+            return false;
+        }
+    }
+
     public Session openSession() {
-        if (this.getSessionFactory() == null) {
-            this.getLogger().severe("SessionFactory is null");
+        if (this.getSessionFactory() == null || this.getSessionFactory().isClosed()) {
+            this.getLogger().warning("SessionFactory is not available. Attempting reconnect...");
+            if (!reconnect()) {
+                this.getLogger().severe("SessionFactory is null or closed and reconnect failed.");
+                return null;
+            }
+        }
+
+        try {
+            return this.getSessionFactory().openSession();
+        } catch (Exception ex) {
+            this.getLogger().log(Level.WARNING, "Failed to open session. Attempting reconnect...", ex);
+            if (reconnect()) {
+                try {
+                    return this.getSessionFactory().openSession();
+                } catch (Exception retryEx) {
+                    this.getLogger().log(Level.SEVERE, "Failed to open session after reconnect!", retryEx);
+                }
+            }
             return null;
         }
-        return this.getSessionFactory().openSession();
     }
 
     public boolean test() {
-        if (this.getSessionFactory() == null) {
-            this.getLogger().severe("SessionFactory is null");
-            return false;
-        }
-        if (this.getSessionFactory().isClosed()) {
-            this.getLogger().severe("SessionFactory is closed");
+        if (this.getSessionFactory() == null || this.getSessionFactory().isClosed()) {
             return false;
         }
 
-        try (final Session session = this.openSession()) {
-            session.beginTransaction();
-            if (session.getTransaction().isActive()) {
-                // this.getLogger().info("MySQL connection working!");
-                return true;
-            }
-            this.getLogger().warning("MySQL connection not working!");
+        try (final Session session = this.getSessionFactory().openSession()) {
+            Object result = session.createNativeQuery("SELECT 1", Object.class).getSingleResult();
+            return result != null;
         } catch (Exception ex) {
-            this.getLogger().log(Level.SEVERE, "Could not connect to MySQL!", ex);
+            this.getLogger().log(Level.WARNING, "MySQL connection test failed: " + ex.getMessage());
+            return false;
         }
-        return false;
     }
 
-    public void close() {
-        if (this.getSessionFactory() != null) {
-            this.getSessionFactory().close();
+    public synchronized void close() {
+        if (this.sessionFactory != null) {
+            try {
+                if (!this.sessionFactory.isClosed()) {
+                    this.sessionFactory.close();
+                }
+            } catch (Exception ex) {
+                this.getLogger().log(Level.WARNING, "Error closing SessionFactory", ex);
+            }
+            this.sessionFactory = null;
         }
+
+        if (this.serviceRegistry != null) {
+            try {
+                StandardServiceRegistryBuilder.destroy(this.serviceRegistry);
+            } catch (Exception ex) {
+                this.getLogger().log(Level.WARNING, "Error destroying ServiceRegistry", ex);
+            }
+            this.serviceRegistry = null;
+        }
+
+        this.metadataSources = null;
+        this.serviceRegistryBuilder = null;
     }
 }

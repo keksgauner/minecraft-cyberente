@@ -28,6 +28,7 @@ import de.datenente.cyberente.utils.hibernate.HibernateConnection;
 import de.datenente.cyberente.utils.hibernate.HibernateDatabase;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -47,6 +48,9 @@ public class HomeDatabase implements HibernateDatabase {
                     session.createNamedQuery(SQLHome.HQL_GET_LIST_BY_PLAYER_UUID, SQLHome.class);
             homeQuery.setParameter("playerUuid", playerUuid.toString());
             return homeQuery.getResultList();
+        } catch (Exception ex) {
+            this.getHibernateConnection().getLogger().log(Level.SEVERE, "Could not get homes from database!", ex);
+            return List.of();
         }
     }
 
@@ -61,6 +65,9 @@ public class HomeDatabase implements HibernateDatabase {
                 return null;
             }
             return homes.getFirst();
+        } catch (Exception ex) {
+            this.getHibernateConnection().getLogger().log(Level.SEVERE, "Could not get home from database!", ex);
+            return null;
         }
     }
 
@@ -89,14 +96,19 @@ public class HomeDatabase implements HibernateDatabase {
 
         try (final Session session = this.getHibernateConnection().openSession()) {
             session.beginTransaction();
-            session.merge(sqlHome);
+            final SQLHome merged = session.merge(sqlHome);
             session.getTransaction().commit();
-            return sqlHome;
+            return merged;
+        } catch (Exception ex) {
+            this.getHibernateConnection()
+                    .getLogger()
+                    .log(Level.SEVERE, "Could not create or update home in database!", ex);
+            return null;
         }
     }
 
     public boolean deleteHome(final UUID playerUuid, final String homeName) {
-        SQLHome sqlHome = getHome(playerUuid, homeName);
+       final SQLHome sqlHome = getHome(playerUuid, homeName);
         if (sqlHome == null) {
             return false;
         }
@@ -106,6 +118,9 @@ public class HomeDatabase implements HibernateDatabase {
             session.remove(session.merge(sqlHome));
             session.getTransaction().commit();
             return true;
+        } catch (Exception ex) {
+            this.getHibernateConnection().getLogger().log(Level.SEVERE, "Could not delete home from database!", ex);
+            return false;
         }
     }
 
